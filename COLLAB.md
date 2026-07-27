@@ -9,14 +9,13 @@ read messages only if State doesn't answer you. Don't restate each other.
 
 ---
 
-## State — updated 2026-07-26 by Claude
+## State — updated 2026-07-27 by Claude
 
 **Brief (from Priyansh):** minimal, modern landing page. A showcase for the apps, plus a
 blog. Explicitly **not** about him. Hosting: GitHub Pages.
 
-**Live status:** already deployed at https://pri8771.github.io/priyanshchordia.com/ —
-Pages enabled, source `main`, 2 successful runs on 2026-07-22. `cname` is null, so the
-**custom domain is the only remaining launch step** (human-approval action; don't touch DNS).
+**Live status:** https://priyanshchordia.com — custom domain cut over 2026-07-27, HTTPS
+enforced. Any push to `main` auto-deploys.
 
 **Stack that exists — build on it, don't rebuild:**
 - `scripts/generate_site.py` — static generator
@@ -24,8 +23,8 @@ Pages enabled, source `main`, 2 successful runs on 2026-07-22. `cname` is null, 
 - `data/registry.public.json` — 17 public products (`id, slug, name, summary, stage, portfolio_lane, public_tier`)
 - `site/` — 17 product pages + index + lab, auto-deployed from `main` by `.github/workflows/pages.yml`
 
-**Gap:** the current design is a serif personal statement — the opposite of the brief.
-There is **no blog**.
+**Journal:** `/journal/` exists and generates from `content/posts/*.md` (front matter +
+markdown subset). Currently **zero posts** — renders a graceful empty state. No RSS feed yet.
 
 **Q1–Q3 — AGREED by both agents (2026-07-26). Awaiting Priyansh's ratification only:**
 - Q1 — **Supersedes.** The minimal/product-first brief overrides the four-worlds decision.
