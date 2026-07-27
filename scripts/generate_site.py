@@ -13,6 +13,7 @@ Sources of truth:
 
 from __future__ import annotations
 
+import hashlib
 import html
 import json
 import re
@@ -650,6 +651,16 @@ def markdown(body: str) -> str:
 # page chrome
 # --------------------------------------------------------------------------
 
+def asset_hash(text: str) -> str:
+    """Short content hash so a deploy always invalidates cached CSS/JS."""
+    return hashlib.sha256(text.encode("utf-8")).hexdigest()[:10]
+
+
+EXPERIENCES = (ROOT / "scripts" / "experiences.js").read_text(encoding="utf-8")
+CSS_V = ""
+XP_V = ""
+
+
 def options_html() -> str:
     return "".join(f'<option value="{k}">{v}</option>' for k, v in THEMES)
 
@@ -672,7 +683,7 @@ def chrome(title: str, body: str, prefix: str = "", active: str = "",
     return f"""<!doctype html>
 <html lang="en" data-theme="signal"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="description" content="{esc(description)}">
-<title>{esc(title)}</title>{preload}<link rel="stylesheet" href="{prefix}styles.css"></head>
+<title>{esc(title)}</title>{preload}<link rel="stylesheet" href="{prefix}styles.css?v={CSS_V}"></head>
 <body><a class="skip" href="#main">Skip to content</a><div class="wrap">
 <header class="top"><div class="left">
 <select id="themer" class="themer" aria-label="Colour theme">{options}</select>
@@ -728,7 +739,7 @@ def home(products: list[dict[str, object]], posts: list[dict[str, object]]) -> s
         '<div id="xp" class="xp"></div>'
         '<select id="themer2" class="themer xp-switch" aria-label="Design">' + options_html() + "</select>"
         f'<script>window.__PRODUCTS={payload}</script>'
-        '<script src="experiences.js" defer></script>'
+        f'<script src="experiences.js?v={XP_V}" defer></script>'
     )
     return chrome(f"{SITE_NAME} — software catalogue", body, active="work", extra=extra)
 
@@ -830,6 +841,9 @@ def write(path: Path, content: str) -> None:
 
 
 def main() -> int:
+    global CSS_V, XP_V
+    CSS_V = asset_hash(CSS)
+    XP_V = asset_hash(EXPERIENCES)
     products = load_products()
     posts = load_posts()
     apps = load_apps()
@@ -839,7 +853,7 @@ def main() -> int:
     OUT.mkdir(parents=True)
     write(OUT / ".nojekyll", "")
     write(OUT / "styles.css", CSS)
-    write(OUT / "experiences.js", (ROOT / "scripts" / "experiences.js").read_text(encoding="utf-8"))
+    write(OUT / "experiences.js", EXPERIENCES)
     if CUSTOM_DOMAIN:
         # Regenerated every build; site/ is wiped each run, so Pages would
         # otherwise lose the custom domain on the next deploy.
