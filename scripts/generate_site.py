@@ -29,7 +29,7 @@ OUT = ROOT / "site"
 # Set to the apex domain ONLY after DNS resolves to GitHub Pages. Emitting a
 # CNAME file early makes Pages redirect github.io -> the domain, which darks
 # the site until propagation completes. None = keep serving on github.io.
-CUSTOM_DOMAIN: str | None = None
+CUSTOM_DOMAIN: str | None = "priyanshchordia.com"
 
 SITE_NAME = "priyanshchordia.com"
 DESCRIPTION = "A catalogue of independent software — games, private utilities, and tools for clearer work."
