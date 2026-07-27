@@ -44,6 +44,7 @@ body{margin:0}a{color:inherit}
 .left{display:flex;align-items:center;gap:14px}
 img{max-width:100%}
 @keyframes sig-caret{0%,49%{opacity:1}50%,100%{opacity:0}}
+@keyframes uni-in{from{opacity:0}to{opacity:1}}
 .xp{display:none}
 html.has-xp .xp{display:grid;position:fixed;inset:0;z-index:40;grid-template-rows:auto 1fr auto;overflow:hidden;background:#000;color:#e8e2d6;font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
 html.has-xp body{overflow:hidden}
