@@ -26,11 +26,17 @@ APPS = ROOT / "data" / "apps.json"
 POSTS = ROOT / "content" / "posts"
 OUT = ROOT / "site"
 
+# Set to the apex domain ONLY after DNS resolves to GitHub Pages. Emitting a
+# CNAME file early makes Pages redirect github.io -> the domain, which darks
+# the site until propagation completes. None = keep serving on github.io.
+CUSTOM_DOMAIN: str | None = None
+
 SITE_NAME = "priyanshchordia.com"
 DESCRIPTION = "A catalogue of independent software — games, private utilities, and tools for clearer work."
 
 CSS = """
 :root{--bg:#070908;--panel:#0d110f;--ink:#e9fff1;--muted:#83a28e;--line:#1d3024;--acid:#a7ff8a;--amber:#f5be65;--on-acid:#071008;--prose:#b8c8bd;--code-bg:#0a0f0c;--top:rgba(7,9,8,.92)}
+:root[data-theme="unknown-signal"]{--bg:#0a0806;--panel:#201a15;--ink:#cfc7b8;--muted:#8f877b;--line:#2a231c;--acid:#ffb347;--amber:#a49c8f;--on-acid:#0a0806;--prose:#a09889;--code-bg:#151009;--top:rgba(10,8,6,.92)}
 :root[data-theme="monolith"]{--bg:#0b0a09;--panel:#141311;--ink:#f4f1ea;--muted:#9a958c;--line:#2a2724;--acid:#e0a850;--amber:#cfcac1;--on-acid:#0b0a09;--prose:#cfcac1;--code-bg:#000;--top:rgba(11,10,9,.92)}
 :root[data-theme="overworld"]{--bg:#05070a;--panel:#16201a;--ink:#e9f2e4;--muted:#8fa094;--line:#24312a;--acid:#9be36f;--amber:#cfe0c8;--on-acid:#05070a;--prose:#cfe0c8;--code-bg:#0a1410;--top:rgba(5,7,10,.92)}
 :root[data-theme="cabinet"]{--bg:#ece5d8;--panel:#f3ecdf;--ink:#2b2620;--muted:#8f8a80;--line:#d6cdbb;--acid:#c9a86a;--amber:#4a423d;--on-acid:#2b2620;--prose:#4a423d;--code-bg:#e3dac6;--top:rgba(236,229,216,.92)}
@@ -80,6 +86,7 @@ footer{display:flex;justify-content:space-between;gap:16px;padding:28px 0;color:
 
 THEMES = [
     ("signal", "Signal"),
+    ("unknown-signal", "Unknown Signal"),
     ("monolith", "Monolith"),
     ("overworld", "Overworld"),
     ("cabinet", "Cabinet"),
@@ -374,6 +381,10 @@ def main() -> int:
         shutil.rmtree(OUT)
     OUT.mkdir(parents=True)
     write(OUT / ".nojekyll", "")
+    if CUSTOM_DOMAIN:
+        # Regenerated every build; site/ is wiped each run, so Pages would
+        # otherwise lose the custom domain on the next deploy.
+        write(OUT / "CNAME", CUSTOM_DOMAIN + "\n")
     write(OUT / "index.html", home(products, posts))
     write(OUT / "journal" / "index.html", journal_index(posts))
 
