@@ -67,7 +67,7 @@
     var rx = el("span", "margin-left:auto;color:#8f877b;letter-spacing:.14em", "RX · 0.7µV · unattended");
     nav.appendChild(rx);
 
-    var main = el("main", "position:relative;z-index:7;display:grid;align-content:center;justify-items:center;gap:clamp(16px,3vh,30px);padding:clamp(16px,4vh,44px) clamp(16px,4vw,44px);min-height:0;overflow:auto");
+    var main = el("main", "position:relative;z-index:7;display:grid;grid-template-columns:minmax(0,1fr);align-content:center;justify-items:center;gap:clamp(16px,3vh,30px);padding:clamp(16px,4vh,44px) clamp(16px,4vw,44px);min-height:0;overflow:auto");
     main.appendChild(el("div", "font:400 10.5px/1 ui-monospace,monospace;letter-spacing:.28em;text-transform:uppercase;color:#989186;text-align:center", "carrier detected · source unidentified · identifies itself only as"));
 
     var h1 = el("h1", "margin:0;text-align:center;font:700 clamp(30px,8.4vw,120px)/.95 ui-monospace,monospace;letter-spacing:-.03em;color:#f6f1e6;text-shadow:0 0 34px rgba(255,179,71,.22)");
@@ -99,7 +99,7 @@
     panel.append(head, bodyWrap);
     main.appendChild(panel);
 
-    var footer = el("footer", "position:relative;z-index:7;border-top:1px solid #171310;padding:12px clamp(14px,3vw,34px) 14px;display:grid;gap:10px");
+    var footer = el("footer", "position:relative;z-index:7;border-top:1px solid #171310;padding:12px clamp(14px,3vw,34px) 14px;display:grid;grid-template-columns:minmax(0,1fr);gap:10px");
     var canvas = el("canvas", "display:block;width:100%;height:clamp(56px,10vh,104px)");
     canvas.setAttribute("role", "img");
     canvas.setAttribute("aria-label", "Spectrum display. " + carriers.length + " carriers; every record is listed in the decoded archive.");
