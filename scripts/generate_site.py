@@ -102,10 +102,20 @@ def load_apps() -> list[dict[str, object]]:
     if not APPS.exists():
         return []
     apps = json.loads(APPS.read_text(encoding="utf-8")).get("apps", [])
+    seen: set[str] = set()
     for app in apps:
-        if not re.fullmatch(r"[a-z0-9-]+", str(app.get("slug", ""))):
-            raise ValueError(f"Unsafe app slug: {app.get('slug')!r}")
+        slug = str(app.get("slug", ""))
+        if not re.fullmatch(r"[a-z0-9-]+", slug):
+            raise ValueError(f"Unsafe app slug: {slug!r}")
+        if slug in RESERVED_ROUTES:
+            raise ValueError(f"App slug {slug!r} collides with a reserved top-level route")
+        if slug in seen:
+            raise ValueError(f"Duplicate app slug: {slug!r}")
+        seen.add(slug)
     return apps
+
+
+RESERVED_ROUTES = {"products", "journal", "apps", "assets", "static", "index"}
 
 
 FRONT_MATTER = re.compile(r"^---\s*\n(.*?)\n---\s*\n(.*)$", re.S)

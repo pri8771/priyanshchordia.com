@@ -1,10 +1,11 @@
 {
-  "_comment": "App Store metadata for /apps/<slug>/privacy/ and /apps/<slug>/support/. Apple requires both URLs per listing. An app whose support_contact is null, TODO, or an example.com address is SKIPPED by the generator — a fabricated support address on a live listing is worse than a missing page. Set support_contact to a real monitored address to publish.",
+  "_comment": "App Store metadata for /apps/<slug>/privacy/ and /apps/<slug>/support/. Apple requires both URLs per listing. An app whose support_contact is null, TODO, or an example.com address is SKIPPED by the generator with a build warning — a fabricated support address on a live listing is worse than a missing page. Set support_contact to a real monitored address to publish. Note: slug here is the STORE identity and is intentionally independent of the mission-control product slug, so a store rename does not require a registry rename.",
   "apps": [
     {
-      "slug": "japa",
-      "name": "Japa",
-      "store_name": "Japa",
+      "slug": "mala",
+      "name": "Mala",
+      "store_name": "Mala",
+      "registry_slug": "japa",
       "support_contact": null
     }
   ]
