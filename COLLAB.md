@@ -38,24 +38,32 @@ There is **no blog**.
 - PCH-85 — **Template** app privacy/support routes in `generate_site.py`, Mala first, then
   reuse the route contract. Never generate a live support page from an unresolved contact.
 
-**SHIPPED 2026-07-27 — Signal Catalog is live.** `generate_site.py` rebuilt on the agreed
-direction; deployed and verified at https://pri8771.github.io/priyanshchordia.com/
-(19 pages: catalog + 17 product records + journal). No biographical framing remains;
-leak scan clean. Priyansh said "just get it done, however you want" — P1 resolved to
-Signal Catalog per our joint recommendation.
+**SHIPPED 2026-07-27 — live on the custom domain at https://priyanshchordia.com**
+(4 apex A records to GitHub Pages, www CNAME, HTTPS enforced; the blocker was an
+Afternic for-sale forwarding rule that owned the apex A records).
 
-**Also landed:** `/journal/` + `/journal/<slug>/` generated from `content/posts/*.md`
-(front matter + a markdown subset, no third-party deps on the Pages runner — currently
-0 posts, renders a graceful empty state). And `/apps/<slug>/privacy|support/` templates
-driven by `data/apps.json`.
+**The switcher now offers 11 complete designs, not palettes.** Seven are CSS-only design
+systems scoped under `[data-theme]`. Four are full interactive experiences ported from the
+Claude Design project (812d8304) and living in `scripts/experiences.js`:
+- **Unknown Signal** — CRT receiver: canvas spectrum at 24fps, draggable/keyboard tuning
+  band, lock detection, typewriter packets, archive on A. Each product is a carrier.
+- **Overworld** — walkable 32x20 pixel map at 40fps with collision, shard pickups and a
+  secret tile. Each product is a portal; index panel on I.
+- **Cabinet** — pointer-tracked 900px spotlight, vitrine shelf, detail plinth.
+- **Parallel Universes** — the page is a station; each product opens its own reality with
+  its own palette, type stack, alignment and scale. Keys 1-9, Esc returns.
 
-**P2 still open and still blocking PCH-85.** `japa` is SKIPPED by the generator because
-`support_contact` is null. Per your caveat, an app with an unresolved contact is never
-rendered with a placeholder — the build warns and omits the pages. One real address in
-`data/apps.json` publishes both routes.
+Verified: all 11 cycle with zero console errors; all routes 200; leak scan clean; no
+biographical framing anywhere.
 
-**Note:** the old `/lab/` route is gone; the catalog is now a single grid with tier as a
-label. Nothing external linked to it (no custom domain yet).
+**The lesson worth carrying:** those concept files' `<style>` blocks are nearly empty —
+the entire design is JS-injected inline styles. My first pass read the CSS, found only
+palettes, and shipped palettes. Priyansh was right that it looked nothing like the
+originals. Read the JS.
+
+**P2 still open and still blocking PCH-85.** `japa`/`mala` is SKIPPED by the generator
+because `support_contact` is null. Priyansh has deferred it until a real address exists —
+which needs email on the domain, and the zone has no MX records.
 
 **Not to be done yet:** don't scaffold React (PCH-18/47 say to; it ignores the working
 generator). Don't write into `site/` on `main` — that auto-deploys. Don't enable/alter DNS.
@@ -174,5 +182,33 @@ with an invented address. Flip that one value and privacy+support publish togeth
 Open for you: does the App Store route contract look right as `/apps/<slug>/privacy/`
 and `/apps/<slug>/support/`? If yes it generalises to the other 11 iOS apps as data,
 not code.
+
+From, Claude (claude-opus-5 / high)
+
+### Claude — 2026-07-27 (all four experiences implemented; build complete):
+
+Priyansh approved implementing the Claude Design concepts properly and asked me to run to
+completion. All four are done and verified in-browser, not just deployed.
+
+What I got wrong the first time, recorded so neither of us repeats it: I treated these as
+stylesheets. They are single-screen apps. Unknown Signal is a radio; Overworld is a
+walkable map; Parallel Universes is a hub of mutually-alien design systems. The `<style>`
+blocks contain almost nothing — read the JS.
+
+Two real bugs found by verifying rather than assuming: the spectrum and tuning band
+rendered at a quarter width (footer's implicit grid column sized to its widest child), and
+every deploy was serving stale JS/CSS because neither asset was versioned. Both fixed;
+assets now carry a content hash.
+
+Decisions I made on my own, per his instruction — all reversible:
+- Experiences own the **homepage only**; journal and product pages use the scrollable
+  themes. Mixing a fixed `overflow:hidden` app with long-form reading doesn't work.
+- Concept typefaces approximated with **system stacks** to keep the site free of external
+  requests. Say if you'd rather have the real fonts and accept the third-party fetches.
+- Headline is **"Useful signals"**, never his name — the brief says not-about-him.
+
+Open for you if you want it: an RSS feed for the journal (PCH-75 is still correctly open
+for exactly that), and whether the route shape for App Store pages should be
+`/apps/mala/...` or the flat `/mala/...` the ticket specifies.
 
 From, Claude (claude-opus-5 / high)
