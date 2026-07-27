@@ -30,12 +30,19 @@ SITE_NAME = "priyanshchordia.com"
 DESCRIPTION = "A catalogue of independent software — games, private utilities, and tools for clearer work."
 
 CSS = """
-:root{--bg:#070908;--panel:#0d110f;--ink:#e9fff1;--muted:#83a28e;--line:#1d3024;--acid:#a7ff8a;--amber:#f5be65}
+:root{--bg:#070908;--panel:#0d110f;--ink:#e9fff1;--muted:#83a28e;--line:#1d3024;--acid:#a7ff8a;--amber:#f5be65;--on-acid:#071008;--prose:#b8c8bd;--code-bg:#0a0f0c;--top:rgba(7,9,8,.92)}
+:root[data-theme="monolith"]{--bg:#0b0a09;--panel:#141311;--ink:#f4f1ea;--muted:#9a958c;--line:#2a2724;--acid:#e0a850;--amber:#cfcac1;--on-acid:#0b0a09;--prose:#cfcac1;--code-bg:#000;--top:rgba(11,10,9,.92)}
+:root[data-theme="overworld"]{--bg:#05070a;--panel:#16201a;--ink:#e9f2e4;--muted:#8fa094;--line:#24312a;--acid:#9be36f;--amber:#cfe0c8;--on-acid:#05070a;--prose:#cfe0c8;--code-bg:#0a1410;--top:rgba(5,7,10,.92)}
+:root[data-theme="cabinet"]{--bg:#ece5d8;--panel:#f3ecdf;--ink:#2b2620;--muted:#8f8a80;--line:#d6cdbb;--acid:#c9a86a;--amber:#4a423d;--on-acid:#2b2620;--prose:#4a423d;--code-bg:#e3dac6;--top:rgba(236,229,216,.92)}
+:root[data-theme="department"]{--bg:#f5f0e2;--panel:#ece7d6;--ink:#221f19;--muted:#6b6455;--line:#cfc7b2;--acid:#8a2b1c;--amber:#4a463c;--on-acid:#f5f0e2;--prose:#4a463c;--code-bg:#e3dcc7;--top:rgba(245,240,226,.92)}
 *{box-sizing:border-box}html{scroll-behavior:smooth}
 body{margin:0;background:var(--bg);color:var(--ink);font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
 a{color:inherit}.wrap{width:min(1380px,calc(100% - 32px));margin:auto}
-.skip{position:absolute;left:-9999px}.skip:focus{left:8px;top:8px;padding:10px 14px;background:var(--acid);color:#071008;z-index:9}
-.top{position:sticky;top:0;z-index:5;display:flex;justify-content:space-between;gap:24px;padding:18px 0;background:rgba(7,9,8,.92);border-bottom:1px solid var(--line);backdrop-filter:blur(14px)}
+.skip{position:absolute;left:-9999px}.skip:focus{left:8px;top:8px;padding:10px 14px;background:var(--acid);color:var(--on-acid);z-index:9}
+.top{position:sticky;top:0;z-index:5;display:flex;justify-content:space-between;align-items:center;gap:24px;padding:18px 0;background:var(--top);border-bottom:1px solid var(--line);backdrop-filter:blur(14px)}
+.left{display:flex;align-items:center;gap:14px}
+.themer{font:inherit;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);background:var(--panel);border:1px solid var(--line);border-radius:0;padding:6px 8px;cursor:pointer}
+.themer:hover,.themer:focus{color:var(--ink);border-color:var(--acid);outline:none}
 .brand{font-weight:800;letter-spacing:.12em;text-decoration:none}.status{color:var(--acid)}
 nav{display:flex;gap:18px}nav a{color:var(--muted);text-decoration:none}nav a:hover,nav a:focus,nav a.active{color:var(--ink)}
 .hero{min-height:72vh;display:grid;grid-template-columns:1.5fr .5fr;align-items:end;gap:40px;padding:9vw 0 48px;border-bottom:1px solid var(--line)}
@@ -47,7 +54,8 @@ section{padding:80px 0;border-bottom:1px solid var(--line)}
 .section-head h2{margin:0;font:700 clamp(38px,6vw,78px)/.95 Arial,sans-serif;letter-spacing:-.05em}
 .products{display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid var(--line);border-left:1px solid var(--line)}
 .product{min-height:230px;padding:22px;display:flex;flex-direction:column;border-right:1px solid var(--line);border-bottom:1px solid var(--line);background:var(--panel);text-decoration:none;transition:background .2s ease,color .2s ease}
-.product:hover,.product:focus{background:var(--acid);color:#071008}.product:hover .meta,.product:focus .meta{color:#17361c}.product:hover p,.product:focus p{color:#1c3b22}
+.product:hover,.product:focus{background:var(--acid);color:var(--on-acid)}
+.product:hover .meta,.product:focus .meta,.product:hover p,.product:focus p,.product:hover .num,.product:focus .num{color:var(--on-acid)}
 .num{font-size:11px;color:var(--acid)}.product h3{margin:auto 0 14px;font:700 28px/1 Arial,sans-serif;letter-spacing:-.04em}
 .product p{margin:0;color:var(--muted);font:13px/1.5 Arial,sans-serif}
 .meta{margin-top:16px;color:var(--amber);font-size:10px;text-transform:uppercase}
@@ -57,8 +65,8 @@ section{padding:80px 0;border-bottom:1px solid var(--line)}
 .post,.detail{padding:clamp(28px,5vw,72px);background:var(--panel);border:1px solid var(--line)}
 .post h1,.detail h1{margin:14px 0 24px;font:700 clamp(36px,5vw,68px)/.95 Arial,sans-serif;letter-spacing:-.05em;max-width:20ch}
 .post h2{margin:36px 0 12px;font:700 clamp(22px,3vw,30px)/1.2 Arial,sans-serif;letter-spacing:-.03em}
-.post p,.post li{max-width:65ch;color:#b8c8bd;line-height:1.75;font-family:Arial,sans-serif}
-.post code{background:#0a0f0c;border:1px solid var(--line);padding:1px 5px}
+.post p,.post li,.detail p{max-width:65ch;color:var(--prose);line-height:1.75;font-family:Arial,sans-serif}
+.post code{background:var(--code-bg);border:1px solid var(--line);padding:1px 5px}
 .post a,.detail a{color:var(--acid)}
 .facts{display:grid;grid-template-columns:repeat(2,1fr);margin-top:36px;border-top:1px solid var(--line)}
 .fact{padding:18px 0;border-bottom:1px solid var(--line)}.fact small{display:block;color:var(--muted);margin-bottom:8px}
@@ -66,9 +74,17 @@ section{padding:80px 0;border-bottom:1px solid var(--line)}
 .back{display:inline-block;margin-top:42px;color:var(--muted)}
 footer{display:flex;justify-content:space-between;gap:16px;padding:28px 0;color:var(--muted);font-size:11px;text-transform:uppercase}
 @media(max-width:900px){.products{grid-template-columns:repeat(2,1fr)}.hero{grid-template-columns:1fr}.section-head{grid-template-columns:1fr}.hero p{max-width:60ch}.facts{grid-template-columns:1fr}}
-@media(max-width:560px){.wrap{width:min(100% - 20px,1380px)}.top{align-items:flex-start}.status{display:none}nav{gap:10px;font-size:12px}.hero{min-height:64vh;padding-top:90px}.products{grid-template-columns:1fr}.product{min-height:190px}.entry{grid-template-columns:58px 1fr}.entry span:last-child{display:none}footer{flex-direction:column}}
+@media(max-width:560px){.wrap{width:min(100% - 20px,1380px)}.top{align-items:center;gap:10px}.status{display:none}nav{gap:10px;font-size:12px}.themer{font-size:10px;padding:5px 6px}.hero{min-height:64vh;padding-top:90px}.products{grid-template-columns:1fr}.product{min-height:190px}.entry{grid-template-columns:58px 1fr}.entry span:last-child{display:none}footer{flex-direction:column}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.product{transition:none}}
 """
+
+THEMES = [
+    ("signal", "Signal"),
+    ("monolith", "Monolith"),
+    ("overworld", "Overworld"),
+    ("cabinet", "Cabinet"),
+    ("department", "Department"),
+]
 
 
 def esc(value: object) -> str:
@@ -191,16 +207,27 @@ def markdown(body: str) -> str:
 def chrome(title: str, body: str, prefix: str = "", active: str = "", description: str = DESCRIPTION) -> str:
     def cls(name: str) -> str:
         return ' class="active"' if active == name else ""
+    options = "".join(f'<option value="{k}">{v}</option>' for k, v in THEMES)
+    # Applied in <head> so the stored theme paints on first frame, no flash.
+    preload = ("<script>(function(){try{var t=localStorage.getItem('pc-theme');"
+               "if(t)document.documentElement.setAttribute('data-theme',t)}catch(e){}})()</script>")
+    switcher = ("<script>(function(){var s=document.getElementById('themer');if(!s)return;"
+                "try{var t=localStorage.getItem('pc-theme');if(t)s.value=t}catch(e){}"
+                "s.addEventListener('change',function(){var v=s.value;"
+                "document.documentElement.setAttribute('data-theme',v);"
+                "try{localStorage.setItem('pc-theme',v)}catch(e){}})})()</script>")
     return f"""<!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="description" content="{esc(description)}">
-<title>{esc(title)}</title><style>{CSS}</style></head>
+<title>{esc(title)}</title>{preload}<style>{CSS}</style></head>
 <body><a class="skip" href="#main">Skip to content</a><div class="wrap">
-<header class="top"><a class="brand" href="{prefix}index.html">P/C <span class="status" aria-hidden="true">&#9679;</span></a>
+<header class="top"><div class="left">
+<select id="themer" class="themer" aria-label="Colour theme">{options}</select>
+<a class="brand" href="{prefix}index.html">P/C <span class="status" aria-hidden="true">&#9679;</span></a></div>
 <nav aria-label="Primary"><a{cls('work')} href="{prefix}index.html#work">Work</a><a{cls('journal')} href="{prefix}journal/">Journal</a></nav></header>
 <main id="main">{body}</main>
 <footer><span>{esc(SITE_NAME)}</span><span>Generated from a sanitized public registry</span></footer>
-</div></body></html>"""
+</div>{switcher}</body></html>"""
 
 
 def product_tile(product: dict[str, object], index: int, prefix: str = "") -> str:
