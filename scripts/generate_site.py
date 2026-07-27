@@ -42,6 +42,13 @@ body{margin:0}a{color:inherit}
 .themer{font:inherit;font-size:11px;letter-spacing:.08em;text-transform:uppercase;padding:6px 8px;cursor:pointer;background:transparent;color:inherit;border:1px solid currentColor}
 .left{display:flex;align-items:center;gap:14px}
 img{max-width:100%}
+@keyframes sig-caret{0%,49%{opacity:1}50%,100%{opacity:0}}
+.xp{display:none}
+html.has-xp .xp{display:grid;position:fixed;inset:0;z-index:40;grid-template-rows:auto 1fr auto;overflow:hidden;background:#000;color:#e8e2d6;font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+html.has-xp body{overflow:hidden}
+html.has-xp .wrap{display:none}
+html.has-xp .xp-switch{position:fixed;z-index:60;top:12px;right:14px;display:block}
+.xp-switch{display:none}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important;animation:none!important}}
 
 /* ================= SIGNAL CATALOG — mono transmission index ================= */
@@ -643,18 +650,25 @@ def markdown(body: str) -> str:
 # page chrome
 # --------------------------------------------------------------------------
 
-def chrome(title: str, body: str, prefix: str = "", active: str = "", description: str = DESCRIPTION) -> str:
+def options_html() -> str:
+    return "".join(f'<option value="{k}">{v}</option>' for k, v in THEMES)
+
+
+def chrome(title: str, body: str, prefix: str = "", active: str = "",
+           description: str = DESCRIPTION, extra: str = "") -> str:
     def cls(name: str) -> str:
         return ' class="active"' if active == name else ""
-    options = "".join(f'<option value="{k}">{v}</option>' for k, v in THEMES)
+    options = options_html()
     # Applied in <head> so the stored theme paints on first frame, no flash.
     preload = ("<script>(function(){try{var t=localStorage.getItem('pc-theme');"
                "if(t)document.documentElement.setAttribute('data-theme',t)}catch(e){}})()</script>")
-    switcher = ("<script>(function(){var s=document.getElementById('themer');if(!s)return;"
-                "try{var t=localStorage.getItem('pc-theme');if(t)s.value=t}catch(e){}"
-                "s.addEventListener('change',function(){var v=s.value;"
+    switcher = ("<script>(function(){var ss=[].slice.call(document.querySelectorAll('.themer'));"
+                "if(!ss.length)return;try{var t=localStorage.getItem('pc-theme');"
+                "if(t)ss.forEach(function(s){s.value=t})}catch(e){}"
+                "ss.forEach(function(s){s.addEventListener('change',function(){var v=s.value;"
                 "document.documentElement.setAttribute('data-theme',v);"
-                "try{localStorage.setItem('pc-theme',v)}catch(e){}})})()</script>")
+                "ss.forEach(function(o){o.value=v});"
+                "try{localStorage.setItem('pc-theme',v)}catch(e){}})})})()</script>")
     return f"""<!doctype html>
 <html lang="en" data-theme="signal"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="description" content="{esc(description)}">
@@ -666,7 +680,7 @@ def chrome(title: str, body: str, prefix: str = "", active: str = "", descriptio
 <nav aria-label="Primary"><a{cls('work')} href="{prefix}index.html#work">Work</a><a{cls('journal')} href="{prefix}journal/">Journal</a></nav></header>
 <main id="main">{body}</main>
 <footer><span>{esc(SITE_NAME)}</span><span>Generated from a sanitized public registry</span></footer>
-</div>{switcher}</body></html>"""
+</div>{extra}{switcher}</body></html>"""
 
 
 def product_tile(product: dict[str, object], index: int, prefix: str = "") -> str:
@@ -705,7 +719,18 @@ def home(products: list[dict[str, object]], posts: list[dict[str, object]]) -> s
 <div class="products" aria-label="All products">{tiles}</div></section>
 <section id="journal"><div class="section-head"><span class="label">02 / Journal</span><h2>Notes from the workbench.</h2></div>
 {journal}</section>"""
-    return chrome(f"{SITE_NAME} — software catalogue", body, active="work")
+    payload = json.dumps([
+        {"name": p["name"], "summary": p["summary"], "href": f"products/{p['slug']}/",
+         "lane": str(p.get("portfolio_lane", "")).replace("-", " ")}
+        for p in products
+    ], ensure_ascii=False)
+    extra = (
+        '<div id="xp" class="xp"></div>'
+        '<select id="themer2" class="themer xp-switch" aria-label="Design">' + options_html() + "</select>"
+        f'<script>window.__PRODUCTS={payload}</script>'
+        '<script src="experiences.js" defer></script>'
+    )
+    return chrome(f"{SITE_NAME} — software catalogue", body, active="work", extra=extra)
 
 
 def product_page(product: dict[str, object]) -> str:
@@ -814,6 +839,7 @@ def main() -> int:
     OUT.mkdir(parents=True)
     write(OUT / ".nojekyll", "")
     write(OUT / "styles.css", CSS)
+    write(OUT / "experiences.js", (ROOT / "scripts" / "experiences.js").read_text(encoding="utf-8"))
     if CUSTOM_DOMAIN:
         # Regenerated every build; site/ is wiped each run, so Pages would
         # otherwise lose the custom domain on the next deploy.

@@ -6,6 +6,13 @@ body{margin:0}a{color:inherit}
 .themer{font:inherit;font-size:11px;letter-spacing:.08em;text-transform:uppercase;padding:6px 8px;cursor:pointer;background:transparent;color:inherit;border:1px solid currentColor}
 .left{display:flex;align-items:center;gap:14px}
 img{max-width:100%}
+@keyframes sig-caret{0%,49%{opacity:1}50%,100%{opacity:0}}
+.xp{display:none}
+html.has-xp .xp{display:grid;position:fixed;inset:0;z-index:40;grid-template-rows:auto 1fr auto;overflow:hidden;background:#000;color:#e8e2d6;font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+html.has-xp body{overflow:hidden}
+html.has-xp .wrap{display:none}
+html.has-xp .xp-switch{position:fixed;z-index:60;top:12px;right:14px;display:block}
+.xp-switch{display:none}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important;animation:none!important}}
 
 /* ================= SIGNAL CATALOG — mono transmission index ================= */
