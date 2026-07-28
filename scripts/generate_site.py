@@ -27,6 +27,7 @@ APPS = ROOT / "data" / "apps.json"
 POSTS = ROOT / "content" / "posts"
 OUT = ROOT / "site"
 THEMES_DIR = ROOT / "scripts" / "themes"
+EXPERIENCES_DIR = ROOT / "scripts" / "experiences"
 
 # Set to the apex domain ONLY after DNS resolves to GitHub Pages. Emitting a
 # CNAME file early makes Pages redirect github.io -> the domain, which darks
@@ -187,7 +188,31 @@ def asset_hash(text: str) -> str:
     return hashlib.sha256(text.encode("utf-8")).hexdigest()[:10]
 
 
-EXPERIENCES = (ROOT / "scripts" / "experiences.js").read_text(encoding="utf-8")
+EXPERIENCE_FILES = ["unknown-signal", "overworld", "cabinet", "parallel"]
+
+
+def _load_js() -> str:
+    """Assemble scripts/experiences.js from scripts/experiences/: common.js
+    (shared IIFE setup -- product data, root/host handles, the `el()` helper)
+    first, then one file per interactive experience, then dispatch.js (the
+    REGISTRY/`sync()` router plus the closing of the shared IIFE opened by
+    common.js). common.js and dispatch.js are two halves of one wrapper, not
+    two independent modules -- the whole original file is a single IIFE, so
+    the opening half must load first and the closing half must load last for
+    the concatenated result to parse. The four experience files sandwiched
+    between them are order-independent (top-level function declarations are
+    hoisted within that shared scope). Keeping each experience in its own
+    file is what makes them separately reviewable and editable -- the
+    generated output is unchanged, just its source layout.
+    """
+    parts = [(EXPERIENCES_DIR / "common.js").read_text(encoding="utf-8")]
+    for slug in EXPERIENCE_FILES:
+        parts.append((EXPERIENCES_DIR / f"{slug}.js").read_text(encoding="utf-8"))
+    parts.append((EXPERIENCES_DIR / "dispatch.js").read_text(encoding="utf-8"))
+    return "\n".join(parts)
+
+
+EXPERIENCES = _load_js()
 CSS_V = ""
 XP_V = ""
 
