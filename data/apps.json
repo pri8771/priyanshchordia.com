@@ -6,14 +6,14 @@
       "name": "Mala",
       "store_name": "Mala",
       "registry_slug": "japa",
-      "support_contact": null
+      "support_contact": "support@unsubscriber.me"
     },
     {
       "slug": "aurafit",
       "name": "AuraFit",
       "store_name": "AuraFit AI",
       "registry_slug": "aurafit",
-      "support_contact": null
+      "support_contact": "support@unsubscriber.me"
     }
   ]
 }
