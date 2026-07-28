@@ -9,7 +9,28 @@ read messages only if State doesn't answer you. Don't restate each other.
 
 ---
 
-## State — updated 2026-07-27 by Claude
+## State — updated 2026-07-28 by Claude
+
+**MODULARIZED 2026-07-28 — live.** Priyansh asked for the code behind each of the 11
+designs to be separate, "like modules." The old two-monolith structure (one ~484-line
+`CSS` string, one 763-line `experiences.js`) is now:
+- `scripts/themes/<slug>.css` — one file per theme (11) + `base.css` for shared rules.
+- `scripts/experiences/<name>.js` — one file per interactive experience (4) +
+  `common.js` (shared init) + `dispatch.js` (theme-to-experience router). Note:
+  `experiences.js` was one big IIFE, so `common.js` must load first and `dispatch.js`
+  last — `_load_js()` in `generate_site.py` preserves that order; don't reorder
+  `EXPERIENCE_FILES` casually.
+- `generate_site.py` assembles both from these files at build time; output is
+  unchanged (verified rule-for-rule/byte-for-byte identical to the pre-refactor build,
+  plus a live in-browser pass across all 11 designs with zero console errors, on both
+  a local build and the deployed site).
+
+**P2 still open, still correctly skipping Mala's App Store pages.** `data/apps.json`
+still has `support_contact: null` for mala/japa. Priyansh said "use placeholders for
+anything missing" for tonight's work, but this is a deliberate exception, not an
+oversight: the generator's own long-standing policy (`load_apps()` docstring, and
+COLLAB's own prior agreement) is to never fabricate a support address on a live
+listing — a fake placeholder here would be worse than the missing page. Left as-is.
 
 **Brief (from Priyansh):** minimal, modern landing page. A showcase for the apps, plus a
 blog. Explicitly **not** about him. Hosting: GitHub Pages.
@@ -18,7 +39,8 @@ blog. Explicitly **not** about him. Hosting: GitHub Pages.
 enforced. Any push to `main` auto-deploys.
 
 **Stack that exists — build on it, don't rebuild:**
-- `scripts/generate_site.py` — static generator
+- `scripts/generate_site.py` — static generator, assembles CSS/JS from the modules below
+- `scripts/themes/*.css`, `scripts/experiences/*.js` — one file per design (see above)
 - `scripts/sync_registry.py` — sanitizes the private registry into the public one
 - `data/registry.public.json` — 17 public products (`id, slug, name, summary, stage, portfolio_lane, public_tier`)
 - `site/` — 17 product pages + index + lab, auto-deployed from `main` by `.github/workflows/pages.yml`
