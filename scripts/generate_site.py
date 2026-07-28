@@ -37,6 +37,17 @@ CUSTOM_DOMAIN: str | None = "priyanshchordia.com"
 SITE_NAME = "priyanshchordia.com"
 DESCRIPTION = "A catalogue of independent software — games, private utilities, and tools for clearer work."
 
+# Minimal inline favicon (dark rounded square, one dot — echoes the nav's status
+# dot) so browser tabs aren't blank. No binary asset file, no external request,
+# consistent with the rest of the site.
+FAVICON = (
+    "data:image/svg+xml,"
+    "%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E"
+    "%3Crect width='32' height='32' rx='7' fill='%23141414'/%3E"
+    "%3Ccircle cx='16' cy='16' r='6' fill='%23d7ff4a'/%3E"
+    "%3C/svg%3E"
+)
+
 THEMES = [
     ("signal", "Signal Catalog"),
     ("editorial", "Editorial Ledger"),
@@ -239,7 +250,8 @@ def chrome(title: str, body: str, prefix: str = "", active: str = "",
     return f"""<!doctype html>
 <html lang="en" data-theme="signal"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="description" content="{esc(description)}">
-<title>{esc(title)}</title>{preload}<link rel="stylesheet" href="{prefix}styles.css?v={CSS_V}"></head>
+<title>{esc(title)}</title>{preload}<link rel="icon" href="{FAVICON}">
+<link rel="stylesheet" href="{prefix}styles.css?v={CSS_V}"></head>
 <body><a class="skip" href="#main">Skip to content</a><div class="wrap">
 <header class="top"><div class="left">
 <select id="themer" class="themer" aria-label="Colour theme">{options}</select>
