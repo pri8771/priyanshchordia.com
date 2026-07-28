@@ -14,6 +14,76 @@
       "store_name": "AuraFit AI",
       "registry_slug": "aurafit",
       "support_contact": "support@priyanshchordia.com"
+    },
+    {
+      "slug": "hindsight",
+      "name": "Hindsight",
+      "store_name": "Hindsight",
+      "registry_slug": "hindsight",
+      "support_contact": "support@priyanshchordia.com"
+    },
+    {
+      "slug": "patchwork",
+      "name": "Patchwork",
+      "store_name": "Patchwork",
+      "registry_slug": "patchwork",
+      "support_contact": "support@priyanshchordia.com"
+    },
+    {
+      "slug": "anjali",
+      "name": "Anjali",
+      "store_name": "Anjali",
+      "registry_slug": "anjali",
+      "support_contact": "support@priyanshchordia.com"
+    },
+    {
+      "slug": "tessera",
+      "name": "Tessera",
+      "store_name": "Tessera",
+      "registry_slug": "tessera",
+      "support_contact": "support@priyanshchordia.com"
+    },
+    {
+      "slug": "pocket-party-court",
+      "name": "Pocket Party Court",
+      "store_name": "Pocket Party Court",
+      "registry_slug": "pocket-party-court",
+      "support_contact": "support@priyanshchordia.com"
+    },
+    {
+      "slug": "roam",
+      "name": "Roam",
+      "store_name": "Roam",
+      "registry_slug": "roam",
+      "support_contact": "support@priyanshchordia.com"
+    },
+    {
+      "slug": "umbra",
+      "name": "Umbra",
+      "store_name": "Umbra",
+      "registry_slug": "umbra",
+      "support_contact": "support@priyanshchordia.com"
+    },
+    {
+      "slug": "svara",
+      "name": "Svara",
+      "store_name": "Svara",
+      "registry_slug": "svara",
+      "support_contact": "support@priyanshchordia.com"
+    },
+    {
+      "slug": "digital-temple",
+      "name": "Digital Temple",
+      "store_name": "Digital Temple",
+      "registry_slug": "digital-temple",
+      "support_contact": "support@priyanshchordia.com"
+    },
+    {
+      "slug": "partytable",
+      "name": "PartyTable",
+      "store_name": "PartyTable",
+      "registry_slug": "partytable",
+      "support_contact": "support@priyanshchordia.com"
     }
   ]
 }
