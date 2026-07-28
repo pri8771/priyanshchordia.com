@@ -228,8 +228,14 @@ CSS_V = ""
 XP_V = ""
 
 
+DEFAULT_THEME = "unknown-signal"
+
+
 def options_html() -> str:
-    return "".join(f'<option value="{k}">{v}</option>' for k, v in THEMES)
+    return "".join(
+        f'<option value="{k}"{" selected" if k == DEFAULT_THEME else ""}>{v}</option>'
+        for k, v in THEMES
+    )
 
 
 def chrome(title: str, body: str, prefix: str = "", active: str = "",
@@ -248,7 +254,7 @@ def chrome(title: str, body: str, prefix: str = "", active: str = "",
                 "ss.forEach(function(o){o.value=v});"
                 "try{localStorage.setItem('pc-theme',v)}catch(e){}})})})()</script>")
     return f"""<!doctype html>
-<html lang="en" data-theme="signal"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<html lang="en" data-theme="{DEFAULT_THEME}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="description" content="{esc(description)}">
 <title>{esc(title)}</title>{preload}<link rel="icon" href="{FAVICON}">
 <link rel="stylesheet" href="{prefix}styles.css?v={CSS_V}"></head>
