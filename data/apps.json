@@ -7,6 +7,13 @@
       "store_name": "Mala",
       "registry_slug": "japa",
       "support_contact": null
+    },
+    {
+      "slug": "aurafit",
+      "name": "AuraFit",
+      "store_name": "AuraFit AI",
+      "registry_slug": "aurafit",
+      "support_contact": null
     }
   ]
 }
