@@ -1,0 +1,43 @@
+/* ================= MONOLITH — brutalist slabs, gold on void ================= */
+[data-theme="monolith"]{--bg:#030303;--panel:#0d0d0c;--ink:#f4f1ea;--muted:#9a958c;--line:#262421;--acc:#e0a850}
+[data-theme="monolith"] body{background:var(--bg);color:var(--ink);font-family:system-ui,"Helvetica Neue",Arial,sans-serif;letter-spacing:-.01em}
+[data-theme="monolith"] .wrap{width:min(1300px,calc(100% - 34px));margin:auto}
+[data-theme="monolith"] .top{display:flex;justify-content:space-between;align-items:center;padding:26px 0;border-bottom:1px solid var(--line)}
+[data-theme="monolith"] .brand{font:800 13px/1 system-ui;letter-spacing:.3em;text-transform:uppercase;text-decoration:none}
+[data-theme="monolith"] .status{color:var(--acc)}
+[data-theme="monolith"] nav{display:flex;gap:26px;font-size:11px;letter-spacing:.22em;text-transform:uppercase}
+[data-theme="monolith"] nav a{color:var(--muted);text-decoration:none}[data-theme="monolith"] nav a:hover{color:var(--acc)}
+[data-theme="monolith"] .hero{padding:16vh 0 10vh;border-bottom:1px solid var(--line)}
+[data-theme="monolith"] h1{margin:20px 0 0;font:800 clamp(70px,15vw,230px)/.82 system-ui,Arial,sans-serif;letter-spacing:-.06em;text-transform:uppercase}
+[data-theme="monolith"] .kicker,[data-theme="monolith"] .label{color:var(--acc);font-size:10px;letter-spacing:.35em;text-transform:uppercase}
+[data-theme="monolith"] .lede{margin-top:40px;max-width:52ch;color:var(--muted);font-size:17px;line-height:1.7}
+[data-theme="monolith"] section{padding:12vh 0;border-bottom:1px solid var(--line)}
+[data-theme="monolith"] .section-head{margin-bottom:8vh}
+[data-theme="monolith"] .section-head h2{margin:14px 0 0;font:800 clamp(40px,8vw,110px)/.85 system-ui,Arial,sans-serif;letter-spacing:-.05em;text-transform:uppercase}
+[data-theme="monolith"] .products{display:block;border-top:1px solid var(--line)}
+[data-theme="monolith"] .product{display:grid;grid-template-columns:70px 1fr 260px;gap:30px;align-items:baseline;padding:34px 0;border-bottom:1px solid var(--line);text-decoration:none;transition:padding .25s}
+[data-theme="monolith"] .product:hover{padding-left:20px}
+[data-theme="monolith"] .product:hover h3{color:var(--acc)}
+[data-theme="monolith"] .num{font-size:11px;color:var(--acc);letter-spacing:.2em}
+[data-theme="monolith"] .product h3{margin:0;font:800 clamp(28px,4vw,52px)/1 system-ui,Arial,sans-serif;letter-spacing:-.04em;text-transform:uppercase}
+[data-theme="monolith"] .product p{margin:8px 0 0;color:var(--muted);font-size:14px;line-height:1.6;grid-column:2}
+[data-theme="monolith"] .meta{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);text-align:right}
+[data-theme="monolith"] .journal-index{border-top:1px solid var(--line)}
+[data-theme="monolith"] .entry{display:grid;grid-template-columns:70px 1fr auto;gap:30px;padding:26px 0;border-bottom:1px solid var(--line);text-decoration:none;align-items:baseline}
+[data-theme="monolith"] .entry strong{font:800 22px/1.2 system-ui;text-transform:uppercase;letter-spacing:-.02em}
+[data-theme="monolith"] .entry span{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
+[data-theme="monolith"] .post,[data-theme="monolith"] .detail{padding:0;max-width:70ch}
+[data-theme="monolith"] .post p,[data-theme="monolith"] .detail p{color:var(--muted);font-size:17px;line-height:1.8}
+[data-theme="monolith"] .facts{display:grid;grid-template-columns:repeat(2,1fr);margin-top:50px;border-top:1px solid var(--line)}
+[data-theme="monolith"] .fact{padding:22px 0;border-bottom:1px solid var(--line);text-transform:uppercase;font-size:13px;letter-spacing:.05em}
+[data-theme="monolith"] .fact small{display:block;color:var(--acc);font-size:10px;letter-spacing:.25em;margin-bottom:8px}
+[data-theme="monolith"] footer{display:flex;justify-content:space-between;padding:40px 0;color:var(--muted);font-size:10px;letter-spacing:.25em;text-transform:uppercase}
+[data-theme="monolith"] .empty{padding:50px 0;color:var(--muted);border-bottom:1px solid var(--line)}
+[data-theme="monolith"] .back{display:inline-block;margin-top:50px;color:var(--acc);font-size:11px;letter-spacing:.2em;text-transform:uppercase}
+[data-theme="monolith"] .themer{color:var(--muted);border-color:var(--line);background:var(--panel)}
+
+
+@media(max-width:900px){
+[data-theme="monolith"] .product{grid-template-columns:50px 1fr}
+[data-theme="monolith"] .meta{display:none}
+}
