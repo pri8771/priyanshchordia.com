@@ -192,7 +192,7 @@ footer{flex-direction:column}
 [data-theme="gallery"] .status{color:var(--lime)}
 [data-theme="gallery"] nav{display:flex;gap:18px;font-size:12px}
 [data-theme="gallery"] nav a{text-decoration:none;color:var(--muted)}[data-theme="gallery"] nav a:hover{color:var(--lime)}
-[data-theme="gallery"] .hero{min-height:92vh;display:grid;align-content:center;text-align:center;position:relative}
+[data-theme="gallery"] .hero{min-height:92vh;display:grid;align-content:center;text-align:center;position:relative;overflow:hidden}
 [data-theme="gallery"] .hero:before,[data-theme="gallery"] .hero:after{content:"";position:absolute;width:34vw;aspect-ratio:1;border-radius:50%;filter:blur(90px);opacity:.18}
 [data-theme="gallery"] .hero:before{background:var(--violet);left:-16vw}
 [data-theme="gallery"] .hero:after{background:var(--lime);right:-16vw}
@@ -564,4 +564,182 @@ footer{flex-direction:column}
 [data-theme="department"] .product{grid-template-columns:50px 1fr}
 [data-theme="department"] .product p{grid-column:2}
 [data-theme="department"] .meta{display:none}
+}
+
+/* ================= SHARED FINISHING LAYER =================
+ * Loaded after every design. These rules are deliberately structural:
+ * accessible focus, article typography, public App Store resources, and
+ * narrow-screen reflow should not diverge across themes.
+ */
+
+:focus-visible{outline:3px solid currentColor;outline-offset:4px}
+[hidden]{display:none!important}
+a,button,select{touch-action:manipulation}
+h1,h2,h3,p,li,dd{overflow-wrap:anywhere}
+code{white-space:normal;overflow-wrap:anywhere}
+nav a.active{text-decoration-thickness:2px;text-underline-offset:5px}
+
+[data-theme] .section-head h1{
+  margin:10px 0 0;
+  max-width:18ch;
+  font-size:clamp(40px,7vw,92px);
+  line-height:.92;
+  letter-spacing:-.05em
+}
+[data-theme] :is(.detail,.post) h1{
+  margin:12px 0 24px;
+  max-width:100%;
+  font-size:clamp(36px,6vw,68px);
+  line-height:.98;
+  letter-spacing:-.045em
+}
+[data-theme] :is(.detail,.post) h2{
+  margin:34px 0 12px;
+  font-size:clamp(21px,3vw,29px);
+  line-height:1.2;
+  letter-spacing:-.02em
+}
+.post ul{padding-left:1.35em;line-height:1.7}
+.post li+li{margin-top:.55em}
+.policy-date{margin-top:-10px!important;font-size:.85rem!important;opacity:.72}
+
+.facts{padding:0}
+.fact dt{display:block;margin-bottom:8px;font-size:10px;letter-spacing:.12em;text-transform:uppercase;opacity:.72}
+.fact dd{margin:0}
+
+.app-resources{margin-top:clamp(28px,5vw,56px)!important;padding-top:clamp(28px,5vw,48px)!important}
+.app-resources h2{margin:.6rem 0 1rem;font-size:clamp(28px,4vw,48px);line-height:1}
+.app-resources>p,.directory-lede{max-width:62ch;line-height:1.7;opacity:.78}
+.resource-links{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-top:22px}
+.resource-link,.resource-note{
+  display:inline-flex;
+  align-items:center;
+  min-height:44px;
+  padding:10px 14px;
+  border:1px solid currentColor;
+  color:inherit;
+  font-size:11px;
+  letter-spacing:.1em;
+  line-height:1.2;
+  text-decoration:none;
+  text-transform:uppercase
+}
+.resource-link:hover,.resource-link:focus-visible{filter:brightness(1.25)}
+.resource-note{border-style:dashed;opacity:.68}
+
+.app-directory{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:16px;
+  margin-top:40px
+}
+.app-card{min-width:0;padding:clamp(22px,4vw,38px);border:1px solid currentColor}
+.app-card h2{margin:14px 0 12px;font-size:clamp(28px,4vw,46px);line-height:1}
+.app-card p{max-width:48ch;line-height:1.65;opacity:.76}
+.legal .resource-links{padding-top:10px;border-top:1px solid currentColor}
+
+.xp-skip{z-index:100!important}
+.xp-dialog-close{
+  min-height:44px;
+  border:1px solid currentColor;
+  background:transparent;
+  color:inherit;
+  cursor:pointer;
+  font:inherit;
+  letter-spacing:.12em;
+  padding:10px 14px;
+  text-transform:uppercase
+}
+.xp-list-row{min-width:0}
+.xp-cab-shelf{padding:12px 6px 14px!important;scroll-padding-inline:6px}
+html.has-xp .xp>nav,
+html.has-xp .xp-par nav{padding-right:190px!important}
+.ow-dpad{
+  position:absolute;
+  z-index:6;
+  bottom:10px;
+  left:10px;
+  display:none;
+  grid-template-columns:repeat(3,44px);
+  grid-template-rows:repeat(2,44px);
+  gap:4px
+}
+.ow-dpad button{
+  border:2px solid #365044;
+  background:#07100c;
+  color:#dff3d6;
+  font:700 18px/1 system-ui,sans-serif
+}
+.ow-dpad .up{grid-column:2}
+.ow-dpad .left{grid-column:1;grid-row:2}
+.ow-dpad .down{grid-column:2;grid-row:2}
+.ow-dpad .right{grid-column:3;grid-row:2}
+
+@media(pointer:coarse){
+  .ow-dpad{display:grid}
+}
+
+@media(max-width:700px){
+  .app-directory{grid-template-columns:1fr}
+  .ow-dpad{display:grid}
+  html.has-xp .xp>nav>span:last-child,
+  html.has-xp .xp-par nav>span:last-child{display:none!important}
+}
+
+@media(max-width:560px){
+  [data-theme] .top{
+    display:flex;
+    flex-wrap:wrap;
+    align-items:center;
+    gap:12px 16px
+  }
+  [data-theme] .top .left{
+    display:flex;
+    width:100%;
+    min-width:0;
+    justify-content:space-between;
+    flex-wrap:nowrap
+  }
+  [data-theme] .top nav{
+    display:flex;
+    width:100%;
+    min-width:0;
+    justify-content:flex-start;
+    gap:16px;
+    flex-wrap:wrap
+  }
+  [data-theme] .themer{max-width:calc(100% - 68px);min-width:0}
+  [data-theme] :is(.detail,.post) h1{font-size:clamp(32px,12vw,52px)}
+  .resource-link,.resource-note{width:100%;justify-content:center;text-align:center}
+
+  html.has-xp .xp-switch{
+    top:8px;
+    left:8px;
+    right:8px;
+    width:auto;
+    max-width:none;
+    padding:6px;
+    font-size:9px
+  }
+  html.has-xp .xp>nav,
+  html.has-xp .xp-par nav{
+    min-height:94px;
+    padding:56px 14px 12px!important;
+    gap:12px!important;
+    overflow:hidden;
+    flex-wrap:wrap
+  }
+  html.has-xp .xp>nav>span:last-child,
+  html.has-xp .xp-par nav>span:last-child{display:none!important}
+  .xp-list-row{
+    grid-template-columns:54px minmax(0,1fr)!important;
+    gap:10px!important
+  }
+  .xp-list-row>*:last-child{grid-column:2}
+  .xp-par-hub-main{grid-template-columns:minmax(0,1fr)!important}
+  .xp-cab-main{
+    justify-content:flex-start!important;
+    overflow-y:auto!important
+  }
+  .xp-cab-shelf,.xp-cab-detail{flex-shrink:0!important}
 }

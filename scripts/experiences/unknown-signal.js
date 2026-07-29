@@ -27,9 +27,16 @@
     vig.setAttribute("aria-hidden", "true");
 
     var nav = el("nav", "display:flex;align-items:center;gap:clamp(12px,2.6vw,32px);padding:16px clamp(14px,3vw,34px);font:400 10.5px/1 ui-monospace,monospace;letter-spacing:.2em;text-transform:uppercase;border-bottom:1px solid #171310;position:relative;z-index:7");
-    ["Catalog", "Journal"].forEach(function (t, i) {
+    var catalogLink = null;
+    [
+      { label: "Catalog", href: "#archive" },
+      { label: "Apps", href: "apps/" },
+      { label: "Journal", href: "journal/" }
+    ].forEach(function (item) {
+      var t = item.label;
       var a = el("a", "color:#8a8377;text-decoration:none", t);
-      a.href = i ? "journal/" : "#xp";
+      a.href = item.href;
+      if (t === "Catalog") catalogLink = a;
       a.onmouseenter = function () { a.style.color = "#ffb347"; };
       a.onmouseleave = function () { a.style.color = "#8a8377"; };
       nav.appendChild(a);
@@ -51,6 +58,8 @@
     var head = el("div", "display:flex;align-items:center;gap:12px;padding:11px 14px;border-bottom:1px solid #201a15;font:400 10px/1 ui-monospace,monospace;letter-spacing:.16em;text-transform:uppercase;color:#a09889;flex-wrap:wrap");
     var lock = el("span", "color:#6b6257", "●");
     var status = el("span", null, "searching");
+    status.setAttribute("role", "status");
+    status.setAttribute("aria-live", "polite");
     var freqLabel = el("span", "margin-left:auto", "");
     head.append(lock, status, freqLabel);
 
@@ -62,6 +71,7 @@
     var caret = el("span", "display:inline-block;width:9px;height:16px;background:#ffb347;vertical-align:-3px;margin-left:3px;animation:sig-caret 1s steps(1) infinite");
     var actions = el("div", "display:flex;gap:8px;flex-wrap:wrap");
     var openRec = el("a", "border:1px solid #2a231c;padding:9px 12px;font:400 10px/1 ui-monospace,monospace;letter-spacing:.14em;text-transform:uppercase;color:#cfc7b8;text-decoration:none", "Open record");
+    openRec.hidden = true;
     var arcBtn = el("a", "border:1px solid #2a231c;padding:9px 12px;font:400 10px/1 ui-monospace,monospace;letter-spacing:.14em;text-transform:uppercase;color:#cfc7b8;text-decoration:none;cursor:pointer", "Decoded archive");
     arcBtn.href = "#archive";
     actions.append(openRec, arcBtn);
@@ -94,10 +104,23 @@
 
     /* archive overlay ------------------------------------------------- */
     var archive = el("div", "position:absolute;inset:0;z-index:9;background:rgba(4,3,2,.96);display:none;overflow:auto;padding:clamp(18px,5vh,60px) clamp(16px,5vw,60px)");
+    archive.id = "archive";
+    archive.tabIndex = -1;
+    archive.setAttribute("role", "dialog");
+    archive.setAttribute("aria-modal", "true");
+    archive.setAttribute("aria-labelledby", "archive-title");
+    archive.setAttribute("aria-hidden", "true");
     var arcInner = el("div", "max-width:1000px;margin:auto");
-    arcInner.appendChild(el("div", "font:400 10px/1 ui-monospace,monospace;letter-spacing:.3em;text-transform:uppercase;color:#ffb347;margin-bottom:18px", "decoded archive · " + carriers.length + " records · press escape"));
+    var archiveHead = el("div", "display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:18px");
+    var archiveTitle = el("h2", "margin:0;font:400 10px/1 ui-monospace,monospace;letter-spacing:.3em;text-transform:uppercase;color:#ffb347", "decoded archive · " + carriers.length + " records");
+    archiveTitle.id = "archive-title";
+    var archiveClose = el("button", null, "Close");
+    archiveClose.className = "xp-dialog-close";
+    archiveHead.append(archiveTitle, archiveClose);
+    arcInner.appendChild(archiveHead);
     carriers.forEach(function (c) {
       var row = el("a", "display:grid;grid-template-columns:70px 200px 1fr;gap:18px;padding:14px 0;border-bottom:1px solid #201a15;text-decoration:none;align-items:baseline");
+      row.className = "xp-list-row";
       row.href = c.href;
       row.append(
         el("span", "font:400 10px/1 ui-monospace,monospace;color:#ffb347;letter-spacing:.14em", c.code),
@@ -109,10 +132,21 @@
     archive.appendChild(arcInner);
     host.appendChild(archive);
 
-    function toggleArchive(on) {
-      archive.style.display = on ? "block" : "none";
+    function toggleArchive(on, trigger) {
+      setHostDialog(archive, on, trigger || arcBtn);
+      arcBtn.setAttribute("aria-expanded", String(on));
     }
+    arcBtn.setAttribute("aria-controls", "archive");
+    arcBtn.setAttribute("aria-expanded", "false");
     arcBtn.onclick = function (e) { e.preventDefault(); toggleArchive(archive.style.display !== "block"); };
+    archiveClose.onclick = function () { toggleArchive(false); };
+    archive.addEventListener("keydown", function (e) {
+      trapDialogTab(archive, e);
+      if (e.key === "Escape") { e.preventDefault(); toggleArchive(false); }
+    });
+    if (catalogLink) {
+      catalogLink.onclick = function (e) { e.preventDefault(); toggleArchive(true, catalogLink); };
+    }
 
     /* nearest carrier + lock ------------------------------------------ */
     function nearest() {
@@ -124,14 +158,18 @@
       return { c: best, d: d };
     }
 
-    var shownCode = null;
+    var shownCode = null, shownStatus = null;
     function render() {
       var n = nearest(), locked = n.d < 2.2;
+      var nextStatus = locked ? "carrier locked" : (n.d < 7 ? "signal near" : "searching");
       freqLabel.textContent = n.c.band;
       lock.style.color = locked ? "#ffb347" : "#6b6257";
-      status.textContent = locked ? "carrier locked" : (n.d < 7 ? "signal near" : "searching");
+      if (nextStatus !== shownStatus) {
+        shownStatus = nextStatus;
+        status.textContent = nextStatus;
+      }
       band.setAttribute("aria-valuenow", String(Math.round(freq)));
-      band.setAttribute("aria-valuetext", locked ? "Locked: " + n.c.name : "Searching");
+      band.setAttribute("aria-valuetext", (locked ? "Locked: " + n.c.name : "Searching") + ", position " + Math.round(freq));
       needle.style.transform = "translateX(" + (freq / 100) * band.clientWidth + "px)";
 
       if (locked && n.c.code !== shownCode) {
@@ -140,6 +178,7 @@
         cName.textContent = n.c.name;
         cDom.textContent = n.c.domain;
         openRec.href = n.c.href;
+        openRec.hidden = false;
         typeOut(n.c.body);
       } else if (!locked && shownCode) {
         shownCode = null;
@@ -147,6 +186,8 @@
         cCode.textContent = ""; cName.textContent = ""; cDom.textContent = "";
         para.textContent = "";
         para.appendChild(caret);
+        openRec.removeAttribute("href");
+        openRec.hidden = true;
       }
     }
 
@@ -164,7 +205,11 @@
       }, 16);
     }
 
-    function tune(v) { freq = Math.max(0, Math.min(100, v)); render(); }
+    function tune(v) {
+      freq = Math.max(0, Math.min(100, v));
+      render();
+      if (reduce) drawSpec();
+    }
 
     /* spectrum canvas -------------------------------------------------- */
     var noise = new Array(240).fill(0).map(function () { return Math.random(); });
@@ -214,9 +259,15 @@
     band.addEventListener("pointerdown", function (e) { dragging = true; band.setPointerCapture(e.pointerId); fromEvent(e); });
     band.addEventListener("pointermove", function (e) { if (dragging) fromEvent(e); });
     band.addEventListener("pointerup", function () { dragging = false; });
+    band.addEventListener("pointercancel", function () { dragging = false; });
+    band.addEventListener("lostpointercapture", function () { dragging = false; });
     band.addEventListener("keydown", function (e) {
-      if (e.key === "ArrowLeft") { e.preventDefault(); tune(freq - 1.5); }
-      if (e.key === "ArrowRight") { e.preventDefault(); tune(freq + 1.5); }
+      if (e.key === "ArrowLeft") { e.preventDefault(); e.stopPropagation(); tune(freq - 1.5); }
+      if (e.key === "ArrowRight") { e.preventDefault(); e.stopPropagation(); tune(freq + 1.5); }
+      if (e.key === "PageDown") { e.preventDefault(); e.stopPropagation(); tune(freq - 10); }
+      if (e.key === "PageUp") { e.preventDefault(); e.stopPropagation(); tune(freq + 10); }
+      if (e.key === "Home") { e.preventDefault(); e.stopPropagation(); tune(0); }
+      if (e.key === "End") { e.preventDefault(); e.stopPropagation(); tune(100); }
     });
     function step(dir) {
       var sorted = carriers.slice().sort(function (a, b) { return a.f - b.f; });
@@ -229,9 +280,9 @@
     next.onclick = function () { step(1); };
 
     var onKey = function (e) {
-      if (e.metaKey || e.ctrlKey || /^(INPUT|SELECT|TEXTAREA)$/.test(e.target.tagName)) return;
+      if (isShortcutTarget(e)) return;
       if (e.key.toLowerCase() === "a") toggleArchive(archive.style.display !== "block");
-      if (e.key === "Escape") toggleArchive(false);
+      if (e.key === "Escape" && archive.style.display === "block") toggleArchive(false);
       if (e.key === "ArrowLeft" || e.key === "ArrowRight") { e.preventDefault(); tune(freq + (e.key === "ArrowLeft" ? -1.5 : 1.5)); }
     };
     window.addEventListener("keydown", onKey);
@@ -252,12 +303,19 @@
     }
 
     sizeSpec();
-    if (window.ResizeObserver) { ro = new ResizeObserver(sizeSpec); ro.observe(canvas); }
-    specTimer = setInterval(drawSpec, 1000 / (reduce ? 4 : 24));
+    drawSpec();
+    if (window.ResizeObserver) {
+      ro = new ResizeObserver(function () { sizeSpec(); drawSpec(); });
+      ro.observe(canvas);
+    }
+    if (!reduce) {
+      specTimer = setInterval(function () { if (!document.hidden) drawSpec(); }, 1000 / 24);
+    }
     render();
 
     return {
       destroy: function () {
+        if (archive.style.display === "block") setHostDialog(archive, false);
         clearInterval(typeTimer); clearInterval(nameTimer); clearInterval(specTimer);
         window.removeEventListener("keydown", onKey);
         if (ro) ro.disconnect();

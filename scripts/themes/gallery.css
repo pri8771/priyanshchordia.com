@@ -7,7 +7,7 @@
 [data-theme="gallery"] .status{color:var(--lime)}
 [data-theme="gallery"] nav{display:flex;gap:18px;font-size:12px}
 [data-theme="gallery"] nav a{text-decoration:none;color:var(--muted)}[data-theme="gallery"] nav a:hover{color:var(--lime)}
-[data-theme="gallery"] .hero{min-height:92vh;display:grid;align-content:center;text-align:center;position:relative}
+[data-theme="gallery"] .hero{min-height:92vh;display:grid;align-content:center;text-align:center;position:relative;overflow:hidden}
 [data-theme="gallery"] .hero:before,[data-theme="gallery"] .hero:after{content:"";position:absolute;width:34vw;aspect-ratio:1;border-radius:50%;filter:blur(90px);opacity:.18}
 [data-theme="gallery"] .hero:before{background:var(--violet);left:-16vw}
 [data-theme="gallery"] .hero:after{background:var(--lime);right:-16vw}

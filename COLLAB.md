@@ -9,7 +9,20 @@ read messages only if State doesn't answer you. Don't restate each other.
 
 ---
 
-## State — updated 2026-07-28 by Claude
+## State — updated 2026-07-29 by Codex
+
+**AUDIT/CLEANUP 2026-07-29 — release state is recorded by Git history and CI.**
+The generator now validates public product/app input, requires app-specific legal
+copy, escapes inline JSON, emits canonical/social/structured metadata, and builds
+`/apps/`, `robots.txt`, `sitemap.xml`, and `404.html`. CI covers generator
+invariants, generated HTML structure, route reachability, current committed
+output, and experience JavaScript syntax. Responsive/accessibility fixes cover
+all four interactive experiences and 320px content pages. Overworld is a
+keyboard/touch-controlled Pac-Man-style project map whose static targets open
+the corresponding product pages. A 1200×630 social preview is in
+`assets/og.png`. Seven implementation-derived App Store policy candidates have
+stable public routes; they remain explicitly unapproved/noindex until the
+documented human approval and mailbox gates are complete.
 
 **MODULARIZED 2026-07-28 — live.** Priyansh asked for the code behind each of the 11
 designs to be separate, "like modules." The old two-monolith structure (one ~484-line
@@ -25,12 +38,13 @@ designs to be separate, "like modules." The old two-monolith structure (one ~484
   plus a live in-browser pass across all 11 designs with zero console errors, on both
   a local build and the deployed site).
 
-**P2 still open, still correctly skipping Mala's App Store pages.** `data/apps.json`
-still has `support_contact: null` for mala/japa. Priyansh said "use placeholders for
-anything missing" for tonight's work, but this is a deliberate exception, not an
-oversight: the generator's own long-standing policy (`load_apps()` docstring, and
-COLLAB's own prior agreement) is to never fabricate a support address on a live
-listing — a fake placeholder here would be worse than the missing page. Left as-is.
+**App Store resource state.** Eleven apps now have explicit,
+implementation-derived privacy copy and use the committed public contact
+`support@priyanshchordia.com`. AuraFit, Anjali, Tessera, Svara, Roam, Pocket
+Party Court, and Hindsight have stable privacy/support routes. No numeric Apple
+App ID has been verified for any app, so no `apps.apple.com` download URL is
+claimed. Digital Temple is withheld because its optional Firebase behavior still
+needs owner/legal review.
 
 **Brief (from Priyansh):** minimal, modern landing page. A showcase for the apps, plus a
 blog. Explicitly **not** about him. Hosting: GitHub Pages.
@@ -43,7 +57,9 @@ enforced. Any push to `main` auto-deploys.
 - `scripts/themes/*.css`, `scripts/experiences/*.js` — one file per design (see above)
 - `scripts/sync_registry.py` — sanitizes the private registry into the public one
 - `data/registry.public.json` — 17 public products (`id, slug, name, summary, stage, portfolio_lane, public_tier`)
-- `site/` — 17 product pages + index + lab, auto-deployed from `main` by `.github/workflows/pages.yml`
+- `site/` — generated catalogue, 17 product pages, app directory, 11
+  privacy/support pairs, journal, discovery files, and 404 page; auto-deployed
+  from `main`
 
 **Journal:** `/journal/` exists and generates from `content/posts/*.md` (front matter +
 markdown subset). Currently **zero posts** — renders a graceful empty state. No RSS feed yet.
@@ -65,11 +81,12 @@ Afternic for-sale forwarding rule that owned the apex A records).
 
 **The switcher now offers 11 complete designs, not palettes.** Seven are CSS-only design
 systems scoped under `[data-theme]`. Four are full interactive experiences ported from the
-Claude Design project (812d8304) and living in `scripts/experiences.js`:
+Claude Design project (812d8304) and living in `scripts/experiences/*.js`:
 - **Unknown Signal** — CRT receiver: canvas spectrum at 24fps, draggable/keyboard tuning
   band, lock detection, typewriter packets, archive on A. Each product is a carrier.
-- **Overworld** — walkable 32x20 pixel map at 40fps with collision, shard pickups and a
-  secret tile. Each product is a portal; index panel on I.
+- **Overworld** — walkable 32×20 signal maze with buffered turns, wall
+  collision, a wrap tunnel, stationary project targets, and touch controls.
+  Touching a target opens its product page directly; the index panel is on I.
 - **Cabinet** — pointer-tracked 900px spotlight, vitrine shelf, detail plinth.
 - **Parallel Universes** — the page is a station; each product opens its own reality with
   its own palette, type stack, alignment and scale. Keys 1-9, Esc returns.
@@ -82,12 +99,13 @@ the entire design is JS-injected inline styles. My first pass read the CSS, foun
 palettes, and shipped palettes. Priyansh was right that it looked nothing like the
 originals. Read the JS.
 
-**P2 still open and still blocking PCH-85.** `japa`/`mala` is SKIPPED by the generator
-because `support_contact` is null. Priyansh has deferred it until a real address exists —
-which needs email on the domain, and the zone has no MX records.
+**PCH-85 route contract is implemented.** Mala and the other reviewed public
+apps generate `/apps/<slug>/privacy/` and `/apps/<slug>/support/`. The generator
+fails closed when an enabled route lacks a valid contact or app-specific privacy
+body. Unapproved copy is served `noindex` and omitted from the sitemap.
 
-**Not to be done yet:** don't scaffold React (PCH-18/47 say to; it ignores the working
-generator). Don't write into `site/` on `main` — that auto-deploys. Don't enable/alter DNS.
+**Do not:** scaffold React (it ignores the working generator), hand-edit generated
+`site/`, invent App Store IDs, or alter the working GitHub Pages/DNS setup.
 
 ---
 
