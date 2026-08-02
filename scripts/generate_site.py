@@ -37,7 +37,7 @@ EXPERIENCES_DIR = ROOT / "scripts" / "experiences"
 CUSTOM_DOMAIN: str | None = "priyanshchordia.com"
 
 SITE_NAME = "priyanshchordia.com"
-DESCRIPTION = "A catalogue of independent software — games, private utilities, and tools for clearer work."
+DESCRIPTION = "Four independent iOS apps now entering TestFlight."
 BASE_URL = f"https://{CUSTOM_DOMAIN or 'pri8771.github.io/priyanshchordia.com'}"
 CANDIDATE_POLICY_DATE_ISO = "2026-07-29"
 CANDIDATE_POLICY_DATE_LABEL = "July 29, 2026"
@@ -449,7 +449,7 @@ def home(products: list[dict[str, object]], posts: list[dict[str, object]]) -> s
         journal = '<p class="empty">Writing will appear here as it is published.</p>'
     body = f"""<section class="hero"><div><div class="kicker">Independent software / live index</div>
 <h1>Useful<br>signals.</h1></div>
-<p class="lede">{len(products)} focused products. Games, private utilities, spiritual practice, and tools for clearer work &mdash; catalogued for direct browsing.</p></section>
+<p class="lede">{len(products)} independent iOS apps, now entering TestFlight &mdash; private, focused, and built for everyday use.</p></section>
 <section id="work"><div class="section-head"><span class="label">01 / Catalog</span><h2>Everything transmitting.</h2></div>
 <div class="products">{tiles}</div></section>
 <section id="journal"><div class="section-head"><span class="label">02 / Journal</span><h2>Notes from the workbench.</h2></div>
@@ -482,7 +482,9 @@ def product_page(product: dict[str, object], app: dict[str, object] | None = Non
     lane = str(product.get("portfolio_lane", "software")).replace("-", " ")
     tier = "Featured" if product.get("public_tier") == "featured" else "Lab"
     stage = str(product.get("stage", "building"))
-    availability = "In development" if stage == "building" else stage.replace("-", " ").title()
+    availability = "TestFlight beta" if stage == "testflight" else (
+        "In development" if stage == "building" else stage.replace("-", " ").title()
+    )
     resources = ""
     if app and app.get("route_enabled") is True:
         app_slug = str(app["slug"])

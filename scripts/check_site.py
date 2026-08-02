@@ -20,10 +20,7 @@ VOID_ELEMENTS = {
     "area", "base", "br", "col", "embed", "hr", "img", "input",
     "link", "meta", "param", "source", "track", "wbr",
 }
-REQUIRED_APP_SLUGS = {
-    "aurafit", "anjali", "tessera", "svara", "roam",
-    "pocket-party-court", "hindsight",
-}
+REQUIRED_APP_SLUGS = {"mala", "anjali", "svara", "roam"}
 
 
 class PageParser(HTMLParser):

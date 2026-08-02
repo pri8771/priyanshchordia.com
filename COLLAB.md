@@ -9,7 +9,16 @@ read messages only if State doesn't answer you. Don't restate each other.
 
 ---
 
-## State — updated 2026-07-29 by Codex
+## State — updated 2026-08-02 by Codex
+
+**CANONICAL SITE AND PUBLIC SCOPE.** This repository is the sole active source
+for `priyanshchordia.com`. It deploys free through GitHub Pages. The duplicate
+OpenAI Sites checkout was retired to `archived_apps/`. The public catalogue is
+restricted to the four apps entering TestFlight: Mala, Anjali, Roam, and Svara.
+All other projects are absent from public source data, generated routes,
+sitemaps, and browser-side product payloads. The registry sync enforces the same
+four-product allowlist. Japa remains the internal repository identity but is
+published under its shipping name, Mala.
 
 **AUDIT/CLEANUP 2026-07-29 — release state is recorded by Git history and CI.**
 The generator now validates public product/app input, requires app-specific legal
@@ -38,13 +47,10 @@ designs to be separate, "like modules." The old two-monolith structure (one ~484
   plus a live in-browser pass across all 11 designs with zero console errors, on both
   a local build and the deployed site).
 
-**App Store resource state.** Eleven apps now have explicit,
-implementation-derived privacy copy and use the committed public contact
-`support@priyanshchordia.com`. AuraFit, Anjali, Tessera, Svara, Roam, Pocket
-Party Court, and Hindsight have stable privacy/support routes. No numeric Apple
-App ID has been verified for any app, so no `apps.apple.com` download URL is
-claimed. Digital Temple is withheld because its optional Firebase behavior still
-needs owner/legal review.
+**App Store resource state.** Mala, Anjali, Svara, and Roam use the committed
+public contact `support@priyanshchordia.com` and have stable privacy/support
+routes. No numeric Apple App ID has been verified, so no `apps.apple.com`
+download URL is claimed.
 
 **Brief (from Priyansh):** minimal, modern landing page. A showcase for the apps, plus a
 blog. Explicitly **not** about him. Hosting: GitHub Pages.
@@ -56,8 +62,8 @@ enforced. Any push to `main` auto-deploys.
 - `scripts/generate_site.py` — static generator, assembles CSS/JS from the modules below
 - `scripts/themes/*.css`, `scripts/experiences/*.js` — one file per design (see above)
 - `scripts/sync_registry.py` — sanitizes the private registry into the public one
-- `data/registry.public.json` — 17 public products (`id, slug, name, summary, stage, portfolio_lane, public_tier`)
-- `site/` — generated catalogue, 17 product pages, app directory, 11
+- `data/registry.public.json` — four public TestFlight products (`id, slug, name, summary, stage, portfolio_lane, public_tier`)
+- `site/` — generated catalogue, four product pages, app directory, four
   privacy/support pairs, journal, discovery files, and 404 page; auto-deployed
   from `main`
 

@@ -506,9 +506,17 @@
     };
     var onBlur = function () { paused = true; dirty = true; };
     var onFocus = function () { paused = false; last = performance.now(); dirty = true; };
+    // A project route can place this page in the back/forward cache while
+    // `navigating` is true and the player is standing on that target cell.
+    // Reloading on restore creates a fresh, playable round instead of
+    // resuming the terminal navigation state.
+    var onPageShow = function (e) {
+      if (e.persisted) window.location.reload();
+    };
     window.addEventListener("keydown", onKd);
     window.addEventListener("blur", onBlur);
     window.addEventListener("focus", onFocus);
+    window.addEventListener("pageshow", onPageShow);
 
     function frame(now) {
       var moved = false;
@@ -536,6 +544,7 @@
         window.removeEventListener("keydown", onKd);
         window.removeEventListener("blur", onBlur);
         window.removeEventListener("focus", onFocus);
+        window.removeEventListener("pageshow", onPageShow);
         if (ro) ro.disconnect();
         host.innerHTML = ""; host.className = "xp";
         host.removeAttribute("style");

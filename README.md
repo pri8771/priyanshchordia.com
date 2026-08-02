@@ -1,8 +1,9 @@
 # priyanshchordia.com
 
-A dependency-free, generated portfolio for independent software. The public
-site is live at [priyanshchordia.com](https://priyanshchordia.com) and deploys
-to GitHub Pages from `main`.
+A dependency-free, generated portfolio for the four iOS apps currently entering
+TestFlight: Mala, Anjali, Svara, and Roam. The public site is live at
+[priyanshchordia.com](https://priyanshchordia.com) and deploys free through
+GitHub Pages from `main`.
 
 ## Sources of truth
 
@@ -15,7 +16,9 @@ to GitHub Pages from `main`.
 - `scripts/experiences/*.js` — four interactive homepage experiences.
 - `scripts/generate_site.py` — static generator.
 
-`mission-control/registry.json` is private operational truth. GitHub Pages never
+Only projects intentionally selected for public release belong in the public
+registry. All other projects remain private and receive no generated page,
+directory entry, sitemap URL, or browser-side data. `mission-control/registry.json` is private operational truth. GitHub Pages never
 reads it, and it must not be copied into this repository. The sync script exports
 only public product identity, summary, lifecycle stage, portfolio lane, and tier;
 it omits paths, priorities, gate evidence, health signals, and internal notes.
@@ -35,6 +38,10 @@ To refresh the public product snapshot first:
 ```sh
 python3 scripts/sync_registry.py ../mission-control/registry.json
 ```
+
+The sync has an explicit four-product allowlist. Changing a private registry
+tier cannot accidentally publish another project; adding a fifth public app
+requires a reviewed code change to `scripts/sync_registry.py`.
 
 The generated `site/` directory is committed. Do not hand-edit it: regenerate
 after changing source data, themes, experiences, or the generator. CI repeats the

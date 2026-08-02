@@ -12,7 +12,23 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_SOURCE = ROOT.parent / "mission-control" / "registry.json"
 OUTPUT = ROOT / "data" / "registry.public.json"
-PUBLIC_TIERS = {"featured", "lab"}
+PUBLIC_PRODUCT_IDS = {"github-japa", "github-anjali", "github-roam", "github-svara"}
+PUBLIC_OVERRIDES = {
+    "github-japa": {
+        "slug": "mala",
+        "name": "Mala",
+        "summary": "A quiet, local-first digital mala for steady repetition practice.",
+    },
+    "github-anjali": {
+        "summary": "An offline Hindu micro-prayer companion centered on one short sacred pause.",
+    },
+    "github-roam": {
+        "summary": "A private, local-first travel map that colors in the places you have explored.",
+    },
+    "github-svara": {
+        "summary": "A local-first daily spiritual companion rooted in Hindu culture.",
+    },
+}
 PUBLIC_FIELDS = (
     "id",
     "slug",
@@ -28,9 +44,13 @@ def sanitize(source: Path) -> dict[str, object]:
     data = json.loads(source.read_text(encoding="utf-8"))
     products = []
     for product in data.get("products", []):
-        if product.get("public_tier") not in PUBLIC_TIERS:
+        product_id = str(product.get("id", ""))
+        if product_id not in PUBLIC_PRODUCT_IDS:
             continue
         public_product = {field: product.get(field) for field in PUBLIC_FIELDS}
+        public_product.update(PUBLIC_OVERRIDES.get(product_id, {}))
+        public_product["stage"] = "testflight"
+        public_product["public_tier"] = "featured"
         if not all(public_product.get(field) for field in ("id", "slug", "name", "summary")):
             raise ValueError(f"Public product is missing identity fields: {product.get('id', '?')}")
         products.append(public_product)

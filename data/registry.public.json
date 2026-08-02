@@ -1,160 +1,43 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-07-22T01:21:37+00:00",
-  "source_updated_at": "2026-07-21T21:15:59.814-04:00",
+  "generated_at": "2026-08-02T00:00:00-04:00",
+  "source_updated_at": "2026-08-02T00:00:00-04:00",
   "products": [
     {
       "id": "github-japa",
-      "slug": "japa",
-      "name": "Japa",
-      "summary": "Eyes-free local iOS digital mala with interruption-safe counting and tactile completion.",
-      "stage": "building",
+      "slug": "mala",
+      "name": "Mala",
+      "summary": "A quiet, local-first digital mala for steady repetition practice.",
+      "stage": "testflight",
       "portfolio_lane": "consumer-spiritual",
-      "public_tier": "featured"
-    },
-    {
-      "id": "github-moonloom",
-      "slug": "moonloom",
-      "name": "Moonloom",
-      "summary": "Feature-rich local iOS idle dream-factory game with prestige, rewards, and purchases.",
-      "stage": "building",
-      "portfolio_lane": "consumer-game",
-      "public_tier": "featured"
-    },
-    {
-      "id": "github-partytable",
-      "slug": "partytable",
-      "name": "PartyTable",
-      "summary": "Local pass-and-play iOS platform with 17 games and reusable PartyGameKit.",
-      "stage": "building",
-      "portfolio_lane": "consumer-game",
-      "public_tier": "featured"
-    },
-    {
-      "id": "github-pocket-party-court",
-      "slug": "pocket-party-court",
-      "name": "Pocket Party Court",
-      "summary": "Offline one-phone party game where friends put silly disputes on trial.",
-      "stage": "building",
-      "portfolio_lane": "consumer-game",
-      "public_tier": "featured"
-    },
-    {
-      "id": "github-tessera",
-      "slug": "tessera",
-      "name": "Tessera",
-      "summary": "Calm daily iOS tessellation puzzle with deterministic generation and a pure solver-backed engine.",
-      "stage": "building",
-      "portfolio_lane": "consumer-game",
       "public_tier": "featured"
     },
     {
       "id": "github-anjali",
       "slug": "anjali",
       "name": "Anjali",
-      "summary": "Offline-first iOS micro-prayer companion centered on one short sacred pause.",
-      "stage": "building",
+      "summary": "An offline Hindu micro-prayer companion centered on one short sacred pause.",
+      "stage": "testflight",
       "portfolio_lane": "consumer-spiritual",
-      "public_tier": "lab"
-    },
-    {
-      "id": "github-aurafit",
-      "slug": "aurafit",
-      "name": "AuraFit",
-      "summary": "Private on-device iOS outfit and camera coach using Apple vision and imaging frameworks.",
-      "stage": "building",
-      "portfolio_lane": "consumer-utility",
-      "public_tier": "lab"
-    },
-    {
-      "id": "github-cadence",
-      "slug": "cadence",
-      "name": "Cadence",
-      "summary": "Creative operations and social-publishing platform with a broad deterministic demo mode.",
-      "stage": "building",
-      "portfolio_lane": "b2b-marketing",
-      "public_tier": "lab"
-    },
-    {
-      "id": "core-digital-temple",
-      "slug": "digital-temple",
-      "name": "Digital Temple",
-      "summary": "Deep local-first prayer and spiritual-practice companion with optional Firebase sync.",
-      "stage": "building",
-      "portfolio_lane": "consumer-spiritual",
-      "public_tier": "lab"
-    },
-    {
-      "id": "github-foldlight",
-      "slug": "foldlight",
-      "name": "Foldlight",
-      "summary": "Cozy folding-and-light iOS puzzle game with daily and infinite progression.",
-      "stage": "building",
-      "portfolio_lane": "consumer-game",
-      "public_tier": "lab"
-    },
-    {
-      "id": "github-hindsight",
-      "slug": "hindsight",
-      "name": "Hindsight",
-      "summary": "Private local decision journal for predictions, outcomes, and decision-quality learning.",
-      "stage": "building",
-      "portfolio_lane": "consumer-utility",
-      "public_tier": "lab"
-    },
-    {
-      "id": "github-nurture",
-      "slug": "nurture",
-      "name": "Nurture",
-      "summary": "Private relationship-maintenance iOS app built around a capped weekly ritual.",
-      "stage": "building",
-      "portfolio_lane": "consumer-utility",
-      "public_tier": "lab"
-    },
-    {
-      "id": "github-patchwork",
-      "slug": "patchwork",
-      "name": "Patchwork",
-      "summary": "Private iOS map-completion game that colors Census ZCTA patches as users visit them.",
-      "stage": "building",
-      "portfolio_lane": "consumer-location",
-      "public_tier": "lab"
+      "public_tier": "featured"
     },
     {
       "id": "github-roam",
       "slug": "roam",
       "name": "Roam",
-      "summary": "Local quantified-self iOS tracker for visited ZIP and Census ZCTA areas.",
-      "stage": "building",
+      "summary": "A private, local-first travel map that colors in the places you have explored.",
+      "stage": "testflight",
       "portfolio_lane": "consumer-location",
-      "public_tier": "lab"
+      "public_tier": "featured"
     },
     {
       "id": "github-svara",
       "slug": "svara",
       "name": "Svara",
-      "summary": "Broad Hindu spiritual-wellness iOS app spanning practice, learning, festivals, stories, and progression.",
-      "stage": "building",
+      "summary": "A local-first daily spiritual companion rooted in Hindu culture.",
+      "stage": "testflight",
       "portfolio_lane": "consumer-spiritual",
-      "public_tier": "lab"
-    },
-    {
-      "id": "github-umbra",
-      "slug": "umbra",
-      "name": "Umbra",
-      "summary": "Offline AR sun-and-shade planner using honest user-placed proxy geometry.",
-      "stage": "building",
-      "portfolio_lane": "consumer-utility",
-      "public_tier": "lab"
-    },
-    {
-      "id": "core-unsubscriber",
-      "slug": "unsubscriber",
-      "name": "Unsubscriber",
-      "summary": "Trust-first Gmail control app for subscriptions, filters, unsubscribe actions, and history.",
-      "stage": "building",
-      "portfolio_lane": "consumer-web",
-      "public_tier": "lab"
+      "public_tier": "featured"
     }
   ]
 }

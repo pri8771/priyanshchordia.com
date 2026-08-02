@@ -35,16 +35,17 @@ class GeneratorTests(unittest.TestCase):
         products = GEN.load_products()
         apps = GEN.load_apps(products)
         enabled = [app for app in apps if app.get("route_enabled") is True]
-        self.assertGreaterEqual(len(enabled), 7)
+        self.assertEqual({app["slug"] for app in enabled}, {"mala", "anjali", "svara", "roam"})
         for app in enabled:
             with self.subTest(app=app["slug"]):
                 self.assertRegex(str(app["support_contact"]), r"^[^@\s]+@[^@\s]+\.[^@\s]+$")
                 self.assertGreaterEqual(len(str(app["privacy_body"]).strip()), 200)
                 if app.get("app_store_id") is not None:
                     self.assertRegex(str(app["app_store_id"]), r"^\d{9,12}$")
-        digital_temple = next(app for app in apps if app["slug"] == "digital-temple")
-        self.assertIs(digital_temple.get("route_enabled"), False)
-        self.assertIs(digital_temple.get("legal_approved"), False)
+        self.assertEqual(
+            {product["slug"] for product in products},
+            {"mala", "anjali", "svara", "roam"},
+        )
 
     def test_unapproved_legal_copy_is_dated_as_draft_and_noindex(self) -> None:
         apps = GEN.load_apps(GEN.load_products())
@@ -132,6 +133,9 @@ class GeneratorTests(unittest.TestCase):
 
         self.assertIn("window.location.assign(target.p.href)", source)
         self.assertNotIn("function openPortal", source)
+        self.assertIn('if (e.persisted) window.location.reload();', source)
+        self.assertIn('window.addEventListener("pageshow", onPageShow);', source)
+        self.assertIn('window.removeEventListener("pageshow", onPageShow);', source)
 
 
 if __name__ == "__main__":
