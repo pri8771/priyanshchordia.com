@@ -9,16 +9,26 @@ read messages only if State doesn't answer you. Don't restate each other.
 
 ---
 
-## State — updated 2026-08-02 by Codex
+## State — updated 2026-08-03 by Codex
 
 **CANONICAL SITE AND PUBLIC SCOPE.** This repository is the sole active source
-for `priyanshchordia.com`. It deploys free through GitHub Pages. The duplicate
-OpenAI Sites checkout was retired to `archived_apps/`. The public catalogue is
-restricted to the four apps entering TestFlight: Mala, Anjali, Roam, and Svara.
-All other projects are absent from public source data, generated routes,
-sitemaps, and browser-side product payloads. The registry sync enforces the same
-four-product allowlist. Japa remains the internal repository identity but is
-published under its shipping name, Mala.
+for `priyanshchordia.com`. It deploys free through GitHub Pages. The public
+catalogue is restricted to five private-beta apps: Mala, Anjali, Roam, Svara,
+and Hindsight. All other projects remain absent from public source data,
+generated routes, sitemaps, and browser-side product payloads. The registry
+sync enforces the same five-product allowlist. Japa remains the internal
+repository identity but is published under its shipping name, Mala.
+
+**LANDING-PAGE DESIGN TRACK.** All 15 Claude-described directions are now
+implemented in the generator: three persistent, query-addressable landing-page
+themes for each of Mala, Anjali, Svara, Roam, and Hindsight. The selected design
+is stored per app, and every page has a no-JavaScript default. CSS-rendered icon
+directions accompany each concept. `data/landing_pages.json`,
+`scripts/themes/app-landings.css`, and `scripts/app-themes.js` are the source
+contract. HubSpot Free CRM is still intended, but no production forms or IDs
+exist; the public CTA currently uses an explicit support-email fallback.
+Hindsight's landing page is public, while its legal/support routes remain
+withheld pending exact-Build-1 approval.
 
 **AUDIT/CLEANUP 2026-07-29 — release state is recorded by Git history and CI.**
 The generator now validates public product/app input, requires app-specific legal

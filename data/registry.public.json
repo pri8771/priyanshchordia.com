@@ -38,6 +38,15 @@
       "stage": "testflight",
       "portfolio_lane": "consumer-spiritual",
       "public_tier": "featured"
+    },
+    {
+      "id": "github-hindsight",
+      "slug": "hindsight",
+      "name": "Hindsight",
+      "summary": "A private, on-device decision journal for comparing what you expected with what happened.",
+      "stage": "private-beta",
+      "portfolio_lane": "consumer-reflection",
+      "public_tier": "featured"
     }
   ]
 }

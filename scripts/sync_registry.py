@@ -12,7 +12,9 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_SOURCE = ROOT.parent / "mission-control" / "registry.json"
 OUTPUT = ROOT / "data" / "registry.public.json"
-PUBLIC_PRODUCT_IDS = {"github-japa", "github-anjali", "github-roam", "github-svara"}
+PUBLIC_PRODUCT_IDS = {
+    "github-japa", "github-anjali", "github-roam", "github-svara", "github-hindsight",
+}
 PUBLIC_OVERRIDES = {
     "github-japa": {
         "slug": "mala",
@@ -27,6 +29,11 @@ PUBLIC_OVERRIDES = {
     },
     "github-svara": {
         "summary": "A local-first daily spiritual companion rooted in Hindu culture.",
+    },
+    "github-hindsight": {
+        "slug": "hindsight",
+        "name": "Hindsight",
+        "summary": "A private, on-device decision journal for comparing what you expected with what happened.",
     },
 }
 PUBLIC_FIELDS = (
@@ -49,7 +56,7 @@ def sanitize(source: Path) -> dict[str, object]:
             continue
         public_product = {field: product.get(field) for field in PUBLIC_FIELDS}
         public_product.update(PUBLIC_OVERRIDES.get(product_id, {}))
-        public_product["stage"] = "testflight"
+        public_product["stage"] = "private-beta" if product_id == "github-hindsight" else "testflight"
         public_product["public_tier"] = "featured"
         if not all(public_product.get(field) for field in ("id", "slug", "name", "summary")):
             raise ValueError(f"Public product is missing identity fields: {product.get('id', '?')}")

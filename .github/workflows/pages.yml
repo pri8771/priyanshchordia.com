@@ -29,7 +29,9 @@ jobs:
       - name: Validate generated routes and markup
         run: python3 scripts/check_site.py
       - name: Check generated experience JavaScript
-        run: node --check site/experiences.js
+        run: |
+          node --check site/experiences.js
+          node --check site/app-themes.js
       - name: Verify committed output is current
         run: test -z "$(git status --porcelain --untracked-files=all -- site)"
       - uses: actions/configure-pages@v5

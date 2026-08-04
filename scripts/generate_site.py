@@ -8,6 +8,7 @@ deliberately not a personal/biographical site.
 Sources of truth:
   data/registry.public.json  sanitized product projection (never edit by hand)
   data/apps.json             per-app store metadata for privacy/support routes
+  data/landing_pages.json    reviewed copy and three design directions per app
   content/posts/*.md         journal posts (front matter + markdown subset)
 """
 
@@ -20,11 +21,13 @@ import re
 import shutil
 from datetime import date
 from pathlib import Path
+from urllib.parse import quote
 
 
 ROOT = Path(__file__).resolve().parents[1]
 DATA = ROOT / "data" / "registry.public.json"
 APPS = ROOT / "data" / "apps.json"
+LANDING_PAGES = ROOT / "data" / "landing_pages.json"
 POSTS = ROOT / "content" / "posts"
 OUT = ROOT / "site"
 ASSETS = ROOT / "assets"
@@ -37,7 +40,7 @@ EXPERIENCES_DIR = ROOT / "scripts" / "experiences"
 CUSTOM_DOMAIN: str | None = "priyanshchordia.com"
 
 SITE_NAME = "priyanshchordia.com"
-DESCRIPTION = "Four independent iOS apps now entering TestFlight."
+DESCRIPTION = "Five private, focused iOS apps in beta."
 BASE_URL = f"https://{CUSTOM_DOMAIN or 'pri8771.github.io/priyanshchordia.com'}"
 CANDIDATE_POLICY_DATE_ISO = "2026-07-29"
 CANDIDATE_POLICY_DATE_LABEL = "July 29, 2026"
@@ -78,9 +81,11 @@ def _load_css() -> str:
     for slug, _name in THEMES:
         parts.append((THEMES_DIR / f"{slug}.css").read_text(encoding="utf-8"))
     parts.append((THEMES_DIR / "finishing.css").read_text(encoding="utf-8"))
+    parts.append((THEMES_DIR / "app-landings.css").read_text(encoding="utf-8"))
     return "\n".join(parts)
 
 CSS = _load_css()
+APP_THEMES_JS = (ROOT / "scripts" / "app-themes.js").read_text(encoding="utf-8")
 
 
 def esc(value: object) -> str:
@@ -176,6 +181,57 @@ def load_apps(products: list[dict[str, object]]) -> list[dict[str, object]]:
             privacy_body = app.get("privacy_body")
             if not isinstance(privacy_body, str) or len(privacy_body.strip()) < 200:
                 raise ValueError(f"{slug}: enabled route requires an app-specific privacy_body")
+    return apps
+
+
+def load_landing_pages(products: list[dict[str, object]]) -> dict[str, dict[str, object]]:
+    """Load reviewed public landing-page copy and exactly three themes per app."""
+    payload = json.loads(LANDING_PAGES.read_text(encoding="utf-8"))
+    apps = payload.get("apps")
+    if not isinstance(apps, dict):
+        raise ValueError("Landing-page data must contain an apps object")
+    product_slugs = {str(product["slug"]) for product in products}
+    if set(apps) != product_slugs:
+        missing = sorted(product_slugs - set(apps))
+        extra = sorted(set(apps) - product_slugs)
+        raise ValueError(f"Landing-page/product mismatch; missing={missing}, extra={extra}")
+    seen_themes: set[str] = set()
+    required_text = ("eyebrow", "headline", "lede", "audience", "privacy", "limitation", "cta")
+    for slug, landing in apps.items():
+        if not isinstance(landing, dict):
+            raise ValueError(f"{slug}: landing page must be an object")
+        for field in required_text:
+            if not isinstance(landing.get(field), str) or not str(landing[field]).strip():
+                raise ValueError(f"{slug}: missing landing-page field {field}")
+        benefits = landing.get("benefits")
+        if not isinstance(benefits, list) or len(benefits) != 3:
+            raise ValueError(f"{slug}: exactly three benefits are required")
+        for benefit in benefits:
+            if not isinstance(benefit, dict) or not all(
+                isinstance(benefit.get(field), str) and str(benefit[field]).strip()
+                for field in ("title", "body")
+            ):
+                raise ValueError(f"{slug}: invalid benefit")
+        steps = landing.get("steps")
+        if not isinstance(steps, list) or len(steps) != 3 or not all(
+            isinstance(step, str) and step.strip() for step in steps
+        ):
+            raise ValueError(f"{slug}: exactly three non-empty steps are required")
+        themes = landing.get("themes")
+        if not isinstance(themes, list) or len(themes) != 3:
+            raise ValueError(f"{slug}: exactly three themes are required")
+        for theme in themes:
+            if not isinstance(theme, dict):
+                raise ValueError(f"{slug}: invalid theme")
+            theme_id = str(theme.get("id", ""))
+            if not re.fullmatch(rf"{re.escape(slug)}-0[1-3]", theme_id):
+                raise ValueError(f"{slug}: invalid theme id {theme_id!r}")
+            if theme_id in seen_themes:
+                raise ValueError(f"Duplicate app theme id: {theme_id}")
+            seen_themes.add(theme_id)
+            for field in ("name", "principle", "icon"):
+                if not isinstance(theme.get(field), str) or not str(theme[field]).strip():
+                    raise ValueError(f"{slug}: theme {theme_id} missing {field}")
     return apps
 
 
@@ -329,6 +385,7 @@ def _load_js() -> str:
 EXPERIENCES = _load_js()
 CSS_V = ""
 XP_V = ""
+APP_THEME_V = ""
 
 
 DEFAULT_THEME = "unknown-signal"
@@ -383,14 +440,16 @@ def chrome(title: str, body: str, prefix: str = "", active: str = "",
         theme_control = f'<select id="themer" class="themer" aria-label="Site design">{options}</select>'
 
     url = canonical_url(path)
+    social_asset = "og-five-apps.png"
+    social_alt = "Five apps, fifteen directions: abstract marks for Mala, Anjali, Svara, Roam, and Hindsight."
     social_image = (
-        f'<meta property="og:image" content="{BASE_URL}/og.png">'
+        f'<meta property="og:image" content="{BASE_URL}/{social_asset}">'
         '<meta property="og:image:width" content="1200">'
         '<meta property="og:image:height" content="630">'
-        '<meta property="og:image:alt" content="A luminous signal beacon beside a grid of abstract software signals.">'
-        f'<meta name="twitter:image" content="{BASE_URL}/og.png">'
-        '<meta name="twitter:image:alt" content="A luminous signal beacon beside a grid of abstract software signals.">'
-        if (ASSETS / "og.png").exists() else ""
+        f'<meta property="og:image:alt" content="{esc(social_alt)}">'
+        f'<meta name="twitter:image" content="{BASE_URL}/{social_asset}">'
+        f'<meta name="twitter:image:alt" content="{esc(social_alt)}">'
+        if (ASSETS / social_asset).exists() else ""
     )
     json_ld = (
         f'<script type="application/ld+json">{safe_script_json(structured_data)}</script>'
@@ -449,7 +508,7 @@ def home(products: list[dict[str, object]], posts: list[dict[str, object]]) -> s
         journal = '<p class="empty">Writing will appear here as it is published.</p>'
     body = f"""<section class="hero"><div><div class="kicker">Independent software / live index</div>
 <h1>Useful<br>signals.</h1></div>
-<p class="lede">{len(products)} independent iOS apps, now entering TestFlight &mdash; private, focused, and built for everyday use.</p></section>
+<p class="lede">{len(products)} independent iOS apps in private beta &mdash; private, focused, and built for everyday use.</p></section>
 <section id="work"><div class="section-head"><span class="label">01 / Catalog</span><h2>Everything transmitting.</h2></div>
 <div class="products">{tiles}</div></section>
 <section id="journal"><div class="section-head"><span class="label">02 / Journal</span><h2>Notes from the workbench.</h2></div>
@@ -478,12 +537,47 @@ def home(products: list[dict[str, object]], posts: list[dict[str, object]]) -> s
     )
 
 
-def product_page(product: dict[str, object], app: dict[str, object] | None = None) -> str:
+def landing_scene(theme: dict[str, object], active: bool) -> str:
+    theme_id = str(theme["id"])
+    hidden = "" if active else " hidden"
+    return f"""<div class="app-scene scene-{esc(theme_id)}" data-app-scene="{esc(theme_id)}"{hidden}
+aria-label="{esc(theme['name'])} visual concept">
+<span class="scene-label">{esc(theme['name'])}</span>
+<span class="scene-shape shape-a"></span><span class="scene-shape shape-b"></span>
+<span class="scene-shape shape-c"></span><span class="scene-shape shape-d"></span>
+<span class="scene-line line-a"></span><span class="scene-line line-b"></span>
+<span class="scene-line line-c"></span><span class="scene-line line-d"></span>
+<span class="scene-dot dot-a"></span><span class="scene-dot dot-b"></span>
+<span class="scene-dot dot-c"></span><span class="scene-dot dot-d"></span>
+<span class="scene-icon" aria-label="Icon direction: {esc(theme['icon'])}"><i></i><b></b></span>
+</div>"""
+
+
+def product_page(product: dict[str, object], landing: dict[str, object],
+                 app: dict[str, object] | None = None) -> str:
     lane = str(product.get("portfolio_lane", "software")).replace("-", " ")
-    tier = "Featured" if product.get("public_tier") == "featured" else "Lab"
     stage = str(product.get("stage", "building"))
     availability = "TestFlight beta" if stage == "testflight" else (
-        "In development" if stage == "building" else stage.replace("-", " ").title()
+        "Private beta" if stage == "private-beta" else (
+            "In development" if stage == "building" else stage.replace("-", " ").title()
+        )
+    )
+    themes = list(landing["themes"])
+    default_theme = str(themes[0]["id"])
+    theme_options = "".join(
+        f'<option value="{esc(theme["id"])}" data-principle="{esc(theme["principle"])}"'
+        f'{" selected" if index == 0 else ""}>{index + 1:02d} · {esc(theme["name"])}</option>'
+        for index, theme in enumerate(themes)
+    )
+    scenes = "".join(landing_scene(theme, index == 0) for index, theme in enumerate(themes))
+    benefits = "".join(
+        f'<article class="landing-benefit"><span>{index + 1:02d}</span><h3>{esc(benefit["title"])}</h3>'
+        f'<p>{esc(benefit["body"])}</p></article>'
+        for index, benefit in enumerate(landing["benefits"])
+    )
+    steps = "".join(
+        f'<li><span>{index + 1:02d}</span><p>{esc(step)}</p></li>'
+        for index, step in enumerate(landing["steps"])
     )
     resources = ""
     if app and app.get("route_enabled") is True:
@@ -501,21 +595,49 @@ def product_page(product: dict[str, object], app: dict[str, object] | None = Non
                 "Public pages prepared for App Store Connect. "
                 "This app does not have a public App Store listing yet."
             )
-        resources = f"""<section class="app-resources" aria-labelledby="app-resources-title">
-<span class="label">App Store submission</span><h2 id="app-resources-title">Public app URLs.</h2>
+        resources = f"""<section class="landing-resources" aria-labelledby="app-resources-title">
+<span class="landing-kicker">App Store submission</span><h2 id="app-resources-title">Public app URLs.</h2>
 <p>{esc(resource_summary)}</p>
 <div class="resource-links">
 <a class="resource-link" href="../../apps/{esc(app_slug)}/privacy/">Privacy policy</a>
 <a class="resource-link" href="../../apps/{esc(app_slug)}/support/">Support</a>
 {store_status}</div></section>"""
-    body = f"""<section><article class="detail"><span class="label">{esc(tier)} / {esc(lane)}</span>
-<h1>{esc(product["name"])}</h1><p>{esc(product["summary"])}</p>
-<dl class="facts">
-<div class="fact"><dt>Availability</dt><dd>{esc(availability)}</dd></div>
-<div class="fact"><dt>Platform</dt><dd>{"iOS" if app else "Software"}</dd></div>
-<div class="fact"><dt>Category</dt><dd>{esc(lane.title())}</dd></div>
-<div class="fact"><dt>Collection</dt><dd>{esc(tier)}</dd></div>
-</dl></article>{resources}<a class="back" href="../../index.html#work">&larr; Back to the catalog</a></section>"""
+    else:
+        resources = """<section class="landing-resources" aria-labelledby="app-resources-title">
+<span class="landing-kicker">Release preparation</span><h2 id="app-resources-title">Legal pages are being prepared.</h2>
+<p>Privacy and support routes will appear here after the exact beta build and public copy are approved.</p></section>"""
+    subject = quote(f"{product['name']} beta access")
+    theme_description_id = f"{product['slug']}-theme-description"
+    body = f"""<article class="app-landing" data-app-landing data-app="{esc(product['slug'])}"
+data-app-theme="{esc(default_theme)}">
+<div class="app-theme-bar" aria-label="{esc(product['name'])} landing-page design selector">
+<label for="app-theme-picker">Explore three designs</label>
+<select id="app-theme-picker" data-app-theme-picker aria-describedby="{esc(theme_description_id)}">{theme_options}</select>
+<p id="{esc(theme_description_id)}" data-app-theme-description>{esc(themes[0]['principle'])}</p>
+</div>
+<header class="landing-hero">
+<div class="landing-hero-copy"><span class="landing-kicker">{esc(landing['eyebrow'])}</span>
+<p class="landing-name">{esc(product['name'])}</p><h1>{esc(landing['headline'])}</h1>
+<p class="landing-lede">{esc(landing['lede'])}</p>
+<div class="landing-actions"><a class="landing-cta" href="mailto:support@priyanshchordia.com?subject={subject}">{esc(landing['cta'])}</a>
+<a class="landing-text-link" href="#how-it-works">See how it works</a></div></div>
+<div class="landing-visual">{scenes}</div></header>
+<section class="landing-audience" aria-labelledby="audience-title"><span class="landing-kicker">Built for</span>
+<h2 id="audience-title">A focused tool, not another feed.</h2><p>{esc(landing['audience'])}</p></section>
+<section class="landing-benefits" aria-labelledby="benefits-title"><div class="landing-section-heading">
+<span class="landing-kicker">Why it exists</span><h2 id="benefits-title">Useful by staying focused.</h2></div>
+<div class="landing-benefit-grid">{benefits}</div></section>
+<section id="how-it-works" class="landing-steps" aria-labelledby="steps-title"><div class="landing-section-heading">
+<span class="landing-kicker">How it works</span><h2 id="steps-title">Three quiet steps.</h2></div><ol>{steps}</ol></section>
+<section class="landing-trust" aria-labelledby="privacy-title"><div><span class="landing-kicker">Privacy</span>
+<h2 id="privacy-title">Your experience remains yours.</h2><p>{esc(landing['privacy'])}</p></div>
+<aside><span class="landing-kicker">A clear boundary</span><p>{esc(landing['limitation'])}</p></aside></section>
+<section class="landing-waitlist" aria-labelledby="waitlist-title"><span class="landing-kicker">{esc(availability)}</span>
+<h2 id="waitlist-title">Help shape {esc(product['name'])}.</h2>
+<p>Beta invitations go out in small groups as testing capacity opens.</p>
+<a class="landing-cta" href="mailto:support@priyanshchordia.com?subject={subject}">{esc(landing['cta'])}</a>
+<small>Email is the current fallback while the app-specific waitlist form is connected.</small></section>
+{resources}<a class="landing-back" href="../../index.html#work">&larr; All five apps</a></article>"""
     structured_data = {
         "@context": "https://schema.org",
         "@type": "SoftwareApplication",
@@ -529,6 +651,8 @@ def product_page(product: dict[str, object], app: dict[str, object] | None = Non
         f"{product['name']} — {SITE_NAME}", body, prefix="../../", active="work",
         description=str(product.get("summary", DESCRIPTION)),
         path=f"/products/{product['slug']}/", structured_data=structured_data,
+        fixed_theme="signal",
+        extra=f'<script src="../../app-themes.js?v={APP_THEME_V}" defer></script>',
     )
 
 
@@ -694,10 +818,12 @@ def sitemap(products: list[dict[str, object]], posts: list[dict[str, object]],
 
 
 def main() -> int:
-    global CSS_V, XP_V
+    global CSS_V, XP_V, APP_THEME_V
     CSS_V = asset_hash(CSS)
     XP_V = asset_hash(EXPERIENCES)
+    APP_THEME_V = asset_hash(APP_THEMES_JS)
     products = load_products()
+    landing_pages = load_landing_pages(products)
     posts = load_posts()
     apps = load_apps(products)
     enabled_apps = [app for app in apps if app.get("route_enabled") is True]
@@ -709,6 +835,7 @@ def main() -> int:
     write(OUT / ".nojekyll", "")
     write(OUT / "styles.css", CSS)
     write(OUT / "experiences.js", EXPERIENCES)
+    write(OUT / "app-themes.js", APP_THEMES_JS)
     if CUSTOM_DOMAIN:
         # Regenerated every build; site/ is wiped each run, so Pages would
         # otherwise lose the custom domain on the next deploy.
@@ -724,7 +851,7 @@ def main() -> int:
         app = apps_by_registry.get(str(product["slug"]))
         write(
             OUT / "products" / str(product["slug"]) / "index.html",
-            product_page(product, app),
+            product_page(product, landing_pages[str(product["slug"])], app),
         )
     for post in posts:
         write(OUT / "journal" / str(post["slug"]) / "index.html", post_page(post))

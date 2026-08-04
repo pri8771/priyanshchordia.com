@@ -1,5 +1,5 @@
 {
-  "_comment": "Public App Store metadata for the four current TestFlight apps. Other portfolio projects remain private until explicitly promoted.",
+  "_comment": "Public App Store metadata for the five landing-page apps. Hindsight's legal routes remain withheld until its policy and support copy are approved.",
   "apps": [
     {
       "slug": "mala",
@@ -44,6 +44,16 @@
       "legal_approved": false,
       "app_store_id": null,
       "privacy_body": "## The short version\n\nSvara does not require an account and does not send your practice data or reflections to a developer-operated server. It contains no advertising, developer analytics, or cross-app tracking.\n\n## Information stored on your device\n\nSvara stores a display name for your local profile; practice sessions, lessons, streaks, points, festival progress, saved festivals, and achievements; reminder choices and times; and private reflections you choose to write.\n\nReflections are stored as a local app file. The production app has no configured Firebase, CloudKit, or developer backend that receives this information.\n\n## Notifications\n\nIf you enable practice reminders, Svara requests notification permission and schedules morning and evening notifications locally through iOS. Reminder settings are not sent to a server. You can disable them in Svara or in iOS Settings.\n\n## Purchases\n\nSvara Plus monthly and yearly subscriptions and the lifetime purchase use Apple's StoreKit and App Store services. Apple processes the transaction; Svara reads verified entitlement state to determine which features are available. Apple's policies govern purchase processing and retention.\n\n## Sharing and external links\n\nWhen you choose to share festival content, Svara opens Apple's system share sheet and you select the destination. The app also provides links to its privacy policy, terms, website, and support contact. Those destinations open through system apps and are governed by their respective providers.\n\n## Permissions\n\nSvara does not request location, contacts, photos, microphone, camera, or health-data access. Audio included with the app is played locally.\n\n## Deletion\n\nSvara currently has no in-app full-data reset. Deleting the app removes its active local app data from the device. Apple purchase records and Apple-managed device backups are governed by Apple.\n\n## Changes\n\nThis policy and the App Store disclosures will be updated before Svara adds an account, developer backend, cloud sync, analytics, advertising, or other changed data handling."
+    },
+    {
+      "slug": "hindsight",
+      "name": "Hindsight",
+      "store_name": "Hindsight — Decision Journal",
+      "registry_slug": "hindsight",
+      "support_contact": "support@priyanshchordia.com",
+      "route_enabled": false,
+      "legal_approved": false,
+      "app_store_id": null
     }
   ]
 }

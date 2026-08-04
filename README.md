@@ -1,7 +1,7 @@
 # priyanshchordia.com
 
-A dependency-free, generated portfolio for the four iOS apps currently entering
-TestFlight: Mala, Anjali, Svara, and Roam. The public site is live at
+A dependency-free, generated portfolio for five private-beta iOS apps: Mala,
+Anjali, Svara, Roam, and Hindsight. The public site is live at
 [priyanshchordia.com](https://priyanshchordia.com) and deploys free through
 GitHub Pages from `main`.
 
@@ -10,11 +10,17 @@ GitHub Pages from `main`.
 - `data/registry.public.json` — sanitized public product catalogue.
 - `data/apps.json` — explicit publication state, support contact, App Store ID,
   and app-specific privacy copy.
+- `data/landing_pages.json` — reviewed public marketing copy and exactly three
+  selectable landing-page directions per app.
 - `content/posts/*.md` — journal entries with front matter.
 - `scripts/themes/*.css` — shared base, 11 selectable designs, and the finishing
   layer for accessibility and narrow-screen behavior.
 - `scripts/experiences/*.js` — four interactive homepage experiences.
+- `scripts/themes/app-landings.css` and `scripts/app-themes.js` — the 15
+  app-specific landing directions and their persistent per-app selector.
 - `scripts/generate_site.py` — static generator.
+- `docs/LANDING_PAGES_ICONS_AND_WAITLIST_PLAN.md` — canonical five-app landing
+  page, icon, asset, HubSpot waitlist, and publication task plan.
 
 Only projects intentionally selected for public release belong in the public
 registry. All other projects remain private and receive no generated page,
@@ -30,6 +36,7 @@ python3 -m unittest discover -s tests -v
 python3 scripts/generate_site.py
 python3 scripts/check_site.py
 node --check site/experiences.js
+node --check site/app-themes.js
 python3 -m http.server --directory site 8000
 ```
 
@@ -39,9 +46,14 @@ To refresh the public product snapshot first:
 python3 scripts/sync_registry.py ../mission-control/registry.json
 ```
 
-The sync has an explicit four-product allowlist. Changing a private registry
-tier cannot accidentally publish another project; adding a fifth public app
+The sync has an explicit five-product allowlist. Changing a private registry
+tier cannot accidentally publish another project; adding a sixth public app
 requires a reviewed code change to `scripts/sync_registry.py`.
+
+Hindsight now has a public private-beta landing page and three selectable design
+directions. Its App Store privacy/support routes remain withheld until the
+owner/legal and exact-Build-1 gates in
+`docs/LANDING_PAGES_ICONS_AND_WAITLIST_PLAN.md` are satisfied.
 
 The generated `site/` directory is committed. Do not hand-edit it: regenerate
 after changing source data, themes, experiences, or the generator. CI repeats the
