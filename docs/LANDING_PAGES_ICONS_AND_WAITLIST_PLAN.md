@@ -25,8 +25,8 @@ candidates for each of five apps. Generated concepts are not approved assets.
 
 - GitHub Pages is canonical and free.
 - Mala, Anjali, Svara, Roam, and Hindsight are in the public product catalogue.
-- All five product pages generate three selectable design directions, for 15
-  implemented directions total.
+- All five product pages use the shared Landing System handoff with app-specific
+  tokens, motifs, content, and screenshot slots.
 - Hindsight's landing page is public; its privacy/support routes remain withheld.
 - App privacy/support copy is candidate legal copy and remains `noindex` until
   approval and effective dates are recorded.
@@ -55,11 +55,11 @@ candidates for each of five apps. Generated concepts are not approved assets.
 | WEB-LP-004 | Add Hindsight to the explicit public allowlist | complete | owner changed public scope | Five-product registry/sync allowlist; no sixth project exposed |
 | WEB-LP-005 | Add Hindsight candidate privacy/support data and routes | blocked | exact Build 1 privacy review, support contact | Generated routes, noindex state, validation tests |
 | WEB-LP-006 | Implement reusable semantic landing-page primitives | complete | WEB-LP-002, WEB-LP-003 | Shared generator markup, style module, and selector script |
-| WEB-LP-007 | Implement five pages with all 15 responsive design directions | complete | WEB-LP-006 | Generated pages, 15 distinct hero/icon treatments, persistent selectors |
+| WEB-LP-007 | Implement five pages with the shared responsive landing system | complete | WEB-LP-006 | Generated pages, app-specific tokens, motifs, feature grids, screenshot slots |
 | WEB-LP-008 | Create HubSpot portfolio/contact property and four/five form contract | blocked | owner HubSpot account | Property/form inventory with no secrets in Git |
 | WEB-LP-009 | Publish website waitlist privacy disclosure and consent language | blocked | controller, purpose, retention/deletion decisions | Approved portfolio privacy page and consent copy |
 | WEB-LP-010 | Integrate one app-specific waitlist form per page | blocked | WEB-LP-008, WEB-LP-009 | Default/error/duplicate/success/fallback behavior |
-| WEB-LP-011 | Add metadata, portfolio Open Graph asset, canonical links, and structured data | in progress | selected assets/copy | New five-app social card is active; per-app cards remain optional follow-up |
+| WEB-LP-011 | Add metadata, portfolio Open Graph asset, canonical links, and structured data | complete | selected assets/copy | Portfolio social card, canonical links, and structured data are active |
 | WEB-LP-012 | Run automated security/privacy/output checks | complete | WEB-LP-007 | Generator tests, route validation, JS checks, generated output |
 | WEB-LP-013 | Run browser, responsive, reduced-motion, selector, and form QA | in progress | WEB-LP-012, test HubSpot forms | All 15 selectors and desktop/mobile layouts pass; production form states remain blocked |
 | WEB-LP-014 | Deploy reviewed commit and verify exact public routes | blocked | WEB-LP-013, explicit owner approval | CI URL, commit SHA, live 200/404/link/form evidence |
@@ -95,9 +95,15 @@ form consent and errors, logged-out live URLs, and support/privacy links.
 
 ## Publication boundary
 
-Do not describe the CSS icon directions as approved App Store icons. Publication
+Do not describe the CSS motifs or screenshot slots as approved App Store icons or app captures. Publication
 of the landing pages requires truthful app-project claims and exact live
 evidence. HubSpot forms and App Store legal routes remain separate gates; until
 HubSpot is configured, the pages disclose and use an email fallback. Hindsight
 may publish its private-beta landing page, but its legal routes remain withheld
 until WEB-LP-005 is authorized and verified.
+
+## Parked follow-up
+
+| ID | Idea | Status | Before implementation |
+|---|---|---|---|
+| WEB-FUTURE-001 | Create a dedicated subpage for an ABBYY implementation specialist offering/profile | parked | Confirm audience, purpose, route, copy, relationship to the five-app portfolio, and whether ABBYY naming or assets require attribution/approval |

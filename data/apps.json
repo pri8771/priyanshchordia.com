@@ -1,59 +1,71 @@
 {
-  "_comment": "Public App Store metadata for the five landing-page apps. Hindsight's legal routes remain withheld until its policy and support copy are approved.",
-  "apps": [
-    {
-      "slug": "mala",
-      "name": "Mala",
-      "store_name": "Mala",
-      "registry_slug": "mala",
-      "support_contact": "support@priyanshchordia.com",
-      "route_enabled": true,
-      "legal_approved": false,
-      "app_store_id": null,
-      "privacy_body": "## The short version\n\nMala is a local-first repetition-practice app. It has no account, ads, analytics, tracking, third-party SDKs, or developer-operated network service.\n\n## Information stored on your device\n\nMala stores the practice labels you create, your preferences, an in-progress practice, and practice history in the app's local storage. This information is used only to provide the app's features and is not sent to the developer.\n\n## Your choices\n\nYou can delete individual history entries, clear all history, and delete custom labels inside the app. Deleting the app removes its active local app data from the device. Apple-managed device backups, if enabled, are governed by Apple and your device settings.\n\n## Permissions and purchases\n\nMala does not request location, camera, microphone, contacts, or photo-library access. Version 1 has no purchase flow.\n\n## Changes\n\nIf Mala's data practices change, this policy and its App Store privacy disclosures will be updated before the changed behavior is released."
-    },
-    {
-      "slug": "anjali",
-      "name": "Anjali",
-      "store_name": "Anjali",
-      "registry_slug": "anjali",
-      "support_contact": "support@priyanshchordia.com",
-      "route_enabled": true,
-      "legal_approved": false,
-      "app_store_id": null,
-      "privacy_body": "## The short version\n\nAnjali does not require an account and does not send personal data to the developer. It has no developer-operated backend, analytics, advertising, tracking, third-party SDKs, or purchases. Prayer content is bundled with the app and works offline.\n\n## Information stored on your device\n\nAnjali stores only the information needed to remember your experience:\n\n- script and prayer-mode preferences;\n- your chosen ishta devata and favorite moments;\n- saved prayers and completed-prayer activity; and\n- whether optional reminders are enabled.\n\nPreferences are stored in the app's local settings, while saved and completed prayers use Apple's on-device SwiftData storage. The developer cannot view this information.\n\n## Notifications\n\nIf you enable a dawn, sunset, or sleep reminder, Anjali asks for notification permission and schedules the reminder locally through iOS. It does not use a push-notification server. You can disable reminders in Anjali or revoke permission in iOS Settings.\n\n## Permissions and third parties\n\nAnjali does not request location, camera, microphone, contacts, or photo-library access. It contains no analytics, advertising, attribution, or crash-reporting SDK.\n\n## Deletion\n\nAnjali has no remote account or server-side record to delete. Deleting the app removes its active local app data from the device. Apple-managed device backups, if enabled, are governed by Apple and your device settings.\n\n## Changes\n\nIf Anjali's data practices change, this policy and its App Store privacy disclosures will be updated before the changed behavior is released."
-    },
-    {
-      "slug": "roam",
-      "name": "Roam",
-      "store_name": "Roam",
-      "registry_slug": "roam",
-      "support_contact": "support@priyanshchordia.com",
-      "route_enabled": true,
-      "legal_approved": false,
-      "app_store_id": null,
-      "privacy_body": "## The short version\n\nRoam is a local-first travel map. It does not require an account, and the developer does not operate a Roam server or receive your saved travel history. Roam does not use advertising, advertising identifiers, cross-app tracking, or third-party analytics SDKs.\n\n## Location information stored on your device\n\nIf you enable tracking, Roam receives precise location samples from Apple's Core Location service, including in the background when you grant Always access. Roam uses those samples to match your position against bundled geographic boundaries.\n\nThe app stores local records that can include exact first-entry and last-seen latitude and longitude, ZIP Code Area visits and timestamps, duration, detection source and confidence, area names, notes, favorites and archive state, preferences, and diagnostic event-log rows that may include coordinates.\n\nDiagnostic event logging is enabled by default and can be disabled in Settings. Roam also stores MetricKit performance and diagnostic reports locally when iOS supplies them.\n\n## Apple services and purchases\n\nRoam uses Core Location for location delivery, MapKit for Apple map content, MetricKit for platform diagnostics, and StoreKit for the optional one-time Roam Plus purchase. Apple may process information needed to provide those services under Apple's policies. Roam does not upload its saved visit database to the developer.\n\n## Exporting and sharing\n\nJSON and CSV exports may contain exact coordinates, timestamps, notes, and optional diagnostic event logs. Files remain local until you choose a destination in Apple's share sheet. The recipient or selected service controls a copy after sharing. The separate coverage card shows aggregate coverage rather than exact routes.\n\n## Your choices\n\nYou can decline or revoke location permission, use foreground-only access, disable background tracking, turn off diagnostic event logging, and delete tracked history. Without location permission, automatic visit tracking does not operate.\n\n## Deletion\n\nDelete All Data removes tracked areas, visits, and diagnostic event-log rows. It does not remove saved settings, export files already generated, or local MetricKit report files. Deleting the app removes its active local app data from the device. Shared copies, Apple purchase records, and Apple-managed device backups are outside Roam's control.\n\n## Changes\n\nThis policy and the App Store privacy disclosures will be updated before Roam changes its location, networking, analytics, account, or sharing behavior."
-    },
-    {
-      "slug": "svara",
-      "name": "Svara",
-      "store_name": "Svara",
-      "registry_slug": "svara",
-      "support_contact": "support@priyanshchordia.com",
-      "route_enabled": true,
-      "legal_approved": false,
-      "app_store_id": null,
-      "privacy_body": "## The short version\n\nSvara does not require an account and does not send your practice data or reflections to a developer-operated server. It contains no advertising, developer analytics, or cross-app tracking.\n\n## Information stored on your device\n\nSvara stores a display name for your local profile; practice sessions, lessons, streaks, points, festival progress, saved festivals, and achievements; reminder choices and times; and private reflections you choose to write.\n\nReflections are stored as a local app file. The production app has no configured Firebase, CloudKit, or developer backend that receives this information.\n\n## Notifications\n\nIf you enable practice reminders, Svara requests notification permission and schedules morning and evening notifications locally through iOS. Reminder settings are not sent to a server. You can disable them in Svara or in iOS Settings.\n\n## Purchases\n\nSvara Plus monthly and yearly subscriptions and the lifetime purchase use Apple's StoreKit and App Store services. Apple processes the transaction; Svara reads verified entitlement state to determine which features are available. Apple's policies govern purchase processing and retention.\n\n## Sharing and external links\n\nWhen you choose to share festival content, Svara opens Apple's system share sheet and you select the destination. The app also provides links to its privacy policy, terms, website, and support contact. Those destinations open through system apps and are governed by their respective providers.\n\n## Permissions\n\nSvara does not request location, contacts, photos, microphone, camera, or health-data access. Audio included with the app is played locally.\n\n## Deletion\n\nSvara currently has no in-app full-data reset. Deleting the app removes its active local app data from the device. Apple purchase records and Apple-managed device backups are governed by Apple.\n\n## Changes\n\nThis policy and the App Store disclosures will be updated before Svara adds an account, developer backend, cloud sync, analytics, advertising, or other changed data handling."
-    },
-    {
-      "slug": "hindsight",
-      "name": "Hindsight",
-      "store_name": "Hindsight — Decision Journal",
-      "registry_slug": "hindsight",
-      "support_contact": "support@priyanshchordia.com",
-      "route_enabled": false,
-      "legal_approved": false,
-      "app_store_id": null
-    }
-  ]
+ "_comment": "Public App Store metadata for the six landing-page apps.",
+ "apps": [
+  {
+   "slug": "mala",
+   "name": "Mala",
+   "store_name": "Mala",
+   "registry_slug": "mala",
+   "support_contact": "support@priyanshchordia.com",
+   "route_enabled": true,
+   "legal_approved": false,
+   "app_store_id": null,
+   "privacy_body": "## The short version\n\nMala is a local-first repetition-practice app. It has no account, ads, analytics, tracking, third-party SDKs, or developer-operated network service.\n\n## Information stored on your device\n\nMala stores the practice labels you create, your preferences, an in-progress practice, and practice history in the app's local storage. This information is used only to provide the app's features and is not sent to the developer.\n\n## Your choices\n\nYou can delete individual history entries, clear all history, and delete custom labels inside the app. Deleting the app removes its active local app data from the device. Apple-managed device backups, if enabled, are governed by Apple and your device settings.\n\n## Permissions and purchases\n\nMala does not request location, camera, microphone, contacts, or photo-library access. Version 1 has no purchase flow.\n\n## Changes\n\nIf Mala's data practices change, this policy and its App Store privacy disclosures will be updated before the changed behavior is released."
+  },
+  {
+   "slug": "anjali",
+   "name": "Anjali",
+   "store_name": "Anjali",
+   "registry_slug": "anjali",
+   "support_contact": "support@priyanshchordia.com",
+   "route_enabled": true,
+   "legal_approved": false,
+   "app_store_id": null,
+   "privacy_body": "## The short version\n\nAnjali does not require an account and does not send personal data to the developer. It has no developer-operated backend, analytics, advertising, tracking, third-party SDKs, or purchases. Prayer content is bundled with the app and works offline.\n\n## Information stored on your device\n\nAnjali stores only the information needed to remember your experience:\n\n- script and prayer-mode preferences;\n- your chosen ishta devata and favorite moments;\n- saved prayers and completed-prayer activity; and\n- whether optional reminders are enabled.\n\nPreferences are stored in the app's local settings, while saved and completed prayers use Apple's on-device SwiftData storage. The developer cannot view this information.\n\n## Notifications\n\nIf you enable a dawn, sunset, or sleep reminder, Anjali asks for notification permission and schedules the reminder locally through iOS. It does not use a push-notification server. You can disable reminders in Anjali or revoke permission in iOS Settings.\n\n## Permissions and third parties\n\nAnjali does not request location, camera, microphone, contacts, or photo-library access. It contains no analytics, advertising, attribution, or crash-reporting SDK.\n\n## Deletion\n\nAnjali has no remote account or server-side record to delete. Deleting the app removes its active local app data from the device. Apple-managed device backups, if enabled, are governed by Apple and your device settings.\n\n## Changes\n\nIf Anjali's data practices change, this policy and its App Store privacy disclosures will be updated before the changed behavior is released."
+  },
+  {
+   "slug": "roam",
+   "name": "Roam",
+   "store_name": "Roam",
+   "registry_slug": "roam",
+   "support_contact": "support@priyanshchordia.com",
+   "route_enabled": true,
+   "legal_approved": false,
+   "app_store_id": null,
+   "privacy_body": "## The short version\n\nRoam is a local-first travel map. It does not require an account, and the developer does not operate a Roam server or receive your saved travel history. Roam does not use advertising, advertising identifiers, cross-app tracking, or third-party analytics SDKs.\n\n## Location information stored on your device\n\nIf you enable tracking, Roam receives precise location samples from Apple's Core Location service, including in the background when you grant Always access. Roam uses those samples to match your position against bundled geographic boundaries.\n\nThe app stores local records that can include exact first-entry and last-seen latitude and longitude, ZIP Code Area visits and timestamps, duration, detection source and confidence, area names, notes, favorites and archive state, preferences, and diagnostic event-log rows that may include coordinates.\n\nDiagnostic event logging is enabled by default and can be disabled in Settings. Roam also stores MetricKit performance and diagnostic reports locally when iOS supplies them.\n\n## Apple services and purchases\n\nRoam uses Core Location for location delivery, MapKit for Apple map content, MetricKit for platform diagnostics, and StoreKit for the optional one-time Roam Plus purchase. Apple may process information needed to provide those services under Apple's policies. Roam does not upload its saved visit database to the developer.\n\n## Exporting and sharing\n\nJSON and CSV exports may contain exact coordinates, timestamps, notes, and optional diagnostic event logs. Files remain local until you choose a destination in Apple's share sheet. The recipient or selected service controls a copy after sharing. The separate coverage card shows aggregate coverage rather than exact routes.\n\n## Your choices\n\nYou can decline or revoke location permission, use foreground-only access, disable background tracking, turn off diagnostic event logging, and delete tracked history. Without location permission, automatic visit tracking does not operate.\n\n## Deletion\n\nDelete All Data removes tracked areas, visits, and diagnostic event-log rows. It does not remove saved settings, export files already generated, or local MetricKit report files. Deleting the app removes its active local app data from the device. Shared copies, Apple purchase records, and Apple-managed device backups are outside Roam's control.\n\n## Changes\n\nThis policy and the App Store privacy disclosures will be updated before Roam changes its location, networking, analytics, account, or sharing behavior."
+  },
+  {
+   "slug": "svara",
+   "name": "Svara",
+   "store_name": "Svara",
+   "registry_slug": "svara",
+   "support_contact": "support@priyanshchordia.com",
+   "route_enabled": true,
+   "legal_approved": false,
+   "app_store_id": null,
+   "privacy_body": "## The short version\n\nSvara does not require an account and does not send your practice data or reflections to a developer-operated server. It contains no advertising, developer analytics, or cross-app tracking.\n\n## Information stored on your device\n\nSvara stores a display name for your local profile; practice sessions, lessons, streaks, points, festival progress, saved festivals, and achievements; reminder choices and times; and private reflections you choose to write.\n\nReflections are stored as a local app file. The production app has no configured Firebase, CloudKit, or developer backend that receives this information.\n\n## Notifications\n\nIf you enable practice reminders, Svara requests notification permission and schedules morning and evening notifications locally through iOS. Reminder settings are not sent to a server. You can disable them in Svara or in iOS Settings.\n\n## Purchases\n\nSvara Plus monthly and yearly subscriptions and the lifetime purchase use Apple's StoreKit and App Store services. Apple processes the transaction; Svara reads verified entitlement state to determine which features are available. Apple's policies govern purchase processing and retention.\n\n## Sharing and external links\n\nWhen you choose to share festival content, Svara opens Apple's system share sheet and you select the destination. The app also provides links to its privacy policy, terms, website, and support contact. Those destinations open through system apps and are governed by their respective providers.\n\n## Permissions\n\nSvara does not request location, contacts, photos, microphone, camera, or health-data access. Audio included with the app is played locally.\n\n## Deletion\n\nSvara currently has no in-app full-data reset. Deleting the app removes its active local app data from the device. Apple purchase records and Apple-managed device backups are governed by Apple.\n\n## Changes\n\nThis policy and the App Store disclosures will be updated before Svara adds an account, developer backend, cloud sync, analytics, advertising, or other changed data handling."
+  },
+  {
+   "slug": "hindsight",
+   "name": "Hindsight",
+   "store_name": "Hindsight — Decision Journal",
+   "registry_slug": "hindsight",
+   "support_contact": "support@priyanshchordia.com",
+   "route_enabled": true,
+   "legal_approved": false,
+   "app_store_id": null,
+   "privacy_body": "## The short version\n\nHindsight is a private, on-device decision journal. Version 1.0 has no account, backend, cloud sync, developer telemetry, advertising, or third-party analytics. Your forecasts, confidence, reflections, and Insights stay on your device, and the developer cannot see them.\n\n## Information stored on your device\n\nHindsight stores the content you create so the app can work: forecast or decision statements, your chosen 0-100% confidence, optional reasoning, categories, options, and notes, creation and review dates, recorded outcomes and reflections, and derived on-device calibration results. It also stores local drafts and preferences such as onboarding completion, appearance, reminder choices, and haptic settings.\n\n## On-device Insights\n\nCalibration and other Insights - observed outcome rate, average stated confidence, calibration gap, confidence bands, and Brier score - are calculated locally from eligible records. They are never uploaded or used for advertising, profiling, or developer analytics.\n\n## Notifications\n\nIf you enable review reminders, Hindsight schedules local notifications through iOS. Reminder text is generic and never includes your forecast or journal content. You can deny or revoke permission in iOS Settings. Hindsight does not use a remote push-notification server.\n\n## Exporting and deletion\n\nYou can export your journal as JSON or PDF; files are created locally and go only to the destination you pick in the iOS share sheet. Example records are kept separate from personal records and are excluded from your personal export. You can delete individual records or clear Hindsight data inside the app, and deleting the app removes its local data from the device, subject to Apple's device and backup behavior.\n\n## Children\n\nHindsight is a judgment tool designed for adults and is not directed to children under 13.\n\n## Changes\n\nThis policy will be reviewed and updated before Hindsight introduces any account, server, synchronization, telemetry, social feature, or other remote data practice."
+  },
+  {
+   "slug": "aurafit",
+   "name": "AuraFit",
+   "store_name": "AuraFit",
+   "registry_slug": "aurafit",
+   "support_contact": "support@priyanshchordia.com",
+   "route_enabled": true,
+   "legal_approved": false,
+   "app_store_id": null,
+   "privacy_body": "## The short version\n\nAuraFit does not collect your data. There is no account, no server, and no analytics. Every photo you scan is analyzed on your iPhone and stored only on your iPhone. The app has no networking code of its own, so there is nowhere for your photos or scores to go.\n\n## Information stored on your device\n\nPhotos you capture or import for a scan, the scores, tips, style match, and color palette the app produces, any scorecard images and reveal clips you generate, and your preferences all live in AuraFit's private app sandbox on your device. Deleting the app deletes all of it.\n\n## How photos are analyzed\n\nAnalysis runs entirely on your device: Apple's Vision framework estimates body pose and person segmentation, Core Image measures image and color signals, and AuraFit uses a deterministic color-based heuristic for the closest style match. Nothing is uploaded for processing. Scores are subjective guidance about an outfit and a photograph; the app does not identify, recognize, or profile anyone.\n\n## Permissions\n\nCamera access is used only to capture the photo you are about to scan. Importing uses Apple's system photo picker, so AuraFit receives only the image you select. Photo Library add access is requested only when you save scorecards or reveal clips. You can revoke any of these in iOS Settings.\n\n## Purchases\n\nAuraFit Pro subscriptions and template unlocks are processed by Apple through StoreKit. Apple handles the payment; AuraFit never sees your payment details and keeps no purchase records of its own beyond what StoreKit provides on device.\n\n## Sharing and deletion\n\nScorecards and reveal clips leave the device only when you tap Share or Save and choose a destination in the iOS share sheet. Settings > Delete All Fits removes every saved scan and its images immediately, and deleting the app removes everything else.\n\n## Changes\n\nIf the app's data practices ever change, this policy and the in-app policy screen will be updated before the change ships."
+  }
+ ]
 }

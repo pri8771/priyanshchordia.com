@@ -14,6 +14,7 @@ DEFAULT_SOURCE = ROOT.parent / "mission-control" / "registry.json"
 OUTPUT = ROOT / "data" / "registry.public.json"
 PUBLIC_PRODUCT_IDS = {
     "github-japa", "github-anjali", "github-roam", "github-svara", "github-hindsight",
+    "github-aurafit",
 }
 PUBLIC_OVERRIDES = {
     "github-japa": {
@@ -34,6 +35,11 @@ PUBLIC_OVERRIDES = {
         "slug": "hindsight",
         "name": "Hindsight",
         "summary": "A private, on-device decision journal for comparing what you expected with what happened.",
+    },
+    "github-aurafit": {
+        "slug": "aurafit",
+        "name": "AuraFit",
+        "summary": "An on-device outfit and camera coach that scores your fit photo privately on your iPhone.",
     },
 }
 PUBLIC_FIELDS = (

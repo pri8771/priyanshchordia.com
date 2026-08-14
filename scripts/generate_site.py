@@ -40,7 +40,7 @@ EXPERIENCES_DIR = ROOT / "scripts" / "experiences"
 CUSTOM_DOMAIN: str | None = "priyanshchordia.com"
 
 SITE_NAME = "priyanshchordia.com"
-DESCRIPTION = "Five private, focused iOS apps in beta."
+DESCRIPTION = "Six private, focused iOS apps in beta."
 BASE_URL = f"https://{CUSTOM_DOMAIN or 'pri8771.github.io/priyanshchordia.com'}"
 CANDIDATE_POLICY_DATE_ISO = "2026-07-29"
 CANDIDATE_POLICY_DATE_LABEL = "July 29, 2026"
@@ -82,10 +82,12 @@ def _load_css() -> str:
         parts.append((THEMES_DIR / f"{slug}.css").read_text(encoding="utf-8"))
     parts.append((THEMES_DIR / "finishing.css").read_text(encoding="utf-8"))
     parts.append((THEMES_DIR / "app-landings.css").read_text(encoding="utf-8"))
+    parts.append((THEMES_DIR / "landing-system.css").read_text(encoding="utf-8"))
     return "\n".join(parts)
 
 CSS = _load_css()
 APP_THEMES_JS = (ROOT / "scripts" / "app-themes.js").read_text(encoding="utf-8")
+WAITLIST_JS = (ROOT / "scripts" / "waitlist.js").read_text(encoding="utf-8")
 
 
 def esc(value: object) -> str:
@@ -408,7 +410,7 @@ def canonical_url(path: str) -> str:
 def chrome(title: str, body: str, prefix: str = "", active: str = "",
            description: str = DESCRIPTION, extra: str = "", path: str = "/",
            fixed_theme: str | None = None, robots: str = "index,follow",
-           structured_data: object | None = None) -> str:
+           structured_data: object | None = None, body_class: str = "") -> str:
     def nav_attrs(name: str) -> str:
         return ' class="active" aria-current="page"' if active == name else ""
 
@@ -455,6 +457,7 @@ def chrome(title: str, body: str, prefix: str = "", active: str = "",
         f'<script type="application/ld+json">{safe_script_json(structured_data)}</script>'
         if structured_data is not None else ""
     )
+    body_attr = f' class="{esc(body_class)}"' if body_class else ""
     return f"""<!doctype html>
 <html lang="en" data-theme="{theme}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="description" content="{esc(description)}"><meta name="robots" content="{esc(robots)}">
@@ -467,7 +470,7 @@ def chrome(title: str, body: str, prefix: str = "", active: str = "",
 <meta name="twitter:description" content="{esc(description)}">
 <title>{esc(title)}</title>{preload}<link rel="icon" href="{FAVICON}" type="image/svg+xml">
 <link rel="stylesheet" href="{prefix}styles.css?v={CSS_V}"></head>
-<body><a class="skip" href="#main">Skip to content</a><div class="wrap">
+<body{body_attr}><a class="skip" href="#main">Skip to content</a><div class="wrap">
 <header class="top"><div class="left">
 {theme_control}
 <a class="brand" href="{prefix}index.html">P/C <span class="status" aria-hidden="true">&#9679;</span></a></div>
@@ -555,89 +558,135 @@ aria-label="{esc(theme['name'])} visual concept">
 
 def product_page(product: dict[str, object], landing: dict[str, object],
                  app: dict[str, object] | None = None) -> str:
+    slug = str(product["slug"])
+    name = str(product["name"])
     lane = str(product.get("portfolio_lane", "software")).replace("-", " ")
-    stage = str(product.get("stage", "building"))
-    availability = "TestFlight beta" if stage == "testflight" else (
-        "Private beta" if stage == "private-beta" else (
-            "In development" if stage == "building" else stage.replace("-", " ").title()
+    subject = quote(f"{name} beta")
+    system = {
+        "mala": {
+            "positioning": "A quiet digital mala.",
+            "hero": "Keep your place. Feel each count. Finish without looking. One tap advances one bead — and the count survives a phone call, a locked screen, or the rest of the day.",
+            "shots": "Five screens. That is the whole app.",
+            "benefits": "Three things a physical mala already does well.",
+            "steps": "Four steps, then you can put the screen away.",
+            "trust": "There is no server to send anything to.",
+            "fit": "Useful to a few people. Not to everyone.",
+            "faq": "What Mala does, and what it will not do.",
+            "features": ["Choose a round size", "Name it, or don't", "Tap to advance", "Finish without looking", "No account or cloud backend", "TestFlight builds expire"],
+        },
+        "anjali": {
+            "positioning": "A sacred pause, not a session.",
+            "hero": "One short prayer for the moment you are in — with the Devanagari, a transliteration, and a plain-English meaning on the same screen. Then you close the app.",
+            "shots": "One prayer, held on one screen.",
+            "benefits": "Built to be closed after the prayer.",
+            "steps": "Three steps, then put it down.",
+            "trust": "A prayer is not an event to be logged.",
+            "fit": "A small app for a small moment.",
+            "faq": "Asked, and answered honestly.",
+            "features": ["Short on purpose", "Read it three ways", "Browse by moment", "Chant or silent", "Offline and accountless", "No recorded audio"],
+        },
+        "svara": {
+            "positioning": "Practice. Learn. Return.",
+            "hero": "A private daily companion for spiritual practice and cultural reconnection: short guided practices, an ordered learning path called Aaroh, and the stories behind what you already do.",
+            "shots": "Something to do today, and somewhere it leads.",
+            "benefits": "Rooted, private, and possible on a normal day.",
+            "steps": "Four steps you will repeat.",
+            "trust": "Local-first, and made by one person.",
+            "fit": "Especially useful if you are finding your way back.",
+            "faq": "What Svara claims, and what it does not.",
+            "features": ["Start with today", "Follow Aaroh at your pace", "Read the why", "Return when ready", "No social feed", "Everything free while testing"],
+        },
+        "roam": {
+            "positioning": "Your travels, coloured in.",
+            "hero": "A private map of the places you have explored. Switch tracking on and Roam fills in supported U.S. Census ZIP Code Areas as you move. Anywhere else in the world, add countries and cities by hand.",
+            "shots": "The same map, at six levels of zoom.",
+            "benefits": "Detailed enough to be interesting. Private enough to keep.",
+            "steps": "Four steps, and one of them is optional.",
+            "trust": "Location history is the most sensitive data you own.",
+            "fit": "Map people, mostly.",
+            "faq": "The precise answers.",
+            "features": ["Decide about tracking", "Travel", "Add the rest by hand", "Keep control of it", "Export and delete", "Synthetic map data in the preview"],
+        },
+        "aurafit": {
+            "positioning": "An outfit check that stays on your phone.",
+            "hero": "Capture or import a full-body photo and get a Fit Score for outfit, colour, pose, lighting, framing, and background — computed entirely on your iPhone. The photo never leaves the device.",
+            "shots": "Scan, score, share if you want.",
+            "benefits": "Honest feedback, with nobody else looking.",
+            "steps": "Three steps before you head out.",
+            "trust": "Your mirror photos are yours alone.",
+            "fit": "For people who check the fit before they leave.",
+            "faq": "What the score is, and what it is not.",
+            "features": ["Scan a full-body photo", "Read the weighted Fit Score", "Follow concrete tips", "Keep a private history", "On-device analysis only", "Share only what you export"],
+        },
+        "hindsight": {
+            "positioning": "Make the decision. Remember the reasoning.",
+            "hero": "A private journal for learning how you decide. Write down what you believed and how sure you were — then come back when reality has answered, and grade the outcome and the process separately.",
+            "shots": "Capture, wait, review.",
+            "benefits": "Hindsight is only useful if it is honest.",
+            "steps": "Four steps, spread over months.",
+            "trust": "You will only be honest in it if nobody else can read it.",
+            "fit": "People willing to be wrong on the record.",
+            "faq": "What Build 1 is, and is not.",
+            "features": ["Write the decision down", "Commit to a prediction", "Set a review date", "Review without flinching", "Insights stay on device", "Export and full deletion"],
+        },
+    }[slug]
+    positioning = system["positioning"]
+    hero_body = system["hero"]
+    shots_heading = system["shots"]
+    benefits_heading = system["benefits"]
+    steps_heading = system["steps"]
+    trust_heading = system["trust"]
+    fit_heading = system["fit"]
+    faq_heading = system["faq"]
+    benefits = "".join(f'<article><span>{index + 1:02d}</span><h3>{esc(item["title"])}</h3><p>{esc(item["body"])}</p></article>' for index, item in enumerate(landing["benefits"]))
+    steps = "".join(f'<li><span>{index + 1:02d}</span><p>{esc(item)}</p></li>' for index, item in enumerate(landing["steps"]))
+    captions = {
+        "mala": ["Practice surface", "Round complete", "Personal label", "Mala styles", "History"],
+        "anjali": ["Prayer detail", "Browse by moment", "Chant or silent"],
+        "svara": ["Today", "Aaroh path", "A practice", "Stories"],
+        "roam": ["Coverage map", "Location choice", "Saved places", "Export summary"],
+        "hindsight": ["New prediction", "Sealed entry", "Outcome review", "Reflection"],
+        "aurafit": ["Scan", "Fit Score", "Coaching tips", "History"],
+    }[slug]
+    shot_files = {
+        "mala": ["01-practice.png", "02-completion.png", "03-label.png", "04-style.png", "05-history.png"],
+        "anjali": ["01-prayer.png", "02-moment.png", "03-chant.png"],
+        "svara": ["01-today.png", "02-aaroh.png", "03-practice.png", "04-story.png"],
+        "roam": ["01-map.png", "02-zcta.png", "03-places.png", "04-progress.png", "05-controls.png"],
+        "hindsight": ["01-capture.png", "02-confidence.png", "03-review.png", "04-insights.png", "05-export.png"],
+        "aurafit": ["01-scan.png", "02-score.png", "03-tips.png", "04-history.png"],
+    }[slug]
+    shot_parts = []
+    for caption, filename in zip(captions, shot_files):
+        asset = ASSETS / "apps" / slug / "shots" / filename
+        image = (
+            f'<img src="../../assets/apps/{esc(slug)}/shots/{esc(filename)}" '
+            f'alt="{esc(caption)} in {esc(name)}" loading="lazy">'
+            if asset.exists() else ""
         )
+        placeholder = "" if image else "<span>Screenshot pending</span>"
+        shot_parts.append(
+            f'<figure><div class="product-shot" aria-label="{esc(caption)} screenshot placeholder">'
+            f'{image}{placeholder}</div><figcaption>{esc(caption)}</figcaption></figure>'
+        )
+    shots = "".join(shot_parts)
+    features = "".join(
+        f'<div><dt>{esc(feature)}</dt><dd>{index + 1:02d}</dd></div>'
+        for index, feature in enumerate(system["features"])
     )
-    themes = list(landing["themes"])
-    default_theme = str(themes[0]["id"])
-    theme_options = "".join(
-        f'<option value="{esc(theme["id"])}" data-principle="{esc(theme["principle"])}"'
-        f'{" selected" if index == 0 else ""}>{index + 1:02d} · {esc(theme["name"])}</option>'
-        for index, theme in enumerate(themes)
-    )
-    scenes = "".join(landing_scene(theme, index == 0) for index, theme in enumerate(themes))
-    benefits = "".join(
-        f'<article class="landing-benefit"><span>{index + 1:02d}</span><h3>{esc(benefit["title"])}</h3>'
-        f'<p>{esc(benefit["body"])}</p></article>'
-        for index, benefit in enumerate(landing["benefits"])
-    )
-    steps = "".join(
-        f'<li><span>{index + 1:02d}</span><p>{esc(step)}</p></li>'
-        for index, step in enumerate(landing["steps"])
-    )
-    resources = ""
-    if app and app.get("route_enabled") is True:
-        app_slug = str(app["slug"])
-        app_store_id = app.get("app_store_id")
-        if app_store_id:
-            store_status = (
-                f'<a class="resource-link" href="https://apps.apple.com/app/id{esc(app_store_id)}" '
-                'rel="external">View on the App Store</a>'
-            )
-            resource_summary = "Privacy, support, and download destinations for this app."
-        else:
-            store_status = '<span class="resource-note">App Store listing: coming soon</span>'
-            resource_summary = (
-                "Public pages prepared for App Store Connect. "
-                "This app does not have a public App Store listing yet."
-            )
-        resources = f"""<section class="landing-resources" aria-labelledby="app-resources-title">
-<span class="landing-kicker">App Store submission</span><h2 id="app-resources-title">Public app URLs.</h2>
-<p>{esc(resource_summary)}</p>
-<div class="resource-links">
-<a class="resource-link" href="../../apps/{esc(app_slug)}/privacy/">Privacy policy</a>
-<a class="resource-link" href="../../apps/{esc(app_slug)}/support/">Support</a>
-{store_status}</div></section>"""
-    else:
-        resources = """<section class="landing-resources" aria-labelledby="app-resources-title">
-<span class="landing-kicker">Release preparation</span><h2 id="app-resources-title">Legal pages are being prepared.</h2>
-<p>Privacy and support routes will appear here after the exact beta build and public copy are approved.</p></section>"""
-    subject = quote(f"{product['name']} beta access")
-    theme_description_id = f"{product['slug']}-theme-description"
-    body = f"""<article class="app-landing" data-app-landing data-app="{esc(product['slug'])}"
-data-app-theme="{esc(default_theme)}">
-<div class="app-theme-bar" aria-label="{esc(product['name'])} landing-page design selector">
-<label for="app-theme-picker">Explore three designs</label>
-<select id="app-theme-picker" data-app-theme-picker aria-describedby="{esc(theme_description_id)}">{theme_options}</select>
-<p id="{esc(theme_description_id)}" data-app-theme-description>{esc(themes[0]['principle'])}</p>
-</div>
-<header class="landing-hero">
-<div class="landing-hero-copy"><span class="landing-kicker">{esc(landing['eyebrow'])}</span>
-<p class="landing-name">{esc(product['name'])}</p><h1>{esc(landing['headline'])}</h1>
-<p class="landing-lede">{esc(landing['lede'])}</p>
-<div class="landing-actions"><a class="landing-cta" href="mailto:support@priyanshchordia.com?subject={subject}">{esc(landing['cta'])}</a>
-<a class="landing-text-link" href="#how-it-works">See how it works</a></div></div>
-<div class="landing-visual">{scenes}</div></header>
-<section class="landing-audience" aria-labelledby="audience-title"><span class="landing-kicker">Built for</span>
-<h2 id="audience-title">A focused tool, not another feed.</h2><p>{esc(landing['audience'])}</p></section>
-<section class="landing-benefits" aria-labelledby="benefits-title"><div class="landing-section-heading">
-<span class="landing-kicker">Why it exists</span><h2 id="benefits-title">Useful by staying focused.</h2></div>
-<div class="landing-benefit-grid">{benefits}</div></section>
-<section id="how-it-works" class="landing-steps" aria-labelledby="steps-title"><div class="landing-section-heading">
-<span class="landing-kicker">How it works</span><h2 id="steps-title">Three quiet steps.</h2></div><ol>{steps}</ol></section>
-<section class="landing-trust" aria-labelledby="privacy-title"><div><span class="landing-kicker">Privacy</span>
-<h2 id="privacy-title">Your experience remains yours.</h2><p>{esc(landing['privacy'])}</p></div>
-<aside><span class="landing-kicker">A clear boundary</span><p>{esc(landing['limitation'])}</p></aside></section>
-<section class="landing-waitlist" aria-labelledby="waitlist-title"><span class="landing-kicker">{esc(availability)}</span>
-<h2 id="waitlist-title">Help shape {esc(product['name'])}.</h2>
-<p>Beta invitations go out in small groups as testing capacity opens.</p>
-<a class="landing-cta" href="mailto:support@priyanshchordia.com?subject={subject}">{esc(landing['cta'])}</a>
-<small>Email is the current fallback while the app-specific waitlist form is connected.</small></section>
-{resources}<a class="landing-back" href="../../index.html#work">&larr; All five apps</a></article>"""
+    legal = (f'<a href="../../apps/{esc(app["slug"])}/privacy/">Privacy notice</a><a href="../../apps/{esc(app["slug"])}/support/">Support</a>' if app and app.get("route_enabled") is True else '<a href="mailto:support@priyanshchordia.com">Support</a>')
+    body = f"""<article class="product-system product-system--{esc(slug)}" data-app="{esc(slug)}">
+<header class="product-nav"><a class="product-wordmark" href="../../index.html">Priyansh Chordia <span>· iOS</span></a><nav aria-label="Product"><a href="../../index.html#work">Products</a><a href="#top">{esc(name)}</a><a href="#waitlist">Join waitlist</a></nav></header>
+<div id="top"><section class="product-hero"><div><p class="product-kicker">{esc(name)}</p><h1>{esc(positioning)}</h1><p class="product-hero-body">{esc(hero_body)}</p><p class="product-hero-note">In TestFlight beta — not on the App Store yet. {esc(landing['privacy'])}</p><div class="product-actions"><a class="product-button" href="#waitlist">Join the waitlist</a><a href="#how-it-works">See how it works <span aria-hidden="true">↓</span></a></div></div><div class="product-motif" aria-hidden="true"><span></span><i></i><b></b></div></section>
+<section class="product-shots"><div class="product-section-heading"><p>The app</p><h2>{esc(shots_heading)}</h2></div><div class="product-shots-grid">{shots}</div></section>
+<section class="product-benefits"><div class="product-section-heading"><p>Why it exists</p><h2>{esc(benefits_heading)}</h2></div><div class="product-triad">{benefits}</div></section>
+<section id="how-it-works" class="product-steps"><div class="product-section-heading"><p>How it works</p><h2>{esc(steps_heading)}</h2></div><ol>{steps}</ol></section>
+<section class="product-trust"><div><p>Privacy and trust</p><h2>{esc(trust_heading)}</h2><p>{esc(landing['privacy'])}</p><div class="product-legal-links">{legal}</div></div><aside><p>Honest boundary</p><strong>{esc(landing['limitation'])}</strong></aside></section>
+<section class="product-features"><div class="product-section-heading"><p>Feature highlights</p><h2>Everything in the beta build.</h2></div><dl>{features}</dl></section>
+<section class="product-fit"><div class="product-section-heading"><p>Who the beta is for</p><h2>{esc(fit_heading)}</h2></div><div><article><h3>A good fit if you</h3><p>{esc(landing['audience'])}</p></article><article><h3>{esc(name)} is deliberately not</h3><p>{esc(landing['limitation'])}</p></article></div></section>
+<section id="waitlist" class="product-waitlist"><div><p>Waitlist</p><h2>Ask for a TestFlight invitation.</h2><p>No account is created. Your email is stored only to send {esc(name)} beta invitations.</p></div><form data-waitlist data-app-name="{esc(name)}" action="mailto:support@priyanshchordia.com?subject={subject}" method="post"><label>Email address <em>(required)</em><input type="email" name="email" autocomplete="email" placeholder="you@example.com" required></label><label>First name <em>(optional)</em><input type="text" name="first_name" autocomplete="given-name"></label><label>Device and iOS version, or what you want to test <em>(optional)</em><textarea name="device" aria-describedby="device-hint"></textarea><small id="device-hint">Helps prioritise invitations across devices. Leave blank if you would rather not say.</small></label><label class="product-consent"><input type="checkbox" name="consent" required> Email me about TestFlight access and occasional updates for {esc(name)}. I can unsubscribe at any time.</label><button class="product-button" type="submit">Join the {esc(name)} waitlist</button><p class="waitlist-status" role="status" aria-live="polite" tabindex="-1"></p><p class="waitlist-fallback">The signup service is not connected yet. Email <a href="mailto:support@priyanshchordia.com?subject={subject}">support@priyanshchordia.com</a> with the subject “{esc(name)} beta” and you will be added by hand.</p></form></section>
+<section class="product-faq"><div class="product-section-heading"><p>Questions and limits</p><h2>{esc(faq_heading)}</h2></div><details><summary>Can I download {esc(name)} from the App Store?</summary><p>No. {esc(name)} is in TestFlight beta and is not available on the App Store yet.</p></details><details><summary>How soon will I get an invitation?</summary><p>Invitations are sent in small groups as testing capacity opens. There is no queue position or promised timeline.</p></details><details><summary>What do you do with my email address?</summary><p>It is used only to send beta invitations and occasional updates. You can ask to be removed at any time.</p></details><div class="product-limits"><p>Honest limitations</p><strong>{esc(landing['limitation'])}</strong></div></section>
+<footer class="product-footer"><p>More from this portfolio</p><h2>Independent iOS apps, built one at a time.</h2><div>{legal}<a href="../../index.html#work">All products</a><a href="mailto:support@priyanshchordia.com">support@priyanshchordia.com</a></div><small>© 2026 Priyansh Chordia. {esc(name)} is in TestFlight beta and is not available on the App Store.</small></footer></div></article>"""
     structured_data = {
         "@context": "https://schema.org",
         "@type": "SoftwareApplication",
@@ -651,8 +700,8 @@ data-app-theme="{esc(default_theme)}">
         f"{product['name']} — {SITE_NAME}", body, prefix="../../", active="work",
         description=str(product.get("summary", DESCRIPTION)),
         path=f"/products/{product['slug']}/", structured_data=structured_data,
-        fixed_theme="signal",
-        extra=f'<script src="../../app-themes.js?v={APP_THEME_V}" defer></script>',
+        fixed_theme="signal", body_class="product-page",
+        extra=f'<script src="../../waitlist.js?v={asset_hash(WAITLIST_JS)}" defer></script>',
     )
 
 
@@ -836,6 +885,7 @@ def main() -> int:
     write(OUT / "styles.css", CSS)
     write(OUT / "experiences.js", EXPERIENCES)
     write(OUT / "app-themes.js", APP_THEMES_JS)
+    write(OUT / "waitlist.js", WAITLIST_JS)
     if CUSTOM_DOMAIN:
         # Regenerated every build; site/ is wiped each run, so Pages would
         # otherwise lose the custom domain on the next deploy.

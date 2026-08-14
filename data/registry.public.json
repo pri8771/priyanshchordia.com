@@ -1,52 +1,61 @@
 {
-  "schema_version": 1,
-  "generated_at": "2026-08-02T00:00:00-04:00",
-  "source_updated_at": "2026-08-02T00:00:00-04:00",
-  "products": [
-    {
-      "id": "github-japa",
-      "slug": "mala",
-      "name": "Mala",
-      "summary": "A quiet, local-first digital mala for steady repetition practice.",
-      "stage": "testflight",
-      "portfolio_lane": "consumer-spiritual",
-      "public_tier": "featured"
-    },
-    {
-      "id": "github-anjali",
-      "slug": "anjali",
-      "name": "Anjali",
-      "summary": "An offline Hindu micro-prayer companion centered on one short sacred pause.",
-      "stage": "testflight",
-      "portfolio_lane": "consumer-spiritual",
-      "public_tier": "featured"
-    },
-    {
-      "id": "github-roam",
-      "slug": "roam",
-      "name": "Roam",
-      "summary": "A private, local-first travel map that colors in the places you have explored.",
-      "stage": "testflight",
-      "portfolio_lane": "consumer-location",
-      "public_tier": "featured"
-    },
-    {
-      "id": "github-svara",
-      "slug": "svara",
-      "name": "Svara",
-      "summary": "A local-first daily spiritual companion rooted in Hindu culture.",
-      "stage": "testflight",
-      "portfolio_lane": "consumer-spiritual",
-      "public_tier": "featured"
-    },
-    {
-      "id": "github-hindsight",
-      "slug": "hindsight",
-      "name": "Hindsight",
-      "summary": "A private, on-device decision journal for comparing what you expected with what happened.",
-      "stage": "private-beta",
-      "portfolio_lane": "consumer-reflection",
-      "public_tier": "featured"
-    }
-  ]
+ "schema_version": 1,
+ "generated_at": "2026-08-02T00:00:00-04:00",
+ "source_updated_at": "2026-08-02T00:00:00-04:00",
+ "products": [
+  {
+   "id": "github-japa",
+   "slug": "mala",
+   "name": "Mala",
+   "summary": "A quiet, local-first digital mala for steady repetition practice.",
+   "stage": "testflight",
+   "portfolio_lane": "consumer-spiritual",
+   "public_tier": "featured"
+  },
+  {
+   "id": "github-anjali",
+   "slug": "anjali",
+   "name": "Anjali",
+   "summary": "An offline Hindu micro-prayer companion centered on one short sacred pause.",
+   "stage": "testflight",
+   "portfolio_lane": "consumer-spiritual",
+   "public_tier": "featured"
+  },
+  {
+   "id": "github-roam",
+   "slug": "roam",
+   "name": "Roam",
+   "summary": "A private, local-first travel map that colors in the places you have explored.",
+   "stage": "testflight",
+   "portfolio_lane": "consumer-location",
+   "public_tier": "featured"
+  },
+  {
+   "id": "github-svara",
+   "slug": "svara",
+   "name": "Svara",
+   "summary": "A local-first daily spiritual companion rooted in Hindu culture.",
+   "stage": "testflight",
+   "portfolio_lane": "consumer-spiritual",
+   "public_tier": "featured"
+  },
+  {
+   "id": "github-hindsight",
+   "slug": "hindsight",
+   "name": "Hindsight",
+   "summary": "A private, on-device decision journal for comparing what you expected with what happened.",
+   "stage": "private-beta",
+   "portfolio_lane": "consumer-reflection",
+   "public_tier": "featured"
+  },
+  {
+   "id": "github-aurafit",
+   "slug": "aurafit",
+   "name": "AuraFit",
+   "summary": "An on-device outfit and camera coach that scores your fit photo privately on your iPhone.",
+   "stage": "testflight",
+   "portfolio_lane": "consumer-lifestyle",
+   "public_tier": "featured"
+  }
+ ]
 }

@@ -1,7 +1,7 @@
 # priyanshchordia.com
 
-A dependency-free, generated portfolio for five private-beta iOS apps: Mala,
-Anjali, Svara, Roam, and Hindsight. The public site is live at
+A dependency-free, generated portfolio for six private-beta iOS apps: Mala,
+Anjali, Svara, Roam, Hindsight, and AuraFit. The public site is live at
 [priyanshchordia.com](https://priyanshchordia.com) and deploys free through
 GitHub Pages from `main`.
 
@@ -10,14 +10,14 @@ GitHub Pages from `main`.
 - `data/registry.public.json` — sanitized public product catalogue.
 - `data/apps.json` — explicit publication state, support contact, App Store ID,
   and app-specific privacy copy.
-- `data/landing_pages.json` — reviewed public marketing copy and exactly three
-  selectable landing-page directions per app.
+- `data/landing_pages.json` — reviewed public marketing copy and app-specific
+  landing-page content.
 - `content/posts/*.md` — journal entries with front matter.
 - `scripts/themes/*.css` — shared base, 11 selectable designs, and the finishing
   layer for accessibility and narrow-screen behavior.
 - `scripts/experiences/*.js` — four interactive homepage experiences.
-- `scripts/themes/app-landings.css` and `scripts/app-themes.js` — the 15
-  app-specific landing directions and their persistent per-app selector.
+- `scripts/themes/landing-system.css` and `scripts/waitlist.js` — the shared
+  five-app landing system, screenshot slots, and waitlist fallback.
 - `scripts/generate_site.py` — static generator.
 - `docs/LANDING_PAGES_ICONS_AND_WAITLIST_PLAN.md` — canonical five-app landing
   page, icon, asset, HubSpot waitlist, and publication task plan.
@@ -50,8 +50,7 @@ The sync has an explicit five-product allowlist. Changing a private registry
 tier cannot accidentally publish another project; adding a sixth public app
 requires a reviewed code change to `scripts/sync_registry.py`.
 
-Hindsight now has a public private-beta landing page and three selectable design
-directions. Its App Store privacy/support routes remain withheld until the
+Hindsight now has a public private-beta landing page. Its App Store privacy/support routes remain withheld until the
 owner/legal and exact-Build-1 gates in
 `docs/LANDING_PAGES_ICONS_AND_WAITLIST_PLAN.md` are satisfied.
 

@@ -1,105 +1,293 @@
 {
-  "schema_version": 1,
-  "apps": {
-    "mala": {
-      "eyebrow": "Private beta · iPhone",
-      "headline": "A quieter way to keep count.",
-      "lede": "Mala is a tactile, distraction-free companion for repetition practice—designed to disappear into the rhythm instead of competing with it.",
-      "audience": "For anyone who wants a simple digital mala without feeds, accounts, or performative streaks.",
-      "benefits": [
-        {"title": "Count by feel", "body": "A large practice surface and restrained feedback keep attention on the repetition."},
-        {"title": "Resume naturally", "body": "An interrupted round can continue without turning practice into a productivity task."},
-        {"title": "Make it yours", "body": "Private labels, multiple mala styles, and local history support a personal ritual."}
-      ],
-      "steps": ["Choose a round and an optional private label.", "Tap through each repetition at your own pace.", "Complete the round and keep the history on your device."],
-      "privacy": "No account, advertising, analytics, tracking, or developer-operated service. Practice information stays in the app's local storage.",
-      "limitation": "Mala supports practice; it does not provide religious instruction, health guidance, or social features.",
-      "cta": "Request Mala beta access",
-      "themes": [
-        {"id": "mala-01", "name": "Thread of 108", "principle": "One unbroken strand carries the page.", "icon": "Knotted bead"},
-        {"id": "mala-02", "name": "Eyes Closed", "principle": "The eyes-free promise becomes the interface.", "icon": "Tactile ring"},
-        {"id": "mala-03", "name": "Bead Ledger", "principle": "A crafted specimen sheet for the mala collection.", "icon": "Bead rosette"}
-      ]
+ "schema_version": 1,
+ "apps": {
+  "mala": {
+   "eyebrow": "Private beta · iPhone",
+   "headline": "A quieter way to keep count.",
+   "lede": "Mala is a tactile, distraction-free companion for repetition practice—designed to disappear into the rhythm instead of competing with it.",
+   "audience": "For anyone who wants a simple digital mala without feeds, accounts, or performative streaks.",
+   "benefits": [
+    {
+     "title": "Count by feel",
+     "body": "A large practice surface and restrained feedback keep attention on the repetition."
     },
-    "anjali": {
-      "eyebrow": "Private beta · iPhone",
-      "headline": "One sacred pause for the moment you are in.",
-      "lede": "Anjali offers a short, offline prayer experience shaped around dawn, transition, gratitude, difficulty, and rest—without presenting itself as a guide or authority.",
-      "audience": "For people who want a brief, private moment of Hindu prayer without opening a feed or starting a long session.",
-      "benefits": [
-        {"title": "Brief by design", "body": "Open Anjali, meet one focused prayer, and return to your day."},
-        {"title": "Available offline", "body": "Bundled content works without an account or developer-operated service."},
-        {"title": "Return gently", "body": "Optional local reminders and favorites help make room for the moments that matter."}
-      ],
-      "steps": ["Choose the moment you are in.", "Read or chant one short prayer at your own pace.", "Save what matters or close the app when the pause is complete."],
-      "privacy": "No account, backend, analytics, advertising, tracking, third-party SDKs, or purchases. Preferences and activity remain on-device.",
-      "limitation": "Current Chant practice is self-led and silent. Anjali does not claim religious authority and is not a puja guide.",
-      "cta": "Request Anjali beta access",
-      "themes": [
-        {"id": "anjali-01", "name": "Six Lights", "principle": "Five moments are organized by the changing light.", "icon": "Lamp horizon"},
-        {"id": "anjali-02", "name": "Under a Minute", "principle": "A complete, intentionally finite sixty-second read.", "icon": "Cupped vessel"},
-        {"id": "anjali-03", "name": "Threshold", "principle": "Quiet architectural thresholds hold each idea.", "icon": "Lit aperture"}
-      ]
+    {
+     "title": "Resume naturally",
+     "body": "An interrupted round can continue without turning practice into a productivity task."
     },
-    "svara": {
-      "eyebrow": "Private beta · iPhone",
-      "headline": "A daily practice rooted in Hindu culture.",
-      "lede": "Svara brings practices, festivals, stories, and reflection into one local-first path that can grow without asking you to perform your spirituality.",
-      "audience": "For people seeking a culturally rooted daily companion that balances guidance, discovery, and private progress.",
-      "benefits": [
-        {"title": "Follow a path", "body": "Lessons and practices create a clear next step without flattening the tradition into a checklist."},
-        {"title": "Meet the calendar", "body": "Festival and story experiences connect practice with cultural time and context."},
-        {"title": "Keep progress local", "body": "Practice history, points, achievements, and reflections stay on the device."}
-      ],
-      "steps": ["Choose a practice, lesson, festival, or story.", "Move through the experience with bundled audio where it exists.", "Return through optional local reminders and continue your path."],
-      "privacy": "No account, developer analytics, advertising, or cross-app tracking. Practice data and reflections are not sent to a developer-operated server.",
-      "limitation": "Audio is available only where bundled. Progress mechanics support orientation and are not a measure of spiritual worth.",
-      "cta": "Request Svara beta access",
-      "themes": [
-        {"id": "svara-01", "name": "The Ascent", "principle": "A rising practice path becomes the page spine.", "icon": "Ascending notches"},
-        {"id": "svara-02", "name": "Almanac", "principle": "A seasonal cultural broadsheet leads with the calendar.", "icon": "Season wheel"},
-        {"id": "svara-03", "name": "Constellation of Practice", "principle": "Practices, festivals, and stories form an explorable field.", "icon": "Three-star asterism"}
-      ]
-    },
-    "roam": {
-      "eyebrow": "Private beta · iPhone",
-      "headline": "See the places you have actually explored.",
-      "lede": "Roam colors in a private map as you travel, turning local visit history into a satisfying picture of where you have been.",
-      "audience": "For curious travelers who want a personal coverage map without handing their saved history to a travel social network.",
-      "benefits": [
-        {"title": "Watch coverage grow", "body": "Visited ZIP Code Areas and countries accumulate into a map that feels tangible."},
-        {"title": "Choose permission deliberately", "body": "A staged location flow explains foreground and background access before you opt in."},
-        {"title": "Share the summary", "body": "Create aggregate coverage cards or export your data when you choose."}
-      ],
-      "steps": ["Choose how much location access to grant.", "Travel while Roam matches samples against bundled geographic boundaries.", "Review, export, or share aggregate coverage on your terms."],
-      "privacy": "No Roam account, developer cloud, advertising, or third-party analytics. Apple services process what MapKit, Core Location, and StoreKit require.",
-      "limitation": "ZIP Code Areas are Census approximations, not postal delivery boundaries. Automatic tracking requires location permission.",
-      "cta": "Request Roam beta access",
-      "themes": [
-        {"id": "roam-01", "name": "Fill the Grid", "principle": "A fictional cell field colors in as the page unfolds.", "icon": "Coverage patch"},
-        {"id": "roam-02", "name": "Field Atlas", "principle": "A plate-bound atlas makes the legend the navigation.", "icon": "Contour patch"},
-        {"id": "roam-03", "name": "Redacted", "principle": "Reveal and withhold controls make privacy visible.", "icon": "Withheld notch"}
-      ]
-    },
-    "hindsight": {
-      "eyebrow": "Private beta · iPhone",
-      "headline": "Compare what you expected with what happened.",
-      "lede": "Hindsight is an on-device decision journal for recording predictions before the outcome arrives, then returning with curiosity instead of self-punishment.",
-      "audience": "For people who want to notice how they make decisions without turning uncertainty into a public scorecard.",
-      "benefits": [
-        {"title": "Record the belief", "body": "Capture an expectation and confidence before knowing the result."},
-        {"title": "Seal the entry", "body": "Keep the original thinking intact until it is time to revisit it."},
-        {"title": "Reflect on evidence", "body": "Compare belief and outcome, then add context that a simple result cannot hold."}
-      ],
-      "steps": ["Write what you expect and how confident you feel.", "Seal the prediction until its review date.", "Record the outcome and reflect on what changed."],
-      "privacy": "Hindsight runs on-device with no networking code, backend, account, analytics, advertising, or tracking.",
-      "limitation": "Outcome labels organize reflection; they do not judge the quality of a person or guarantee better future decisions.",
-      "cta": "Request Hindsight beta access",
-      "themes": [
-        {"id": "hindsight-01", "name": "Sealed Envelope", "principle": "Each belief remains sealed until the outcome arrives.", "icon": "Fractured seal"},
-        {"id": "hindsight-02", "name": "The Ledger Spread", "principle": "Belief and outcome occupy two calm, equal columns.", "icon": "Balanced entries"},
-        {"id": "hindsight-03", "name": "Fork in the Timeline", "principle": "Chosen and unchosen branches remain visible together.", "icon": "Split timeline"}
-      ]
+    {
+     "title": "Make it yours",
+     "body": "Private labels, multiple mala styles, and local history support a personal ritual."
     }
+   ],
+   "steps": [
+    "Choose a round and an optional private label.",
+    "Tap through each repetition at your own pace.",
+    "Complete the round and keep the history on your device."
+   ],
+   "privacy": "No account, advertising, analytics, tracking, or developer-operated service. Practice information stays in the app's local storage.",
+   "limitation": "Mala supports practice; it does not provide religious instruction, health guidance, or social features.",
+   "cta": "Request Mala beta access",
+   "themes": [
+    {
+     "id": "mala-01",
+     "name": "Thread of 108",
+     "principle": "One unbroken strand carries the page.",
+     "icon": "Knotted bead"
+    },
+    {
+     "id": "mala-02",
+     "name": "Eyes Closed",
+     "principle": "The eyes-free promise becomes the interface.",
+     "icon": "Tactile ring"
+    },
+    {
+     "id": "mala-03",
+     "name": "Bead Ledger",
+     "principle": "A crafted specimen sheet for the mala collection.",
+     "icon": "Bead rosette"
+    }
+   ]
+  },
+  "anjali": {
+   "eyebrow": "Private beta · iPhone",
+   "headline": "One sacred pause for the moment you are in.",
+   "lede": "Anjali offers a short, offline prayer experience shaped around dawn, transition, gratitude, difficulty, and rest—without presenting itself as a guide or authority.",
+   "audience": "For people who want a brief, private moment of Hindu prayer without opening a feed or starting a long session.",
+   "benefits": [
+    {
+     "title": "Brief by design",
+     "body": "Open Anjali, meet one focused prayer, and return to your day."
+    },
+    {
+     "title": "Available offline",
+     "body": "Bundled content works without an account or developer-operated service."
+    },
+    {
+     "title": "Return gently",
+     "body": "Optional local reminders and favorites help make room for the moments that matter."
+    }
+   ],
+   "steps": [
+    "Choose the moment you are in.",
+    "Read or chant one short prayer at your own pace.",
+    "Save what matters or close the app when the pause is complete."
+   ],
+   "privacy": "No account, backend, analytics, advertising, tracking, third-party SDKs, or purchases. Preferences and activity remain on-device.",
+   "limitation": "Current Chant practice is self-led and silent. Anjali does not claim religious authority and is not a puja guide.",
+   "cta": "Request Anjali beta access",
+   "themes": [
+    {
+     "id": "anjali-01",
+     "name": "Six Lights",
+     "principle": "Five moments are organized by the changing light.",
+     "icon": "Lamp horizon"
+    },
+    {
+     "id": "anjali-02",
+     "name": "Under a Minute",
+     "principle": "A complete, intentionally finite sixty-second read.",
+     "icon": "Cupped vessel"
+    },
+    {
+     "id": "anjali-03",
+     "name": "Threshold",
+     "principle": "Quiet architectural thresholds hold each idea.",
+     "icon": "Lit aperture"
+    }
+   ]
+  },
+  "svara": {
+   "eyebrow": "Private beta · iPhone",
+   "headline": "A daily practice rooted in Hindu culture.",
+   "lede": "Svara brings practices, festivals, stories, and reflection into one local-first path that can grow without asking you to perform your spirituality.",
+   "audience": "For people seeking a culturally rooted daily companion that balances guidance, discovery, and private progress.",
+   "benefits": [
+    {
+     "title": "Follow a path",
+     "body": "Lessons and practices create a clear next step without flattening the tradition into a checklist."
+    },
+    {
+     "title": "Meet the calendar",
+     "body": "Festival and story experiences connect practice with cultural time and context."
+    },
+    {
+     "title": "Keep progress local",
+     "body": "Practice history, points, achievements, and reflections stay on the device."
+    }
+   ],
+   "steps": [
+    "Choose a practice, lesson, festival, or story.",
+    "Move through the experience with bundled audio where it exists.",
+    "Return through optional local reminders and continue your path."
+   ],
+   "privacy": "No account, developer analytics, advertising, or cross-app tracking. Practice data and reflections are not sent to a developer-operated server.",
+   "limitation": "Audio is available only where bundled. Progress mechanics support orientation and are not a measure of spiritual worth.",
+   "cta": "Request Svara beta access",
+   "themes": [
+    {
+     "id": "svara-01",
+     "name": "The Ascent",
+     "principle": "A rising practice path becomes the page spine.",
+     "icon": "Ascending notches"
+    },
+    {
+     "id": "svara-02",
+     "name": "Almanac",
+     "principle": "A seasonal cultural broadsheet leads with the calendar.",
+     "icon": "Season wheel"
+    },
+    {
+     "id": "svara-03",
+     "name": "Constellation of Practice",
+     "principle": "Practices, festivals, and stories form an explorable field.",
+     "icon": "Three-star asterism"
+    }
+   ]
+  },
+  "roam": {
+   "eyebrow": "Private beta · iPhone",
+   "headline": "See the places you have actually explored.",
+   "lede": "Roam colors in a private map as you travel, turning local visit history into a satisfying picture of where you have been.",
+   "audience": "For curious travelers who want a personal coverage map without handing their saved history to a travel social network.",
+   "benefits": [
+    {
+     "title": "Watch coverage grow",
+     "body": "Visited ZIP Code Areas and countries accumulate into a map that feels tangible."
+    },
+    {
+     "title": "Choose permission deliberately",
+     "body": "A staged location flow explains foreground and background access before you opt in."
+    },
+    {
+     "title": "Share the summary",
+     "body": "Create aggregate coverage cards or export your data when you choose."
+    }
+   ],
+   "steps": [
+    "Choose how much location access to grant.",
+    "Travel while Roam matches samples against bundled geographic boundaries.",
+    "Review, export, or share aggregate coverage on your terms."
+   ],
+   "privacy": "No Roam account, developer cloud, advertising, or third-party analytics. Apple services process what MapKit, Core Location, and StoreKit require.",
+   "limitation": "ZIP Code Areas are Census approximations, not postal delivery boundaries. Automatic tracking requires location permission.",
+   "cta": "Request Roam beta access",
+   "themes": [
+    {
+     "id": "roam-01",
+     "name": "Fill the Grid",
+     "principle": "A fictional cell field colors in as the page unfolds.",
+     "icon": "Coverage patch"
+    },
+    {
+     "id": "roam-02",
+     "name": "Field Atlas",
+     "principle": "A plate-bound atlas makes the legend the navigation.",
+     "icon": "Contour patch"
+    },
+    {
+     "id": "roam-03",
+     "name": "Redacted",
+     "principle": "Reveal and withhold controls make privacy visible.",
+     "icon": "Withheld notch"
+    }
+   ]
+  },
+  "hindsight": {
+   "eyebrow": "Private beta · iPhone",
+   "headline": "Compare what you expected with what happened.",
+   "lede": "Hindsight is an on-device decision journal for recording predictions before the outcome arrives, then returning with curiosity instead of self-punishment.",
+   "audience": "For people who want to notice how they make decisions without turning uncertainty into a public scorecard.",
+   "benefits": [
+    {
+     "title": "Record the belief",
+     "body": "Capture an expectation and confidence before knowing the result."
+    },
+    {
+     "title": "Seal the entry",
+     "body": "Keep the original thinking intact until it is time to revisit it."
+    },
+    {
+     "title": "Reflect on evidence",
+     "body": "Compare belief and outcome, then add context that a simple result cannot hold."
+    }
+   ],
+   "steps": [
+    "Write what you expect and how confident you feel.",
+    "Seal the prediction until its review date.",
+    "Record the outcome and reflect on what changed."
+   ],
+   "privacy": "Hindsight runs on-device with no networking code, backend, account, analytics, advertising, or tracking.",
+   "limitation": "Outcome labels organize reflection; they do not judge the quality of a person or guarantee better future decisions.",
+   "cta": "Request Hindsight beta access",
+   "themes": [
+    {
+     "id": "hindsight-01",
+     "name": "Sealed Envelope",
+     "principle": "Each belief remains sealed until the outcome arrives.",
+     "icon": "Fractured seal"
+    },
+    {
+     "id": "hindsight-02",
+     "name": "The Ledger Spread",
+     "principle": "Belief and outcome occupy two calm, equal columns.",
+     "icon": "Balanced entries"
+    },
+    {
+     "id": "hindsight-03",
+     "name": "Fork in the Timeline",
+     "principle": "Chosen and unchosen branches remain visible together.",
+     "icon": "Split timeline"
+    }
+   ]
+  },
+  "aurafit": {
+   "eyebrow": "Private beta · iPhone",
+   "headline": "Your outfit check, scored on your iPhone.",
+   "lede": "AuraFit is an on-device outfit and camera coach. Capture or import a full-body photo and get a Fit Score for outfit, color, pose, lighting, framing, and background - without the photo leaving your phone.",
+   "audience": "For people who take a mirror check before heading out and want honest, private feedback.",
+   "benefits": [
+    {
+     "title": "Scan the fit",
+     "body": "Capture or import a full-body photo and let on-device analysis read pose, palette, lighting, and framing."
+    },
+    {
+     "title": "Read the score",
+     "body": "See a weighted Fit Score with concrete tips for the outfit, the light, and the frame."
+    },
+    {
+     "title": "Share on your terms",
+     "body": "Export a scorecard or a five-second reveal clip only when you choose to."
+    }
+   ],
+   "steps": [
+    "Capture or import a full-body photo.",
+    "Review your Fit Score and coaching tips.",
+    "Save or share the scorecard if you want to."
+   ],
+   "privacy": "AuraFit analyzes photos entirely on device with no account, backend, analytics, or tracking; networking exists only for App Store purchases.",
+   "limitation": "Scores are subjective guidance about an outfit and a photograph; they never measure a person.",
+   "cta": "Request AuraFit beta access",
+   "themes": [
+    {
+     "id": "aurafit-01",
+     "name": "Studio Mirror",
+     "principle": "The photo stays the hero; the coaching frames it.",
+     "icon": "Full-length mirror"
+    },
+    {
+     "id": "aurafit-02",
+     "name": "Contact Sheet",
+     "principle": "Every scan lines up like film, ready to compare.",
+     "icon": "Film strip"
+    },
+    {
+     "id": "aurafit-03",
+     "name": "Fitting Room Glow",
+     "principle": "Feedback reads like a stylist, not a judge.",
+     "icon": "Glowing hanger"
+    }
+   ]
   }
+ }
 }

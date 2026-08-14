@@ -35,7 +35,10 @@ class GeneratorTests(unittest.TestCase):
         products = GEN.load_products()
         apps = GEN.load_apps(products)
         enabled = [app for app in apps if app.get("route_enabled") is True]
-        self.assertEqual({app["slug"] for app in enabled}, {"mala", "anjali", "svara", "roam"})
+        self.assertEqual(
+            {app["slug"] for app in enabled},
+            {"mala", "anjali", "svara", "roam", "hindsight", "aurafit"},
+        )
         for app in enabled:
             with self.subTest(app=app["slug"]):
                 self.assertRegex(str(app["support_contact"]), r"^[^@\s]+@[^@\s]+\.[^@\s]+$")
@@ -44,25 +47,22 @@ class GeneratorTests(unittest.TestCase):
                     self.assertRegex(str(app["app_store_id"]), r"^\d{9,12}$")
         self.assertEqual(
             {product["slug"] for product in products},
-            {"mala", "anjali", "svara", "roam", "hindsight"},
+            {"mala", "anjali", "svara", "roam", "hindsight", "aurafit"},
         )
 
-    def test_each_product_has_three_valid_landing_page_themes(self) -> None:
+    def test_each_product_uses_the_shared_landing_system(self) -> None:
         products = GEN.load_products()
         landings = GEN.load_landing_pages(products)
-        self.assertEqual(set(landings), {"mala", "anjali", "svara", "roam", "hindsight"})
-        theme_ids = [
-            str(theme["id"])
-            for landing in landings.values()
-            for theme in landing["themes"]
-        ]
-        self.assertEqual(len(theme_ids), 15)
-        self.assertEqual(len(set(theme_ids)), 15)
+        self.assertEqual(set(landings), {"mala", "anjali", "svara", "roam", "hindsight", "aurafit"})
         for product in products:
             slug = str(product["slug"])
             rendered = GEN.product_page(product, landings[slug], None)
-            self.assertEqual(rendered.count("data-app-scene="), 3)
-            self.assertIn("data-app-theme-picker", rendered)
+            self.assertIn(f"product-system--{slug}", rendered)
+            self.assertIn("Ask for a TestFlight invitation.", rendered)
+            self.assertIn("data-waitlist", rendered)
+            self.assertIn("product-features", rendered)
+            self.assertIn("Screenshot pending", rendered)
+            self.assertIn("I can unsubscribe at any time.", rendered)
 
     def test_unapproved_legal_copy_is_dated_as_draft_and_noindex(self) -> None:
         apps = GEN.load_apps(GEN.load_products())
