@@ -752,7 +752,7 @@ def apps_index(apps: list[dict[str, object]]) -> str:
             store_link = ""
         cards_list.append(
             f"""<article class="app-card"><span class="label">{esc(status)}</span>
-<h2>{esc(app.get("store_name") or app.get("name"))}</h2>
+<h2><a href="../products/{esc(app['registry_slug'])}/">{esc(app.get("store_name") or app.get("name"))}</a></h2>
 <p>{esc(summary)}</p>
 <div class="resource-links"><a class="resource-link" href="{esc(app['slug'])}/privacy/">Privacy policy</a>
 <a class="resource-link" href="{esc(app['slug'])}/support/">Support</a>{store_link}</div></article>"""
