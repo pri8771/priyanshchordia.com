@@ -265,7 +265,7 @@
     "Review your Fit Score and coaching tips.",
     "Save or share the scorecard if you want to."
    ],
-   "privacy": "AuraFit analyzes photos entirely on device with no account, backend, analytics, or tracking; networking exists only for App Store purchases.",
+   "privacy": "AuraFit analyzes photos entirely on device with no account, backend, analytics, or tracking. The app has no networking code of its own, and every feature is free.",
    "limitation": "Scores are subjective guidance about an outfit and a photograph; they never measure a person.",
    "cta": "Request AuraFit beta access",
    "themes": [
