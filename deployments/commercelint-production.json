@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "status": "live",
+  "verified_at_utc": "2026-08-24T16:24:11Z",
+  "brand": "CommerceLint",
+  "url": "https://priyanshchordia.com/commercelint/",
+  "scanner_url": "https://priyanshchordia.com/commercelint/scanner.html",
+  "legacy_url": "https://priyanshchordia.com/machinecart/",
+  "portfolio_commit": "290645eab42657a3897a721e027b15a1233ac1a2",
+  "source_commit": "ffef47935ab9473f7d8ad6ec898eda8238ef8b89",
+  "source_changed": true,
+  "pages_url": "https://priyanshchordia.com/",
+  "workflow_run_url": "https://github.com/pri8771/priyanshchordia.com/actions/runs/32750543043",
+  "indexnow": {
+    "outcome": "success",
+    "http_status": "202",
+    "url_count": 12
+  },
+  "checks": [
+    "home returned HTTP success and contained CommerceLint",
+    "scanner returned HTTP success and contained analyzeMarkup",
+    "status.json returned valid JSON",
+    "legacy route pointed to the CommerceLint canonical path",
+    "excluded Primandir analytics references were absent",
+    "IndexNow ownership key was publicly reachable"
+  ]
+}
