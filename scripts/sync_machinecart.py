@@ -20,6 +20,7 @@ import xml.etree.ElementTree as ET
 from html.parser import HTMLParser
 from pathlib import Path
 from urllib.parse import unquote, urlsplit
+from machinecart_portfolio_promotion import inject_portfolio_promotion
 
 PRODUCTION_BASE = "https://priyanshchordia.com/machinecart/"
 LEGACY_BASES = (
@@ -503,6 +504,7 @@ def main() -> int:
     }
     (target / "deployment.json").write_text(json.dumps(deployment, indent=2) + "\n", encoding="utf-8")
     merge_discovery(site_root, target)
+    inject_portfolio_promotion(site_root)
 
     errors = validate(target)
     if errors:
