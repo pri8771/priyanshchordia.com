@@ -3,6 +3,8 @@ name: Deploy public portfolio
 on:
   push:
     branches: [main]
+  schedule:
+    - cron: "23 * * * *"
   workflow_dispatch:
 
 permissions:
@@ -18,22 +20,43 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Check out portfolio
+        uses: actions/checkout@v4
+
+      - name: Check out autonomous MachineCart source
+        uses: actions/checkout@v4
+        with:
+          repository: pri8771/autonomous_apps
+          ref: main
+          path: .machinecart-source
+
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+
       - name: Test generator and interactive map invariants
         run: python3 -m unittest discover -s tests -v
-      - name: Generate static site
+
+      - name: Generate static portfolio
         run: python3 scripts/generate_site.py
-      - name: Validate generated routes and markup
+
+      - name: Validate generated portfolio routes and markup
         run: python3 scripts/check_site.py
-      - name: Check generated experience JavaScript
+
+      - name: Check generated portfolio JavaScript
         run: |
           node --check site/experiences.js
           node --check site/app-themes.js
-      - name: Verify committed output is current
+
+      - name: Verify committed portfolio output is current
         run: test -z "$(git status --porcelain --untracked-files=all -- site)"
+
+      - name: Mount and validate latest MachineCart release
+        run: python3 scripts/sync_machinecart.py .machinecart-source/docs site/machinecart
+
+      - name: Check MachineCart analytics JavaScript
+        run: node --check site/machinecart/assets/analytics.js
+
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
