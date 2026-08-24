@@ -3,7 +3,7 @@
 
 The source repository remains the durable business/operator source of truth.
 This script copies only the public ``docs/`` tree, rewrites canonical URLs for
-the production path, adds consent-gated analytics, and validates the mounted
+the production path, adds a no-network analytics shim, and validates the mounted
 site before GitHub Pages deployment.
 """
 
@@ -41,7 +41,7 @@ REQUIRED_FILES = (
     "sitemap.xml",
 )
 ANALYTICS_FILENAME = "analytics.js"
-HUBSPOT_PORTAL_ID = "246481057"
+ANALYTICS_MODE = "disabled"
 
 
 class PublicPageParser(HTMLParser):
@@ -181,126 +181,16 @@ def rewrite_html(path: Path, root: Path) -> None:
 
 
 def analytics_javascript() -> str:
-    return f"""(() => {{
+    """Return a no-network compatibility shim.
+
+    MachineCart intentionally sends no analytics to Primandir or any other
+    third-party property. Existing pages may call ``machineCartTrack``;
+    the no-op keeps those calls safe without collecting or transmitting data.
+    """
+    return """(() => {
   "use strict";
-  const CONSENT_KEY = "machinecart_analytics_consent";
-  const EVENT_KEY = "machinecart_local_events";
-  const PORTAL_ID = "{HUBSPOT_PORTAL_ID}";
-  const EVENT_BASE = "/machinecart/events/";
-
-  function consent() {{
-    try {{ return localStorage.getItem(CONSENT_KEY); }} catch (_) {{ return null; }}
-  }}
-
-  function remember(name) {{
-    try {{
-      const events = JSON.parse(localStorage.getItem(EVENT_KEY) || "{{}}");
-      events[name] = (events[name] || 0) + 1;
-      localStorage.setItem(EVENT_KEY, JSON.stringify(events));
-    }} catch (_) {{}}
-  }}
-
-  function loadHubSpot() {{
-    if (document.getElementById("hs-script-loader")) return;
-    window._hsq = window._hsq || [];
-    const script = document.createElement("script");
-    script.id = "hs-script-loader";
-    script.async = true;
-    script.defer = true;
-    script.src = `https://js.hs-scripts.com/${{PORTAL_ID}}.js`;
-    document.head.appendChild(script);
-  }}
-
-  function track(name) {{
-    remember(name);
-    if (consent() !== "granted") return;
-    loadHubSpot();
-    window._hsq = window._hsq || [];
-    const originalPath = location.pathname + location.search;
-    window._hsq.push(["setPath", EVENT_BASE + encodeURIComponent(name)]);
-    window._hsq.push(["trackPageView"]);
-    window._hsq.push(["setPath", originalPath]);
-  }}
-
-  function setConsent(value) {{
-    try {{ localStorage.setItem(CONSENT_KEY, value); }} catch (_) {{}}
-    document.getElementById("machinecart-consent")?.remove();
-    if (value === "granted") {{
-      loadHubSpot();
-      track("analytics-consent-granted");
-    }}
-  }}
-
-  function showConsent() {{
-    if (consent()) return;
-    const banner = document.createElement("aside");
-    banner.id = "machinecart-consent";
-    banner.setAttribute("aria-label", "Analytics choice");
-    banner.innerHTML = `
-      <div><strong>Help improve MachineCart</strong><span>Allow privacy-conscious analytics for page views and scanner funnel events. The scanner itself still runs in your browser.</span></div>
-      <div class="mc-consent-actions">
-        <button type="button" data-mc-consent="denied">Decline</button>
-        <button type="button" data-mc-consent="granted">Allow analytics</button>
-        <a href="${{location.pathname.includes("/guides/") ? "../" : ""}}privacy.html">Privacy</a>
-      </div>`;
-    const style = document.createElement("style");
-    style.textContent = `
-      #machinecart-consent{{position:fixed;z-index:9999;left:1rem;right:1rem;bottom:1rem;display:flex;gap:1rem;align-items:center;justify-content:space-between;padding:1rem 1.15rem;border:1px solid rgba(255,255,255,.16);border-radius:16px;background:#111827;color:#f8fafc;box-shadow:0 18px 60px rgba(0,0,0,.35);font:14px/1.45 system-ui,sans-serif}}
-      #machinecart-consent div:first-child{{display:grid;gap:.2rem;max-width:720px}}
-      #machinecart-consent span{{color:#cbd5e1}}
-      .mc-consent-actions{{display:flex;gap:.55rem;align-items:center;flex-wrap:wrap}}
-      .mc-consent-actions button,.mc-consent-actions a{{border:1px solid rgba(255,255,255,.2);border-radius:999px;padding:.55rem .8rem;background:#1f2937;color:#fff;text-decoration:none;cursor:pointer;font:inherit}}
-      .mc-consent-actions button[data-mc-consent="granted"]{{background:#fff;color:#111827}}
-      @media(max-width:720px){{#machinecart-consent{{align-items:flex-start;flex-direction:column}}}}
-    `;
-    document.head.appendChild(style);
-    document.body.appendChild(banner);
-    banner.addEventListener("click", event => {{
-      const target = event.target.closest("[data-mc-consent]");
-      if (target) setConsent(target.dataset.mcConsent);
-    }});
-  }}
-
-  function bindFunnel() {{
-    document.getElementById("scanButton")?.addEventListener("click", () => track("scanner-start"));
-    document.getElementById("loadExample")?.addEventListener("click", () => track("example-loaded"));
-    document.getElementById("downloadButton")?.addEventListener("click", () => track("evidence-download"));
-
-    document.addEventListener("click", event => {{
-      const link = event.target.closest("a[href]");
-      if (!link) return;
-      const href = link.getAttribute("href") || "";
-      if (href.includes("founding-audit") || href.includes("MachineCart%20founding%20audit") || href.includes("MachineCart%20deep%20audit")) {{
-        track("paid-offer-click");
-      }} else if (href.includes("agency") || href.includes("agency%20pilot")) {{
-        track("agency-intent");
-      }} else if (href.startsWith("mailto:")) {{
-        track("contact-intent");
-      }}
-    }});
-
-    const results = document.getElementById("results");
-    if (results) {{
-      let completed = !results.classList.contains("hidden");
-      const observer = new MutationObserver(() => {{
-        if (!completed && !results.classList.contains("hidden")) {{
-          completed = true;
-          track("scanner-completed");
-        }}
-      }});
-      observer.observe(results, {{ attributes: true, attributeFilter: ["class"] }});
-    }}
-  }}
-
-  if (consent() === "granted") loadHubSpot();
-  if (document.readyState === "loading") {{
-    document.addEventListener("DOMContentLoaded", () => {{ showConsent(); bindFunnel(); }}, {{ once: true }});
-  }} else {{
-    showConsent();
-    bindFunnel();
-  }}
-  window.machineCartTrack = track;
-}})();
+  window.machineCartTrack = function () {};
+})();
 """
 
 
@@ -321,29 +211,21 @@ def og_card_svg() -> str:
 
 def privacy_rewrite(path: Path) -> None:
     content = path.read_text(encoding="utf-8")
-    old = (
-        "<section><h2>Analytics</h2><p>The first release does not embed advertising trackers. "
-        "Aggregate first-party analytics may be added later to understand scanner starts, completions, "
-        "conversions, and product usefulness. This page will be updated before materially different "
-        "collection begins.</p></section>"
+    replacement = (
+        "<section><h2>Analytics</h2><p>MachineCart currently does not load "
+        "third-party analytics, advertising trackers, or cross-site measurement. "
+        "The scanner runs in your browser. If a separate opt-in analytics property "
+        "is added later, this notice will be updated before collection begins.</p></section>"
     )
-    new = (
-        "<section><h2>Optional analytics</h2><p>The production site offers a clear analytics choice. "
-        "If you select Allow analytics, it loads HubSpot analytics for page views and virtual funnel "
-        "events such as scanner start, scanner completion, evidence download, and audit-interest clicks. "
-        "If you decline or make no choice, that third-party analytics script is not loaded. Your choice "
-        "is stored in this browser and can be reset by clearing site data.</p></section>"
+    content, count = re.subn(
+        r"<section><h2>(?:Optional analytics|Analytics)</h2>.*?</section>",
+        replacement,
+        content,
+        count=1,
+        flags=re.IGNORECASE | re.DOTALL,
     )
-    if old in content:
-        content = content.replace(old, new)
-    else:
-        content = re.sub(
-            r"<section><h2>Analytics</h2>.*?</section>",
-            new,
-            content,
-            count=1,
-            flags=re.IGNORECASE | re.DOTALL,
-        )
+    if count != 1:
+        raise ValueError("privacy.html analytics section was not found")
     content = content.replace("Last updated August 23, 2026.", "Last updated August 24, 2026.")
     path.write_text(content, encoding="utf-8")
 
@@ -497,9 +379,10 @@ def main() -> int:
         "source_repository": "pri8771/autonomous_apps",
         "source_commit": source_sha(source),
         "analytics": {
-            "provider": "HubSpot",
-            "portal_id": HUBSPOT_PORTAL_ID,
-            "consent_required": True,
+            "provider": "None",
+            "mode": ANALYTICS_MODE,
+            "consent_required": False,
+            "network_requests": False,
         },
     }
     (target / "deployment.json").write_text(json.dumps(deployment, indent=2) + "\n", encoding="utf-8")
