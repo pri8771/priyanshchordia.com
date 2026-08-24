@@ -1,0 +1,118 @@
+name: Cut over CommerceLint production analytics
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/analytics-cutover.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  issues: write
+
+concurrency:
+  group: portfolio-analytics-cutover
+  cancel-in-progress: false
+
+jobs:
+  migrate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/checkout@v4
+        with:
+          repository: pri8771/autonomous_apps
+          ref: main
+          path: .commercelint-source
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Patch, exercise, and persist the production pipeline
+        id: migration
+        shell: bash
+        run: |
+          set -u -o pipefail
+          git config user.name "commercelint-deployment[bot]"
+          git config user.email "pchordia@unsubscriber.me"
+          result=1
+          detail="cutover did not start"
+
+          for attempt in 1 2 3; do
+            git fetch origin main
+            git reset --hard origin/main
+            git clean -fd -e .commercelint-source
+            git -C .commercelint-source fetch origin main
+            git -C .commercelint-source reset --hard origin/main
+
+            set +e
+            python scripts/analytics_cutover_migration.py
+            migration_code=$?
+            python -m py_compile scripts/sync_commercelint.py scripts/analytics_cutover_migration.py
+            syntax_code=$?
+            python3 -m unittest discover -s tests -v
+            tests_code=$?
+            python3 scripts/generate_site.py
+            generate_code=$?
+            python3 scripts/check_site.py
+            portfolio_code=$?
+            python3 scripts/sync_commercelint.py .commercelint-source/docs site/commercelint
+            mount_code=$?
+            node --check site/commercelint/assets/analytics.js
+            javascript_code=$?
+            set -e
+
+            if [ "$migration_code" -ne 0 ] || [ "$syntax_code" -ne 0 ] || [ "$tests_code" -ne 0 ] || [ "$generate_code" -ne 0 ] || [ "$portfolio_code" -ne 0 ] || [ "$mount_code" -ne 0 ] || [ "$javascript_code" -ne 0 ]; then
+              detail="migration=${migration_code}, syntax=${syntax_code}, tests=${tests_code}, generate=${generate_code}, portfolio=${portfolio_code}, mount=${mount_code}, javascript=${javascript_code}"
+              break
+            fi
+
+            grep -q 'G-3TY7EMFMWM' site/commercelint/assets/analytics.js
+            grep -q 'commercelint:analyticsConsent:v1' site/commercelint/assets/analytics.js
+            grep -q 'only after you select' site/commercelint/privacy.html
+            test -z "$(grep -RIl 'googletagmanager.com/gtag/js' site/commercelint --include='*.html' || true)"
+
+            rm -f .github/workflows/analytics-cutover.yml scripts/analytics_cutover_migration.py
+            git add .github/workflows/pages.yml scripts/sync_commercelint.py .github/workflows/analytics-cutover.yml scripts/analytics_cutover_migration.py
+            if git diff --cached --quiet; then
+              result=0
+              detail="production analytics pipeline already current"
+              break
+            fi
+
+            git commit -m "Preserve consent-gated CommerceLint analytics in production"
+            if git push origin HEAD:main; then
+              result=0
+              detail="production pipeline migration committed"
+              break
+            fi
+
+            detail="push conflict on attempt ${attempt}; retrying from latest main"
+            sleep $((attempt * 3))
+          done
+
+          echo "result=${result}" >> "$GITHUB_OUTPUT"
+          echo "detail=${detail}" >> "$GITHUB_OUTPUT"
+          exit 0
+
+      - name: Open or refresh a cutover incident
+        if: ${{ steps.migration.outputs.result != '0' }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          DETAIL: ${{ steps.migration.outputs.detail }}
+        shell: bash
+        run: |
+          title="[CommerceLint] Analytics production cutover failed"
+          body="The analytics production cutover failed at $(date -u +'%Y-%m-%dT%H:%M:%SZ'). ${DETAIL}. Run: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          issue="$(gh issue list --state open --search "in:title $title" --json number --jq '.[0].number // empty')"
+          if [ -n "$issue" ]; then gh issue comment "$issue" --body "$body"; else gh issue create --title "$title" --body "$body"; fi
+
+      - name: Fail after incident recording
+        if: ${{ steps.migration.outputs.result != '0' }}
+        run: exit 1
