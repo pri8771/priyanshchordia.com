@@ -1,3 +1,4 @@
+# Registered workflow retriggered after installation.
 name: Add MachineCart portfolio promotion
 
 on:
