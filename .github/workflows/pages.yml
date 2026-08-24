@@ -1,4 +1,4 @@
-name: Deploy public portfolio
+name: Deploy public portfolio and CommerceLint
 
 on:
   push:
@@ -26,39 +26,39 @@ jobs:
   build:
     runs-on: ubuntu-latest
     outputs:
-      machinecart_source_sha: ${{ steps.machinecart_source.outputs.sha }}
-      machinecart_source_changed: ${{ steps.machinecart_changed.outputs.changed }}
+      source_sha: ${{ steps.source.outputs.sha }}
+      source_changed: ${{ steps.changed.outputs.changed }}
     steps:
       - name: Check out portfolio
         uses: actions/checkout@v4
 
-      - name: Check out autonomous MachineCart source
+      - name: Check out autonomous CommerceLint source
         uses: actions/checkout@v4
         with:
           repository: pri8771/autonomous_apps
           ref: main
-          path: .machinecart-source
+          path: .commercelint-source
 
-      - name: Record MachineCart source revision
-        id: machinecart_source
+      - name: Record CommerceLint source revision
+        id: source
         shell: bash
-        run: echo "sha=$(git -C .machinecart-source rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+        run: echo "sha=$(git -C .commercelint-source rev-parse HEAD)" >> "$GITHUB_OUTPUT"
 
-      - name: Detect a new MachineCart release
-        id: machinecart_changed
+      - name: Detect a new CommerceLint release
+        id: changed
         env:
-          CURRENT_SHA: ${{ steps.machinecart_source.outputs.sha }}
+          CURRENT_SHA: ${{ steps.source.outputs.sha }}
         shell: bash
         run: |
           previous="$(python - <<'PY'
           import json
           from pathlib import Path
-          path = Path('deployments/machinecart-production.json')
+          path = Path('deployments/commercelint-production.json')
           if not path.exists():
               print('')
           else:
               try:
-                  print(json.loads(path.read_text(encoding='utf-8')).get('machinecart_source_commit', ''))
+                  print(json.loads(path.read_text(encoding='utf-8')).get('source_commit', ''))
               except Exception:
                   print('')
           PY
@@ -68,20 +68,20 @@ jobs:
           else
             echo "changed=true" >> "$GITHUB_OUTPUT"
           fi
-          echo "Previous MachineCart source: ${previous:-none}"
-          echo "Current MachineCart source: $CURRENT_SHA"
+          echo "Previous CommerceLint source: ${previous:-none}"
+          echo "Current CommerceLint source: $CURRENT_SHA"
 
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
 
-      - name: Test generator and interactive map invariants
+      - name: Test portfolio generator
         run: python3 -m unittest discover -s tests -v
 
       - name: Generate static portfolio
         run: python3 scripts/generate_site.py
 
-      - name: Validate generated portfolio routes and markup
+      - name: Validate generated portfolio
         run: python3 scripts/check_site.py
 
       - name: Check generated portfolio JavaScript
@@ -92,13 +92,20 @@ jobs:
       - name: Verify committed portfolio output is current
         run: test -z "$(git status --porcelain --untracked-files=all -- site)"
 
-      - name: Mount and validate latest MachineCart release
-        run: python3 scripts/sync_machinecart.py .machinecart-source/docs site/machinecart
+      - name: Mount and validate latest CommerceLint release
+        run: python3 scripts/sync_commercelint.py .commercelint-source/docs site/commercelint
 
-      - name: Check MachineCart analytics JavaScript
-        run: node --check site/machinecart/assets/analytics.js
+      - name: Check CommerceLint privacy and JavaScript invariants
+        shell: bash
+        run: |
+          node --check site/commercelint/assets/analytics.js
+          test -z "$(grep -RIlE '246481057|js\.hs-scripts\.com' site/commercelint || true)"
+          grep -q 'CommerceLint' site/commercelint/index.html
+          grep -q 'priyanshchordia.com/commercelint/' site/commercelint/index.html
+          grep -q 'priyanshchordia.com/commercelint/' site/machinecart/index.html
 
       - uses: actions/configure-pages@v5
+
       - uses: actions/upload-pages-artifact@v3
         with:
           path: site
@@ -125,34 +132,39 @@ jobs:
       indexnow_status: ${{ steps.indexnow.outputs.status }}
       indexnow_url_count: ${{ steps.indexnow.outputs.url_count }}
     steps:
-      - name: Verify public MachineCart funnel
+      - name: Verify public CommerceLint funnel and legacy redirect
         shell: bash
         run: |
           set -euo pipefail
           home="$(mktemp)"
           scanner="$(mktemp)"
           status="$(mktemp)"
+          legacy="$(mktemp)"
           success=false
-          for attempt in $(seq 1 20); do
-            if curl -fsSL --max-time 20 "https://priyanshchordia.com/machinecart/" -o "$home" \
-              && curl -fsSL --max-time 20 "https://priyanshchordia.com/machinecart/scanner.html" -o "$scanner" \
-              && curl -fsSL --max-time 20 "https://priyanshchordia.com/machinecart/status.json" -o "$status" \
-              && curl -fsSL --max-time 20 "https://priyanshchordia.com/machinecart/1d88808c1ec138f77fe50484f83e6de7.txt" | grep -q "1d88808c1ec138f77fe50484f83e6de7" \
-              && grep -q "MachineCart" "$home" \
+          for attempt in $(seq 1 24); do
+            if curl -fsSL --max-time 20 "https://priyanshchordia.com/commercelint/" -o "$home" \
+              && curl -fsSL --max-time 20 "https://priyanshchordia.com/commercelint/scanner.html" -o "$scanner" \
+              && curl -fsSL --max-time 20 "https://priyanshchordia.com/commercelint/status.json" -o "$status" \
+              && curl -fsSL --max-time 20 "https://priyanshchordia.com/machinecart/" -o "$legacy" \
+              && curl -fsSL --max-time 20 "https://priyanshchordia.com/commercelint/1d88808c1ec138f77fe50484f83e6de7.txt" | grep -q "1d88808c1ec138f77fe50484f83e6de7" \
+              && grep -q "CommerceLint" "$home" \
+              && grep -q "Turn product-page defects" "$home" \
               && grep -q "analyzeMarkup" "$scanner" \
+              && grep -q "priyanshchordia.com/commercelint/" "$legacy" \
+              && ! grep -qE "246481057|js\.hs-scripts\.com" "$home" \
               && python -m json.tool "$status" >/dev/null; then
               success=true
               break
             fi
             echo "Production verification attempt $attempt did not pass yet."
-            sleep 12
+            sleep 10
           done
           test "$success" = true
-          echo "MachineCart production funnel is reachable and structurally healthy."
+          echo "CommerceLint production funnel and legacy redirect are healthy."
 
-      - name: Submit changed MachineCart URLs to IndexNow
+      - name: Submit changed CommerceLint URLs to IndexNow
         id: indexnow
-        if: ${{ needs.build.outputs.machinecart_source_changed == 'true' }}
+        if: ${{ needs.build.outputs.source_changed == 'true' }}
         continue-on-error: true
         shell: bash
         run: |
@@ -162,7 +174,7 @@ jobs:
           import urllib.request
           import xml.etree.ElementTree as ET
 
-          base = "https://priyanshchordia.com/machinecart/"
+          base = "https://priyanshchordia.com/commercelint/"
           sitemap_url = base + "sitemap.xml"
           key = "1d88808c1ec138f77fe50484f83e6de7"
           key_location = base + key + ".txt"
@@ -172,7 +184,7 @@ jobs:
           urls = [node.text for node in root.findall("sm:url/sm:loc", namespace) if node.text]
           urls = sorted({url for url in urls if url.startswith(base)})
           if not urls:
-              raise SystemExit("Production sitemap contained no MachineCart URLs")
+              raise SystemExit("Production sitemap contained no CommerceLint URLs")
           payload = json.dumps({
               "host": "priyanshchordia.com",
               "key": key,
@@ -182,7 +194,7 @@ jobs:
           request = urllib.request.Request(
               "https://api.indexnow.org/indexnow",
               data=payload,
-              headers={"Content-Type": "application/json; charset=utf-8", "User-Agent": "MachineCart-Discovery/1.0"},
+              headers={"Content-Type": "application/json; charset=utf-8", "User-Agent": "CommerceLint-Discovery/1.0"},
               method="POST",
           )
           with urllib.request.urlopen(request, timeout=30) as response:
@@ -193,16 +205,16 @@ jobs:
           with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as handle:
               handle.write(f"status={status}\n")
               handle.write(f"url_count={len(urls)}\n")
-          print(f"IndexNow accepted {len(urls)} production URLs with HTTP {status}.")
+          print(f"IndexNow accepted {len(urls)} CommerceLint URLs with HTTP {status}.")
           PY
 
       - name: Open or refresh search-discovery incident
-        if: ${{ needs.build.outputs.machinecart_source_changed == 'true' && steps.indexnow.outcome == 'failure' }}
+        if: ${{ needs.build.outputs.source_changed == 'true' && steps.indexnow.outcome == 'failure' }}
         env:
           GH_TOKEN: ${{ github.token }}
         shell: bash
         run: |
-          title="[MachineCart] Search discovery incident"
+          title="[CommerceLint] Search discovery incident"
           body="The production site deployed successfully, but IndexNow submission failed in ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}. The next changed release will retry automatically."
           existing="$(gh issue list --state open --search "in:title $title" --json number --jq '.[0].number // empty')"
           if [ -n "$existing" ]; then
@@ -212,12 +224,12 @@ jobs:
           fi
 
       - name: Resolve search-discovery incident
-        if: ${{ needs.build.outputs.machinecart_source_changed == 'true' && steps.indexnow.outcome == 'success' }}
+        if: ${{ needs.build.outputs.source_changed == 'true' && steps.indexnow.outcome == 'success' }}
         env:
           GH_TOKEN: ${{ github.token }}
         shell: bash
         run: |
-          title="[MachineCart] Search discovery incident"
+          title="[CommerceLint] Search discovery incident"
           existing="$(gh issue list --state open --search "in:title $title" --json number --jq '.[0].number // empty')"
           if [ -n "$existing" ]; then
             gh issue comment "$existing" --body "IndexNow accepted the latest verified release. Closing automatically."
@@ -236,8 +248,8 @@ jobs:
 
       - name: Write machine-readable deployment receipt
         env:
-          MACHINECART_SOURCE_SHA: ${{ needs.build.outputs.machinecart_source_sha }}
-          MACHINECART_SOURCE_CHANGED: ${{ needs.build.outputs.machinecart_source_changed }}
+          SOURCE_SHA: ${{ needs.build.outputs.source_sha }}
+          SOURCE_CHANGED: ${{ needs.build.outputs.source_changed }}
           PAGE_URL: ${{ needs.deploy.outputs.page_url }}
           INDEXNOW_OUTCOME: ${{ needs.verify_production.outputs.indexnow_outcome }}
           INDEXNOW_STATUS: ${{ needs.verify_production.outputs.indexnow_status }}
@@ -255,11 +267,13 @@ jobs:
               "schema_version": 1,
               "status": "live",
               "verified_at_utc": datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z"),
-              "machinecart_url": "https://priyanshchordia.com/machinecart/",
-              "scanner_url": "https://priyanshchordia.com/machinecart/scanner.html",
+              "brand": "CommerceLint",
+              "url": "https://priyanshchordia.com/commercelint/",
+              "scanner_url": "https://priyanshchordia.com/commercelint/scanner.html",
+              "legacy_url": "https://priyanshchordia.com/machinecart/",
               "portfolio_commit": os.environ["GITHUB_SHA"],
-              "machinecart_source_commit": os.environ["MACHINECART_SOURCE_SHA"],
-              "machinecart_source_changed": os.environ.get("MACHINECART_SOURCE_CHANGED") == "true",
+              "source_commit": os.environ["SOURCE_SHA"],
+              "source_changed": os.environ.get("SOURCE_CHANGED") == "true",
               "pages_url": os.environ.get("PAGE_URL", ""),
               "workflow_run_url": os.environ["WORKFLOW_RUN_URL"],
               "indexnow": {
@@ -268,13 +282,15 @@ jobs:
                   "url_count": int(os.environ.get("INDEXNOW_URL_COUNT") or 0),
               },
               "checks": [
-                  "home returned HTTP success and contained MachineCart",
+                  "home returned HTTP success and contained CommerceLint",
                   "scanner returned HTTP success and contained analyzeMarkup",
                   "status.json returned valid JSON",
+                  "legacy route pointed to the CommerceLint canonical path",
+                  "excluded Primandir analytics references were absent",
                   "IndexNow ownership key was publicly reachable",
               ],
           }
-          path = Path("deployments/machinecart-production.json")
+          path = Path("deployments/commercelint-production.json")
           path.parent.mkdir(parents=True, exist_ok=True)
           path.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
           PY
@@ -282,13 +298,13 @@ jobs:
       - name: Commit deployment receipt
         shell: bash
         run: |
-          git config user.name "machinecart-deployment[bot]"
+          git config user.name "commercelint-deployment[bot]"
           git config user.email "pchordia@unsubscriber.me"
-          git add deployments/machinecart-production.json
+          git add deployments/commercelint-production.json
           if git diff --cached --quiet; then
             echo "Deployment receipt is already current."
           else
-            git commit -m "Record verified MachineCart production deployment"
+            git commit -m "Record verified CommerceLint production deployment"
             for attempt in 1 2 3; do
               if git push origin HEAD:main; then
                 exit 0
@@ -304,7 +320,7 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         shell: bash
         run: |
-          title="[MachineCart] Production deployment incident"
+          title="[CommerceLint] Production deployment incident"
           existing="$(gh issue list --state open --search "in:title $title" --json number --jq '.[0].number // empty')"
           if [ -n "$existing" ]; then
             gh issue comment "$existing" --body "Production deployment and HTTP verification succeeded in ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}. Closing automatically."
@@ -324,9 +340,9 @@ jobs:
           VERIFY_RESULT: ${{ needs.verify_production.result }}
         shell: bash
         run: |
-          title="[MachineCart] Production deployment incident"
+          title="[CommerceLint] Production deployment incident"
           run_url="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
-          body="MachineCart production did not pass its deployment gate. Build: ${BUILD_RESULT}; deploy: ${DEPLOY_RESULT}; public verification: ${VERIFY_RESULT}. Run: ${run_url}"
+          body="CommerceLint production did not pass its deployment gate. Build: ${BUILD_RESULT}; deploy: ${DEPLOY_RESULT}; public verification: ${VERIFY_RESULT}. Run: ${run_url}"
           existing="$(gh issue list --state open --search "in:title $title" --json number --jq '.[0].number // empty')"
           if [ -n "$existing" ]; then
             gh issue comment "$existing" --body "$body"
