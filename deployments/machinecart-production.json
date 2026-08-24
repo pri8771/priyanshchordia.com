@@ -1,16 +1,23 @@
 {
   "schema_version": 1,
   "status": "live",
-  "verified_at_utc": "2026-08-24T15:29:06Z",
+  "verified_at_utc": "2026-08-24T15:37:02Z",
   "machinecart_url": "https://priyanshchordia.com/machinecart/",
   "scanner_url": "https://priyanshchordia.com/machinecart/scanner.html",
-  "portfolio_commit": "c9e1f51d0629cb52d508b776a6beb6dd8d1573ba",
-  "machinecart_source_commit": "fbb2804e4202d2dea6af2a9df217cce8011bc902",
+  "portfolio_commit": "4dc99923124f0053856aba7c52ca84935b728eec",
+  "machinecart_source_commit": "c343697287b3ce619126e498a57ed63551a428eb",
+  "machinecart_source_changed": true,
   "pages_url": "https://priyanshchordia.com/",
-  "workflow_run_url": "https://github.com/pri8771/priyanshchordia.com/actions/runs/32745067615",
+  "workflow_run_url": "https://github.com/pri8771/priyanshchordia.com/actions/runs/32745809372",
+  "indexnow": {
+    "outcome": "success",
+    "http_status": "200",
+    "url_count": 9
+  },
   "checks": [
     "home returned HTTP success and contained MachineCart",
     "scanner returned HTTP success and contained analyzeMarkup",
-    "status.json returned valid JSON"
+    "status.json returned valid JSON",
+    "IndexNow ownership key was publicly reachable"
   ]
 }
