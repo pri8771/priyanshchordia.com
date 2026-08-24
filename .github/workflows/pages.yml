@@ -3,14 +3,17 @@ name: Deploy public portfolio
 on:
   push:
     branches: [main]
+    paths-ignore:
+      - "deployments/**"
   schedule:
     - cron: "23 * * * *"
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
   pages: write
   id-token: write
+  issues: write
 
 concurrency:
   group: pages
@@ -19,6 +22,8 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+    outputs:
+      machinecart_source_sha: ${{ steps.machinecart_source.outputs.sha }}
     steps:
       - name: Check out portfolio
         uses: actions/checkout@v4
@@ -29,6 +34,11 @@ jobs:
           repository: pri8771/autonomous_apps
           ref: main
           path: .machinecart-source
+
+      - name: Record MachineCart source revision
+        id: machinecart_source
+        shell: bash
+        run: echo "sha=$(git -C .machinecart-source rev-parse HEAD)" >> "$GITHUB_OUTPUT"
 
       - uses: actions/setup-python@v5
         with:
@@ -68,7 +78,136 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     needs: build
+    outputs:
+      page_url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+
+  verify_production:
+    runs-on: ubuntu-latest
+    needs: deploy
+    timeout-minutes: 8
+    steps:
+      - name: Verify public MachineCart funnel
+        shell: bash
+        run: |
+          set -euo pipefail
+          home="$(mktemp)"
+          scanner="$(mktemp)"
+          status="$(mktemp)"
+          success=false
+          for attempt in $(seq 1 20); do
+            if curl -fsSL --max-time 20 "https://priyanshchordia.com/machinecart/" -o "$home" \
+              && curl -fsSL --max-time 20 "https://priyanshchordia.com/machinecart/scanner.html" -o "$scanner" \
+              && curl -fsSL --max-time 20 "https://priyanshchordia.com/machinecart/status.json" -o "$status" \
+              && grep -q "MachineCart" "$home" \
+              && grep -q "analyzeMarkup" "$scanner" \
+              && python -m json.tool "$status" >/dev/null; then
+              success=true
+              break
+            fi
+            echo "Production verification attempt $attempt did not pass yet."
+            sleep 12
+          done
+          test "$success" = true
+          echo "MachineCart production funnel is reachable and structurally healthy."
+
+  record_success:
+    runs-on: ubuntu-latest
+    needs: [build, deploy, verify_production]
+    if: ${{ success() }}
+    steps:
+      - name: Check out deployment ledger
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Write machine-readable deployment receipt
+        env:
+          MACHINECART_SOURCE_SHA: ${{ needs.build.outputs.machinecart_source_sha }}
+          PAGE_URL: ${{ needs.deploy.outputs.page_url }}
+          WORKFLOW_RUN_URL: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json
+          import os
+          from datetime import datetime, timezone
+          from pathlib import Path
+
+          payload = {
+              "schema_version": 1,
+              "status": "live",
+              "verified_at_utc": datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z"),
+              "machinecart_url": "https://priyanshchordia.com/machinecart/",
+              "scanner_url": "https://priyanshchordia.com/machinecart/scanner.html",
+              "portfolio_commit": os.environ["GITHUB_SHA"],
+              "machinecart_source_commit": os.environ["MACHINECART_SOURCE_SHA"],
+              "pages_url": os.environ.get("PAGE_URL", ""),
+              "workflow_run_url": os.environ["WORKFLOW_RUN_URL"],
+              "checks": [
+                  "home returned HTTP success and contained MachineCart",
+                  "scanner returned HTTP success and contained analyzeMarkup",
+                  "status.json returned valid JSON",
+              ],
+          }
+          path = Path("deployments/machinecart-production.json")
+          path.parent.mkdir(parents=True, exist_ok=True)
+          path.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
+          PY
+
+      - name: Commit deployment receipt
+        shell: bash
+        run: |
+          git config user.name "machinecart-deployment[bot]"
+          git config user.email "pchordia@unsubscriber.me"
+          git add deployments/machinecart-production.json
+          if git diff --cached --quiet; then
+            echo "Deployment receipt is already current."
+          else
+            git commit -m "Record verified MachineCart production deployment"
+            for attempt in 1 2 3; do
+              if git push origin HEAD:main; then
+                break
+              fi
+              git pull --rebase origin main
+              sleep $((attempt * 3))
+            done
+          fi
+
+      - name: Resolve prior deployment incident
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          title="[MachineCart] Production deployment incident"
+          existing="$(gh issue list --state open --search "in:title $title" --json number --jq '.[0].number // empty')"
+          if [ -n "$existing" ]; then
+            gh issue comment "$existing" --body "Production deployment and HTTP verification succeeded in ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}. Closing automatically."
+            gh issue close "$existing" --reason completed
+          fi
+
+  report_failure:
+    runs-on: ubuntu-latest
+    needs: [build, deploy, verify_production]
+    if: ${{ always() && (needs.build.result == 'failure' || needs.deploy.result == 'failure' || needs.verify_production.result == 'failure') }}
+    steps:
+      - name: Open or refresh deployment incident
+        env:
+          GH_TOKEN: ${{ github.token }}
+          BUILD_RESULT: ${{ needs.build.result }}
+          DEPLOY_RESULT: ${{ needs.deploy.result }}
+          VERIFY_RESULT: ${{ needs.verify_production.result }}
+        shell: bash
+        run: |
+          title="[MachineCart] Production deployment incident"
+          run_url="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
+          body="MachineCart production did not pass its deployment gate. Build: ${BUILD_RESULT}; deploy: ${DEPLOY_RESULT}; public verification: ${VERIFY_RESULT}. Run: ${run_url}"
+          existing="$(gh issue list --state open --search "in:title $title" --json number --jq '.[0].number // empty')"
+          if [ -n "$existing" ]; then
+            gh issue comment "$existing" --body "$body"
+          else
+            gh issue create --title "$title" --body "$body"
+          fi
