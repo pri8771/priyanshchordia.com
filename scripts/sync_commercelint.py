@@ -140,7 +140,6 @@ def analytics_javascript() -> str:
   "use strict";
   const noOp = function () {};
   window.commerceLintTrack = noOp;
-  window.machineCartTrack = noOp;
 })();
 """
 
@@ -304,7 +303,16 @@ def validate(target: Path) -> list[str]:
         if marker not in scanner:
             errors.append(f"scanner.html: missing functional marker {marker}")
     privacy = (target / "privacy.html").read_text(encoding="utf-8") if (target / "privacy.html").exists() else ""
-    if "does not load third-party analytics" not in privacy:
+    privacy_lower = privacy.lower()
+    has_tracker_disclosure = (
+        "third-party analytics" in privacy_lower
+        and ("advertising tracker" in privacy_lower or "advertising trackers" in privacy_lower)
+    )
+    has_no_network_disclosure = any(
+        marker in privacy_lower
+        for marker in ("no network events", "sends no page or scanner data", "no-network")
+    )
+    if not (has_tracker_disclosure and has_no_network_disclosure):
         errors.append("privacy.html: no-network analytics disclosure is missing")
     return errors
 
