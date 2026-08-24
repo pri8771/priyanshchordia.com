@@ -23,6 +23,9 @@ def replace_once(text: str, old: str, new: str, label: str) -> str:
 def patch_sync() -> None:
     text = SYNC.read_text(encoding="utf-8")
 
+    if "import os\n" not in text:
+        text = replace_once(text, "import json\n", "import json\nimport os\n", "os import")
+
     if '    "assets/analytics.js",\n' not in text:
         text = replace_once(
             text,
@@ -31,15 +34,41 @@ def patch_sync() -> None:
             "required analytics asset",
         )
 
+    replacement = r'''def rewrite_public_tree(target: Path) -> None:
+    analytics_target = target / "assets" / ANALYTICS_FILENAME
+    loader_pattern = re.compile(
+        r'\s*<script\b[^>]*\bsrc=["\'][^"\']*assets/analytics\.js["\'][^>]*>\s*</script>',
+        re.IGNORECASE,
+    )
+    for path in sorted(target.rglob("*")):
+        if path.is_symlink():
+            raise ValueError(f"Symlinks are not allowed in public assets: {path}")
+        if not path.is_file() or path.suffix.lower() not in TEXT_SUFFIXES:
+            continue
+        text = path.read_text(encoding="utf-8")
+        for old in OLD_BASES:
+            text = text.replace(old, PRODUCTION_BASE)
+        text = text.replace("MachineCart", "CommerceLint").replace("machinecart", "commercelint")
+        if path.suffix.lower() == ".html":
+            text = replace_or_insert_canonical(text, canonical_for(path.relative_to(target)))
+            text = loader_pattern.sub("", text)
+            relative = os.path.relpath(analytics_target, path.parent).replace(os.sep, "/")
+            if "</head>" not in text:
+                raise ValueError(f"{path.relative_to(target)} has no closing head tag")
+            text = text.replace("</head>", f'  <script defer src="{relative}"></script>\n</head>', 1)
+        path.write_text(text, encoding="utf-8")
+
+
+def og_card_svg'''
     text, count = re.subn(
-        r"\n\ndef analytics_javascript\(\) -> str:\n.*?\n\n\ndef og_card_svg",
-        "\n\ndef og_card_svg",
+        r"def rewrite_public_tree\(target: Path\) -> None:.*?\n\n\ndef og_card_svg",
+        replacement,
         text,
         count=1,
         flags=re.DOTALL,
     )
-    if count == 0 and "def analytics_javascript()" in text:
-        raise RuntimeError("Could not remove the obsolete no-op analytics generator")
+    if count != 1:
+        raise RuntimeError("Could not replace the production tree rewriter and no-op analytics generator")
 
     text = text.replace(
         '    (assets / ANALYTICS_FILENAME).write_text(analytics_javascript(), encoding="utf-8")\n',
@@ -69,7 +98,7 @@ def patch_sync() -> None:
         }},'''
     text = replace_once(text, old_metadata, new_metadata, "deployment analytics metadata")
 
-    old_privacy = '''    privacy = (target / "privacy.html").read_text(encoding="utf-8") if (target / "privacy.html").exists() else ""
+    old_validation = '''    privacy = (target / "privacy.html").read_text(encoding="utf-8") if (target / "privacy.html").exists() else ""
     privacy_lower = privacy.lower()
     has_tracker_disclosure = (
         "third-party analytics" in privacy_lower
@@ -81,7 +110,7 @@ def patch_sync() -> None:
     )
     if not (has_tracker_disclosure and has_no_network_disclosure):
         errors.append("privacy.html: no-network analytics disclosure is missing")'''
-    new_privacy = f'''    privacy = (target / "privacy.html").read_text(encoding="utf-8") if (target / "privacy.html").exists() else ""
+    new_validation = f'''    privacy = (target / "privacy.html").read_text(encoding="utf-8") if (target / "privacy.html").exists() else ""
     privacy_lower = privacy.lower()
     for marker in (
         "google analytics 4",
@@ -99,7 +128,7 @@ def patch_sync() -> None:
         "commercelint:analyticsConsent:v1",
         "window.commerceLintTrack = track",
         "send_page_view: false",
-        "readConsent() !== \\\"granted\\\"",
+        'readConsent() !== "granted"',
     ):
         if marker not in analytics:
             errors.append(f"analytics.js: missing consent marker {{marker!r}}")
@@ -107,15 +136,15 @@ def patch_sync() -> None:
         if forbidden in analytics:
             errors.append(f"analytics.js: prohibited marker {{forbidden!r}}")
 
-    analytics_loader = re.compile(r'<script\\b[^>]*src=["\\\'][^"\\\']*assets/analytics\\.js["\\\']', re.I)
+    loader_pattern = re.compile(r'<script\\b[^>]*src=["\\\'][^"\\\']*assets/analytics\\.js["\\\']', re.I)
     for page in sorted(target.rglob("*.html")):
         page_text = page.read_text(encoding="utf-8")
-        count = len(analytics_loader.findall(page_text))
-        if count != 1:
-            errors.append(f"{{page.relative_to(target)}}: expected one local analytics loader, found {{count}}")
+        loader_count = len(loader_pattern.findall(page_text))
+        if loader_count != 1:
+            errors.append(f"{{page.relative_to(target)}}: expected one local analytics loader, found {{loader_count}}")
         if "googletagmanager.com/gtag/js" in page_text:
             errors.append(f"{{page.relative_to(target)}}: Google tag is loaded directly before consent")'''
-    text = replace_once(text, old_privacy, new_privacy, "production analytics validation")
+    text = replace_once(text, old_validation, new_validation, "production analytics validation")
 
     SYNC.write_text(text, encoding="utf-8")
 
@@ -123,7 +152,7 @@ def patch_sync() -> None:
 def patch_pages_workflow() -> None:
     text = WORKFLOW.read_text(encoding="utf-8")
 
-    old_invariants = '''      - name: Check CommerceLint privacy and JavaScript invariants
+    old = '''      - name: Check CommerceLint privacy and JavaScript invariants
         shell: bash
         run: |
           node --check site/commercelint/assets/analytics.js
@@ -131,7 +160,7 @@ def patch_pages_workflow() -> None:
           grep -q 'CommerceLint' site/commercelint/index.html
           grep -q 'priyanshchordia.com/commercelint/' site/commercelint/index.html
           grep -q 'priyanshchordia.com/commercelint/' site/machinecart/index.html'''
-    new_invariants = f'''      - name: Check CommerceLint privacy and analytics invariants
+    new = f'''      - name: Check CommerceLint privacy and analytics invariants
         shell: bash
         run: |
           node --check site/commercelint/assets/analytics.js
@@ -146,37 +175,7 @@ def patch_pages_workflow() -> None:
           grep -q 'CommerceLint' site/commercelint/index.html
           grep -q 'priyanshchordia.com/commercelint/' site/commercelint/index.html
           grep -q 'priyanshchordia.com/commercelint/' site/machinecart/index.html'''
-    text = replace_once(text, old_invariants, new_invariants, "build analytics invariant step")
-
-    text = replace_once(
-        text,
-        '          status="$(mktemp)"\n          legacy="$(mktemp)"',
-        '          status="$(mktemp)"\n          analytics="$(mktemp)"\n          privacy="$(mktemp)"\n          legacy="$(mktemp)"',
-        "production temporary files",
-    )
-
-    text = replace_once(
-        text,
-        '              && curl -fsSL --max-time 20 "https://priyanshchordia.com/commercelint/status.json" -o "$status" \\\n              && curl -fsSL --max-time 20 "https://priyanshchordia.com/machinecart/" -o "$legacy" \\\',
-        '              && curl -fsSL --max-time 20 "https://priyanshchordia.com/commercelint/status.json" -o "$status" \\\n              && curl -fsSL --max-time 20 "https://priyanshchordia.com/commercelint/assets/analytics.js" -o "$analytics" \\\n              && curl -fsSL --max-time 20 "https://priyanshchordia.com/commercelint/privacy.html" -o "$privacy" \\\n              && curl -fsSL --max-time 20 "https://priyanshchordia.com/machinecart/" -o "$legacy" \\\',
-        "production analytics fetches",
-    )
-
-    text = replace_once(
-        text,
-        '              && grep -q "analyzeMarkup" "$scanner" \\\n              && grep -q "priyanshchordia.com/commercelint/" "$legacy" \\\',
-        f'''              && grep -q "analyzeMarkup" "$scanner" \\
-              && grep -q "assets/analytics.js" "$home" \\
-              && ! grep -q "googletagmanager.com/gtag/js" "$home" \\
-              && grep -q "{MEASUREMENT_ID}" "$analytics" \\
-              && grep -q "commercelint:analyticsConsent:v1" "$analytics" \\
-              && grep -q "window.commerceLintTrack = track" "$analytics" \\
-              && grep -q "send_page_view: false" "$analytics" \\
-              && grep -q "only after you select" "$privacy" \\
-              && grep -q "does <strong>not</strong> send pasted HTML" "$privacy" \\
-              && grep -q "priyanshchordia.com/commercelint/" "$legacy" \\''',
-        "production consent assertions",
-    )
+    text = replace_once(text, old, new, "build analytics invariant step")
 
     text = replace_once(
         text,
@@ -197,15 +196,15 @@ def validate() -> None:
         MEASUREMENT_ID,
         "network_requests_before_consent",
         "expected one local analytics loader",
+        "os.path.relpath",
     )
     required_workflow = (
         MEASUREMENT_ID,
         "commercelint:analyticsConsent:v1",
         "public HTML did not load the Google tag before consent",
-        'privacy="$(mktemp)"',
     )
-    missing = [f"sync:{m}" for m in required_sync if m not in sync]
-    missing += [f"workflow:{m}" for m in required_workflow if m not in workflow]
+    missing = [f"sync:{marker}" for marker in required_sync if marker not in sync]
+    missing += [f"workflow:{marker}" for marker in required_workflow if marker not in workflow]
     if "analytics_javascript()" in sync:
         missing.append("sync:obsolete no-op generator remains")
     if missing:
