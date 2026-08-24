@@ -1,18 +1,18 @@
 {
   "schema_version": 1,
   "status": "live",
-  "verified_at_utc": "2026-08-24T15:52:10Z",
+  "verified_at_utc": "2026-08-24T15:55:54Z",
   "machinecart_url": "https://priyanshchordia.com/machinecart/",
   "scanner_url": "https://priyanshchordia.com/machinecart/scanner.html",
-  "portfolio_commit": "3fcd3ab2ebc138eee2b859e51ac9c89e617b1131",
+  "portfolio_commit": "77a0ef4144d342b480cb542f92349d800f4e2222",
   "machinecart_source_commit": "7f399417b93f80e67da6dd067314488a7c872e5b",
-  "machinecart_source_changed": true,
+  "machinecart_source_changed": false,
   "pages_url": "https://priyanshchordia.com/",
-  "workflow_run_url": "https://github.com/pri8771/priyanshchordia.com/actions/runs/32747389224",
+  "workflow_run_url": "https://github.com/pri8771/priyanshchordia.com/actions/runs/32747771685",
   "indexnow": {
-    "outcome": "success",
-    "http_status": "200",
-    "url_count": 12
+    "outcome": "skipped",
+    "http_status": "",
+    "url_count": 0
   },
   "checks": [
     "home returned HTTP success and contained MachineCart",
