@@ -1,0 +1,15 @@
+---
+description: BidetFit App Factory governance
+alwaysApply: true
+---
+
+BidetFit follows `ventures/bidetfit/AGENTS.md` and App Factory Operating Standard 1.1.
+
+- Work only on one Ready `BF-` item at a time.
+- Read the task packet, canonical docs, decisions, risks, and current state first.
+- Use a dedicated branch or worktree for implementation.
+- Do not mix unrelated fixes.
+- Do not alter architecture, business authority, privacy, financial scope, external communications, affiliate behavior, or customer-action policy without a linked decision or change request and approval.
+- Do not place secrets, raw emails, order data, customer identifiers, or private measurements in source control.
+- Run all stated tests and record exact commands and results.
+- A code change is not Done until evidence, docs, Jira, Notion, prompt log, and handoff are complete.
