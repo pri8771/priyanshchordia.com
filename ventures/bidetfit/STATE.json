@@ -29,6 +29,26 @@
     "last_run_at": "2026-08-25T18:56:24Z",
     "last_run_result": "success"
   },
+  "governance": {
+    "standard": "App Factory Operating Standard 1.1",
+    "scope_version": "BF-1.1-governed-autonomy",
+    "canonical_system": "GitHub repository documentation and evidence",
+    "lifecycle_system": "Jira",
+    "command_center": "Notion",
+    "work_item_range": "BF-001..BF-033",
+    "backfill_status": "in_progress"
+  },
+  "customer_operations": {
+    "status": "not_deployed",
+    "current_capability": "deterministic site and repository health only",
+    "support_mailbox": "not_provisioned",
+    "private_ticket_store": "not_deployed",
+    "external_model_runtime": "not_connected",
+    "email_mode": "none",
+    "seller_of_record": false,
+    "return_refund_authority": "none",
+    "target_first_release": "draft-only support with owner approval"
+  },
   "monetization": {
     "active_affiliate_links": 0,
     "applications_submitted": 0,
@@ -49,16 +69,21 @@
     "returning_visitors": 0
   },
   "next_actions": [
-    "Configure Google Search Console and submit the BidetFit sitemap to establish an indexing baseline",
-    "Reverify and submit a bundled set of direct affiliate applications after recording all final terms",
-    "Build an exact toilet-model by bidet-model compatibility database with source and confidence fields",
-    "Publish a toilet-model-number guide and a printable measurement and photo sheet",
-    "Harden deployment by folding the BidetFit mount into the primary Pages workflow after a clean overlay run"
+    "Complete BF-012 Jira and Notion synchronization and write tracker links back to the canonical work-item ledger",
+    "Configure Search Console and privacy-conscious analytics under BF-013",
+    "Reverify and submit affiliate applications under BF-014",
+    "Build the exact compatibility data schema under BF-015",
+    "Provision and authorize the support mailbox under BF-018",
+    "Implement browser-level tests under BF-030"
   ],
   "blockers": [
     "Affiliate applications may require owner identity, tax, payout, agreement, CAPTCHA, or two-factor steps",
     "Search Console or analytics ownership may require an owner grant or verification action",
-    "No merchant tracking links may be published before approval and exact-link verification"
+    "No merchant tracking links may be published before approval and exact-link verification",
+    "Support alias, Gmail OAuth, two-factor authentication, and account recovery require owner action",
+    "No external model runtime is authorized; ChatGPT subscription is not treated as API runtime",
+    "BidetFit has no seller-of-record or delegated merchant authority for returns, replacements, cancellations, or refunds",
+    "Customer operations cannot launch until privacy, security, policy, testing, and owner approval gates pass"
   ],
-  "updated_at": "2026-08-25T18:56:24Z"
+  "updated_at": "2026-08-25T19:15:00Z"
 }
