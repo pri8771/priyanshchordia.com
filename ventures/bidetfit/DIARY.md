@@ -143,3 +143,13 @@ This external deterministic loop can run while the chat is closed. It does not f
 
 ### Next adjustment trigger
 If the fit checker receives impressions but weak engagement, simplify the measurement flow and lead with toilet-shape identification. If pages receive commercial clicks but no merchant approval, add eligible fallback merchants without weakening the niche. If search discovery remains zero after indexing and publication of the initial cluster, distribute the measurement guide through legitimate homeowner, plumbing, renter, and accessibility communities without spam.
+---
+
+## Automated evidence — 2026-08-25
+
+<!-- operator:2026-08-25 -->
+- First scheduled operator evidence for this UTC day: **success**.
+- Public site state observed: **live**.
+- Evidence detail: required files, CSV schemas, and public-source files passed; public status endpoint verified
+- Additional same-day runs are retained in `RUNS.csv` and `logs/runs.jsonl`.
+

@@ -1,1 +1,2 @@
 run_id,started_at,finished_at,trigger,result,experiment_status,site_status,local_checks,public_http,notes
+20260825T154947Z-32868199605,2026-08-25T15:49:47Z,2026-08-25T15:49:47Z,push,success,active,live,pass,200,"required files, CSV schemas, and public-source files passed; public status endpoint verified"

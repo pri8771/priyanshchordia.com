@@ -11,8 +11,8 @@
     "canonical_url": "https://priyanshchordia.com/bidetfit/",
     "host": "GitHub Pages",
     "source_path": "ventures/bidetfit/public",
-    "status": "launching",
-    "last_verified_at": null
+    "status": "live",
+    "last_verified_at": "2026-08-25T15:49:47Z"
   },
   "niche": {
     "name": "bidet and toilet compatibility",
@@ -22,11 +22,11 @@
     "selection_date": "2026-08-25"
   },
   "automation": {
-    "status": "configured_pending_first_external_run",
+    "status": "healthy",
     "workflow": ".github/workflows/bidetfit-operator.yml",
     "cadence": "every 6 hours",
-    "last_run_at": null,
-    "last_run_result": null
+    "last_run_at": "2026-08-25T15:49:47Z",
+    "last_run_result": "success"
   },
   "monetization": {
     "active_affiliate_links": 0,
@@ -56,5 +56,5 @@
     "Affiliate applications may require owner identity, tax, payout, agreement, or two-factor steps",
     "No merchant tracking links may be published before approval and exact-link verification"
   ],
-  "updated_at": "2026-08-25T15:36:00Z"
+  "updated_at": "2026-08-25T15:49:47Z"
 }
