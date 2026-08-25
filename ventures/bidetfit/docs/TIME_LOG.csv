@@ -1,0 +1,13 @@
+work_item_id,date,contributor,duration_minutes,note,evidence,actuals_confidence
+BF-001,2026-08-24,ChatGPT,,Historical work backfilled from conversation and mission evidence; exact active duration was not reliably recorded.,MISSION.md and DIARY.md,Unknown / Needs Backfill
+BF-002,2026-08-24,ChatGPT,,Historical work backfilled from conversation and repository audit evidence; exact active duration was not reliably recorded.,DIARY.md Day 1-2,Unknown / Needs Backfill
+BF-003,2026-08-25,ChatGPT,,Historical work backfilled from niche scorecard and decision evidence; exact active duration was not reliably recorded.,NICHE_SCORECARD.csv and DECISIONS.md,Unknown / Needs Backfill
+BF-004,2026-08-25,ChatGPT,,Historical work backfilled from decision evidence; exact active duration was not reliably recorded.,DECISIONS.md D-003-D-004,Unknown / Needs Backfill
+BF-005,2026-08-25,ChatGPT,,Historical work backfilled from content-map and editorial-queue evidence; exact active duration was not reliably recorded.,CONTENT_MAP.csv and EDITORIAL_QUEUE.csv,Unknown / Needs Backfill
+BF-006,2026-08-25,ChatGPT,,Historical work backfilled from public source and deployment evidence; exact active duration was not reliably recorded.,public source and workflow evidence,Unknown / Needs Backfill
+BF-007,2026-08-25,Automated CI,,Historical work backfilled from deployment and public verification evidence; exact active duration was not reliably recorded.,GitHub Actions and DIARY.md,Unknown / Needs Backfill
+BF-008,2026-08-25,ChatGPT,,Historical work backfilled from workflow and operator source; exact active duration was not reliably recorded.,bidetfit-operator.yml operator.py RUNS.csv,Unknown / Needs Backfill
+BF-009,2026-08-25,ChatGPT,,Historical bug repair backfilled from failed and successful workflow evidence; exact active duration was not reliably recorded.,Run 32868199605 and DIARY.md,Unknown / Needs Backfill
+BF-010,2026-08-25,ChatGPT,,Historical bug repair backfilled from step-level workflow evidence; exact active duration was not reliably recorded.,Overlay run 32868820325 and DIARY.md,Unknown / Needs Backfill
+BF-011,2026-08-25,ChatGPT,,Historical strategy work backfilled from decision and diary evidence; exact active duration was not reliably recorded.,DECISIONS.md D-008 and DIARY.md,Unknown / Needs Backfill
+BF-012,2026-08-25,ChatGPT,,Governance and tracker backfill in progress; record actual duration only from a reliable execution receipt.,This change set and tracker records,Unknown / Needs Backfill
