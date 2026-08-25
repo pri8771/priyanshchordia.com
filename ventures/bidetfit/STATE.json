@@ -19,6 +19,7 @@
     "brand": "BidetFit",
     "status": "selected",
     "core_value": "Conservative fit guidance from user measurements and manufacturer requirements",
+    "differentiation": "Retrofit bidet seats and attachments, special-toilet geometry, plumbing access, and an exact toilet-model by bidet-model evidence database",
     "selection_date": "2026-08-25"
   },
   "automation": {
@@ -38,6 +39,8 @@
     "reinvestment_spend_usd": 0.0
   },
   "metrics": {
+    "public_html_pages": 11,
+    "known_indexed_pages": 0,
     "search_impressions": 0,
     "search_clicks": 0,
     "affiliate_clicks": 0,
@@ -46,15 +49,16 @@
     "returning_visitors": 0
   },
   "next_actions": [
-    "Deploy the public beta and independently verify every route",
-    "Run the first scheduled operator execution outside chat",
-    "Submit a bundled set of affiliate applications after the useful beta is public",
-    "Expand the fit checker into a model-level compatibility database",
-    "Publish the initial measurement and special-toilet topic cluster"
+    "Configure Google Search Console and submit the BidetFit sitemap to establish an indexing baseline",
+    "Reverify and submit a bundled set of direct affiliate applications after recording all final terms",
+    "Build an exact toilet-model by bidet-model compatibility database with source and confidence fields",
+    "Publish a toilet-model-number guide and a printable measurement and photo sheet",
+    "Harden deployment by folding the BidetFit mount into the primary Pages workflow after a clean overlay run"
   ],
   "blockers": [
-    "Affiliate applications may require owner identity, tax, payout, agreement, or two-factor steps",
+    "Affiliate applications may require owner identity, tax, payout, agreement, CAPTCHA, or two-factor steps",
+    "Search Console or analytics ownership may require an owner grant or verification action",
     "No merchant tracking links may be published before approval and exact-link verification"
   ],
-  "updated_at": "2026-08-25T15:49:47Z"
+  "updated_at": "2026-08-25T15:52:08Z"
 }

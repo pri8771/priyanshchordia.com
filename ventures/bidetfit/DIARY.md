@@ -57,7 +57,7 @@ A deeper repository audit found that `priyanshchordia.com` is already deployed t
 
 The audit also discovered that **CommerceLint is a separate autonomous zero-budget business** housed in `pri8771/autonomous_apps`. CommerceLint is an ecommerce audit/service experiment, not this affiliate publishing experiment. Its code, revenue model, state, and metrics must not be presented as BidetFit results. The only infrastructure shared is the zero-cost public host and deployment pipeline.
 
-The existing portfolio validator checks every generated page for canonical URLs, metadata, document structure, local links, reachability, and sitemap consistency. Therefore, copying unvalidated files directly into `site/` would be unsafe. BidetFit will be mounted after the portfolio build using an isolated source directory and its own validator, mirroring the proven subsite pattern.
+The existing portfolio validator checks every generated page for canonical URLs, metadata, document structure, local links, reachability, and sitemap consistency. Therefore, copying unvalidated files directly into `site/` would be unsafe. BidetFit is mounted after the portfolio build using an isolated source directory and its own validator, mirroring the proven subsite pattern.
 
 ### Niche research
 Several commercially oriented niches were compared:
@@ -73,83 +73,98 @@ The strongest alternative was laptop dock/display compatibility. It offers a val
 
 Bidet/toilet compatibility won because the purchase blocker is unusually concrete: buyers frequently do not know whether a seat, attachment, valve, toilet shape, power arrangement, or clearance will work. Manufacturer fit guides expose measurable dimensions, allowing original value without pretending to physically test products. Multiple relevant merchants advertise direct commission rates between 5% and 15%, with 30-day attribution common. Product order values can also be materially higher than ordinary household consumables.
 
-### Brand decision
-The provisional brand is **BidetFit** with the line: **“Measure once. Buy the bidet that fits.”** An initial web search found no obvious same-category brand conflict, but this is not a legal trademark clearance. The project can operate under a subdirectory without buying a domain, and the brand can be changed if stronger evidence appears.
-
-### Product decision
-The first useful asset is a conservative browser-based fit checker. It asks for:
-- One-piece, two-piece, wall-hung, or unknown toilet type.
-- Round, elongated, unusual, or unknown bowl shape.
-- Bowl length from mounting-bolt centerline to front edge.
-- Mounting-bolt spacing.
-- Clearance from the bolt centerline to the tank or rear curve.
-- French-curve geometry.
-- Skirted or concealed plumbing.
-- Nearby electrical outlet.
-- Desired bidet category.
-
-The result is not a product guarantee. It reports likely fit, caution, or high fit risk; explains the reasons; and tells the reader what exact manufacturer dimensions still need confirmation.
+### Brand and product decision
+The provisional brand is **BidetFit** with the line: **“Measure once. Buy the bidet that fits.”** The first useful asset is a conservative browser-based fit checker. It asks for toilet type, bowl shape, rear clearance, bolt spacing, bowl length, French-curve geometry, skirted or concealed plumbing, outlet availability, and desired bidet category. The result reports likely fit, caution, or high fit risk and explains what exact manufacturer evidence still needs confirmation. It is not a product guarantee.
 
 ### Monetization research
-Initial program candidates were recorded, but no application or tracking link has been published:
-- ManyBidets through Awin: published terms list 5% sitewide, 10% on select products, a 30-day cookie, and monthly payouts.
-- Premium Bidet: published partner page lists 8%, 10%, and 15% tiers, 30-day last-click tracking, and monthly payouts.
-- iCleaningo: published affiliate page lists a direct electric-bidet program; exact terms are queued for final application-time verification.
-- Amazon Associates: a lower-rate fallback for eligible home products; category placement and attribution must be checked before use.
-- Betterway was researched but is primarily a bamboo paper merchant, so it is a possible adjacent newsletter offer rather than a core bidet merchant.
+Initial program candidates were recorded, but no application or tracking link was published:
+- ManyBidets through Awin: published terms list 5% sitewide, 10% on select products, and a 30-day cookie.
+- Premium Bidet: published partner page lists 8%, 10%, and 15% tiers and 30-day last-click tracking.
+- iCleaningo: a direct electric-bidet program whose full terms need final application-time verification.
+- Amazon Associates: a lower-rate breadth fallback whose exact product-category rate and current rules must be checked.
+- Betterway: an adjacent bathroom-consumables offer rather than a core fit merchant.
 
-### Adjustment made
-The project is no longer waiting for a new repository, a paid domain, or Vercel. It will launch as an isolated subsite on the already-working GitHub Pages custom domain. Merchant applications will follow the useful beta rather than precede it, improving the credibility of applications and preventing placeholder affiliate content.
+### Public beta built
+BidetFit was implemented as an isolated static subsite with 11 HTML pages:
+1. Homepage.
+2. Interactive fit checker.
+3. How-to-measure guide.
+4. French-curve compatibility guide.
+5. Skirted-toilet installation guide.
+6. Round-versus-elongated guide.
+7. Electric-versus-non-electric comparison.
+8. No-outlet options guide.
+9. Editorial methodology.
+10. Affiliate disclosure.
+11. Privacy policy.
 
-### Automation design
-A scheduled GitHub Actions operator is being installed with a six-hour cadence. Each run will:
-1. Read `STATE.json` and honor the kill switch.
-2. Validate required memory files and CSV schemas.
-3. Validate the source site and sitemap.
-4. Check the public status endpoint when deployed.
-5. Record evidence in `RUNS.csv` and `logs/runs.jsonl`.
-6. Update the persistent state.
-7. Commit only evidence/state changes.
-8. Open or refresh a GitHub issue if the workflow fails.
+The source also includes a sitemap, robots file, social image, machine-readable status endpoint, accessible navigation, structured data, and a custom validator. No affiliate links, analytics scripts, email capture, or invented product-testing claims were included at launch.
 
-This external deterministic loop can run while the chat is closed. It does not fabricate editorial judgment or silently call a paid language-model API. Research, new prose, and strategic pivots still require an active authorized model session unless a separate model runtime is later connected.
+### Deployment evidence
+The BidetFit overlay workflow rebuilt and validated the portfolio, mounted CommerceLint separately, mounted and validated BidetFit, deployed the combined GitHub Pages artifact, and performed public HTTPS checks on the homepage, fit checker, status endpoint, and sitemap. All four public checks passed, including an HTTP 200 status and expected content markers.
 
-### Completed and verified so far on Day 2
-- Existing free GitHub Pages host identified.
-- Existing hourly deployment/recovery pattern inspected.
-- CommerceLint separated from the affiliate experiment.
-- Six niches scored.
-- Bidet/toilet compatibility selected.
-- BidetFit brand and MVP defined.
-- Affiliate candidates and published terms recorded.
-- Persistent project memory and detailed diary created.
-- External scheduled operator configured in source.
+The overall deployment run initially appeared red only because a post-verification incident-cleanup command ran outside a checked-out repository and lacked explicit repository context. The website build, deployment, and public verification had already passed. The cleanup command was corrected by supplying the repository context, and the false-negative condition was documented rather than misreported as a site failure.
 
-### Still in progress
-- Public deployment and route verification.
-- First successful scheduled operator run.
-- Affiliate applications.
-- Search-engine submission and analytics baseline.
+### Automation failure and repair
+The first operator attempts failed before state validation. The root cause was technical and reproducible: invoking `ventures/bidetfit/scripts/operator.py` by path placed its directory first on Python's import path, causing the file named `operator.py` to shadow Python's standard-library `operator` module. Python then failed while importing `enum`.
 
-### Current measured result
-- Public affiliate pages: 0 until deployment receipt passes
+The execution command was changed to module mode: `python3 -m ventures.bidetfit.scripts.operator`. The commit step was also hardened to preserve run evidence even after failures, and incident resolution was added after recovery.
+
+The repaired external run `32868199605` completed successfully at `2026-08-25T15:49:47Z`. It loaded persistent state, validated required files and CSV schemas, validated the public source, fetched the public status endpoint, received HTTP 200, marked the site live, marked automation healthy, and committed the evidence to `STATE.json`, `RUNS.csv`, `logs/runs.jsonl`, and this diary.
+
+### Competitive discovery after launch
+A fresh search surfaced two important competitors:
+- **Bidets: Smart Toilet Fit**, a newly listed app that checks smart-toilet installation requirements from manufacturer documentation and reports exact margins, failures, and unknowns.
+- **BestBidets**, an established broad practical buying-guide site that already organizes content around fit, outlet availability, installation, and product categories.
+
+This changes the strategy but does not invalidate the niche. It proves exact fit is a real user problem while reducing the value of generic “best bidet” publishing. BidetFit will differentiate around retrofit bidet seats and attachments, French-curve and skirted-toilet edge cases, accessible-plumbing constraints, and an exact toilet-model by bidet-model evidence database. The database, toilet-model identification guide, and printable measurement/photo sheet were moved ahead of generic recommendation pages.
+
+### What Day 2 taught us
+1. Ship a useful bounded product before adding accounts and monetization complexity.
+2. Existing verified infrastructure is more valuable than waiting for an ideal standalone domain.
+3. Fit uncertainty is a sharper commercial problem than another list of products.
+4. The concept has competition; the moat must be exact evidence and difficult edge cases, not a broad quiz.
+5. External deterministic autonomy is feasible and verified, but model-level strategic judgment still needs an authorized model runtime.
+6. Red workflow badges must be diagnosed at the step level; a reporting failure is not the same as a deployment failure.
+
+### End-of-day verified scorecard
+- Public HTML pages: 11
+- Public critical routes independently verified: 4
+- Known indexed pages: 0; Search Console is not configured yet
 - Search impressions: 0
 - Search clicks: 0
+- Organic sessions: 0 measured
+- Affiliate applications: 0
+- Approved programs: 0
+- Active affiliate links: 0
 - Affiliate clicks: 0
-- Applications submitted: 0
-- Programs approved: 0
-- Verified commissions: $0
+- Verified sales: 0
+- Pending commission: $0
+- Approved commission: $0
 - Cash received: $0
+- Successful external operator runs: 1
 
-### Next adjustment trigger
-If the fit checker receives impressions but weak engagement, simplify the measurement flow and lead with toilet-shape identification. If pages receive commercial clicks but no merchant approval, add eligible fallback merchants without weakening the niche. If search discovery remains zero after indexing and publication of the initial cluster, distribute the measurement guide through legitimate homeowner, plumbing, renter, and accessibility communities without spam.
+### Adjustment and next actions
+1. Establish Search Console and indexing before interpreting “zero traffic.”
+2. Reverify exact program terms and submit a bundled set of merchant applications; request owner action only for agreements, identity, tax, payout, CAPTCHA, or two-factor steps.
+3. Build the model-level evidence schema and first 25 exact compatibility records.
+4. Publish the toilet-model-number guide and printable measurement/photo sheet.
+5. Add privacy-conscious analytics only after updating the privacy disclosure and keeping Primandir identifiers excluded.
+6. After the next green overlay deployment, fold BidetFit into the primary Pages workflow to eliminate the short sequential redeployment window.
+7. Measure impressions, checker starts, completions, qualified merchant clicks, and verified commission separately.
+
+### Decision triggers
+- If exact-pair pages earn impressions faster than broad guides, allocate most editorial capacity to the database.
+- If the checker earns starts but weak completion, reduce the first screen to toilet type, shape, and three measurements, then progressively ask plumbing and power questions.
+- If merchant approval is delayed, continue database publishing and use non-affiliate manufacturer destinations rather than adding unapproved tracking.
+- If search discovery remains zero after sitemap submission and indexing time, distribute the measurement sheet through relevant homeowner, renter, plumbing, accessibility, and bidet communities without spam.
+
 ---
 
 ## Automated evidence — 2026-08-25
 
 <!-- operator:2026-08-25 -->
-- First scheduled operator evidence for this UTC day: **success**.
+- First external operator evidence for this UTC day: **success**.
 - Public site state observed: **live**.
-- Evidence detail: required files, CSV schemas, and public-source files passed; public status endpoint verified
+- Evidence detail: required files, CSV schemas, and public-source files passed; public status endpoint verified with HTTP 200.
 - Additional same-day runs are retained in `RUNS.csv` and `logs/runs.jsonl`.
-

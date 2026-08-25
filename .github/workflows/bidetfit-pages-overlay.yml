@@ -128,6 +128,7 @@ jobs:
       - name: Resolve prior BidetFit deployment incident
         env:
           GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
         shell: bash
         run: |
           title="[BidetFit] Production deployment incident"
@@ -145,6 +146,7 @@ jobs:
       - name: Open or refresh BidetFit deployment incident
         env:
           GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
           BUILD_RESULT: ${{ needs.build.result }}
           DEPLOY_RESULT: ${{ needs.deploy.result }}
           VERIFY_RESULT: ${{ needs.verify.result }}

@@ -1,13 +1,15 @@
 priority,item_id,type,title,target_intent,dependency,status,success_metric,planned_review
-1,BF-001,tool,Will a bidet fit my toilet?,commercial investigation,public deployment,in_progress,checker_completion_rate,2026-08-26
-2,BF-003,guide,How to measure a toilet for a bidet seat or attachment,informational to commercial,manufacturer fit sources,in_progress,organic_impressions,2026-08-26
-3,BF-004,guide,French-curve toilets and bidet compatibility,problem-aware commercial,model examples and manufacturer sources,in_progress,qualified_outbound_click_rate,2026-08-27
-4,BF-005,guide,Skirted toilets: seat fit versus plumbing access,problem-aware commercial,plumbing adapter source verification,in_progress,qualified_outbound_click_rate,2026-08-27
-5,BF-006,guide,Round versus elongated: measure instead of guessing,commercial investigation,measurement sources,in_progress,checker_start_rate,2026-08-27
-6,BF-007,comparison,Electric versus non-electric bidets by installation constraint,commercial investigation,electrical and merchant source review,in_progress,commercial_click_rate,2026-08-28
-7,BF-008,guide,Best bidet categories when there is no outlet,commercial investigation,electrical safety source review,in_progress,commercial_click_rate,2026-08-28
-8,BF-009,database,Toilet and bidet model compatibility database,commercial investigation,repeatable evidence schema,queued,database_searches,2026-09-01
-9,BF-010,guide,Concealed or nonstandard shutoff valves: what changes,problem-aware commercial,plumbing source review,queued,organic_impressions,2026-09-02
-10,BF-011,comparison,Bidet attachment versus replacement seat for renters,commercial investigation,lease-safe installation evidence,queued,affiliate_click_rate,2026-09-03
-11,BF-012,guide,What measurements to photograph before asking support,informational,merchant support workflows,queued,returning_visitors,2026-09-04
-12,BF-013,template,Printable bidet fit measurement sheet,download intent,measurement guide,queued,downloads,2026-09-05
+0,BF-001,tool,Will a bidet fit my toilet?,commercial investigation,public deployment,published,checker_completion_rate,2026-09-01
+0,BF-003,guide,How to measure a toilet for a bidet seat or attachment,informational to commercial,manufacturer fit sources,published,organic_impressions,2026-09-08
+0,BF-004,guide,French-curve toilets and bidet compatibility,problem-aware commercial,model examples and manufacturer sources,published,qualified_outbound_click_rate,2026-09-08
+0,BF-005,guide,Skirted toilets: seat fit versus plumbing access,problem-aware commercial,plumbing adapter source verification,published,qualified_outbound_click_rate,2026-09-08
+0,BF-006,guide,Round versus elongated: measure instead of guessing,commercial investigation,measurement sources,published,checker_start_rate,2026-09-08
+0,BF-007,comparison,Electric versus non-electric bidets by installation constraint,commercial investigation,electrical and merchant source review,published,commercial_click_rate,2026-09-08
+0,BF-008,guide,Best bidet categories when there is no outlet,commercial investigation,electrical safety source review,published,commercial_click_rate,2026-09-08
+1,BF-009,database,Exact toilet-model by bidet-model compatibility database,transactional investigation,repeatable evidence schema,queued,database_searches,2026-09-01
+2,BF-014,guide,How to find the exact toilet model number,informational to commercial,manufacturer model-label evidence,queued,checker_start_rate,2026-09-02
+3,BF-013,template,Printable bidet fit measurement and photo sheet,download intent,measurement guide,queued,downloads,2026-09-05
+4,BF-012,guide,What measurements to photograph before asking support,informational,merchant support workflows,queued,returning_visitors,2026-09-04
+5,BF-010,guide,Concealed or nonstandard shutoff valves: what changes,problem-aware commercial,plumbing source review,queued,organic_impressions,2026-09-02
+6,BF-011,comparison,Bidet attachment versus replacement seat for renters,commercial investigation,lease-safe installation evidence,queued,affiliate_click_rate,2026-09-03
+7,BF-015,database,First 25 exact toilet and bidet compatibility records,transactional investigation,database schema and primary sources,queued,qualified_outbound_click_rate,2026-09-06

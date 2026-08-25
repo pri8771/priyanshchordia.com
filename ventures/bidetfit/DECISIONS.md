@@ -38,3 +38,9 @@
 **Date:** 2026-08-25  
 **Decision:** GitHub Actions performs health checks, state reads, schema checks, public verification, evidence logging, retries, and alerts. New research and substantive editorial decisions require an authorized model session unless a separate free model runtime is deliberately connected later.  
 **Why:** This is honest autonomy: unattended tasks run externally, while judgment is not falsely described as continuous consciousness.
+
+## D-008 — Narrow the moat after competitor discovery
+**Date:** 2026-08-25  
+**Decision:** Do not compete as another generic “best bidets” publisher or as a smart-toilet bathroom-readiness app. Prioritize retrofit bidet seats and attachments, French-curve and skirted-toilet edge cases, accessible-plumbing constraints, and an exact toilet-model by bidet-model evidence database.  
+**Evidence:** A newly surfaced App Store product already performs verified smart-toilet fit math, while BestBidets already publishes broad practical buying guides and compatibility content.  
+**Adjustment:** Move the model-level compatibility database, toilet-model identification guide, and photo/measurement sheet ahead of generic recommendation pages. Keep BidetFit's result conservative and source-linked.

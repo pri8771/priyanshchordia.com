@@ -15,8 +15,19 @@ Every eligible run must:
 
 ## Scheduled operator
 Workflow: `.github/workflows/bidetfit-operator.yml`  
-Cadence: every six hours, plus manual dispatch and source/workflow changes.  
-The operator uses only Python’s standard library and GitHub’s included runner services.
+Cadence: every six hours, plus manual dispatch and relevant source/workflow changes.  
+The operator uses only Python's standard library and GitHub's included runner services. It performs deterministic state, schema, source, and public-health work while the chat is closed. It does not invent editorial judgment or silently call a paid model.
+
+## Deployment
+Workflow: `.github/workflows/bidetfit-pages-overlay.yml`  
+The deployment rebuilds the public portfolio, mounts CommerceLint as a separate business, mounts and validates BidetFit, deploys the combined artifact, and verifies the BidetFit homepage, checker, status endpoint, and sitemap over public HTTPS.
+
+## Diary protocol
+- Record one detailed section for every local operating day, including failed attempts, evidence, assumptions, decisions, metrics, and the next adjustment.
+- Record substantive model-driven work directly in `DIARY.md`.
+- The external operator appends the first automated evidence entry for each UTC day.
+- Preserve every run, including same-day repeats, in `RUNS.csv` and `logs/runs.jsonl`.
+- Never rewrite a failure into a success; append the repair and verification evidence.
 
 ## Kill switch
 Create `ventures/bidetfit/KILL_SWITCH` or set `experiment.status` to `paused` or `stopped`. The operator must log the paused state and perform no network or mutation work beyond that evidence record.
@@ -24,9 +35,9 @@ Create `ventures/bidetfit/KILL_SWITCH` or set `experiment.status` to `paused` or
 ## Recovery
 1. Inspect the most recent row in `RUNS.csv` and JSON object in `logs/runs.jsonl`.
 2. Inspect the GitHub workflow run and any `[BidetFit] Operator incident` issue.
-3. Reproduce source validation with `python3 ventures/bidetfit/scripts/operator.py --local-only`.
+3. Reproduce source validation with `python3 -m ventures.bidetfit.scripts.operator --local-only`.
 4. Repair the smallest failing component.
-5. Dispatch the workflow manually.
+5. Dispatch the workflow manually or make a relevant source change.
 6. Verify the public `status.json`, homepage, checker, and sitemap before closing the incident.
 
 ## Publishing gate
