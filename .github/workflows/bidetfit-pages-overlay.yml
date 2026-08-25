@@ -1,0 +1,161 @@
+name: Deploy BidetFit overlay
+
+on:
+  workflow_run:
+    workflows: ["Deploy public portfolio and CommerceLint"]
+    types: [completed]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+  issues: write
+
+concurrency:
+  group: bidetfit-pages-overlay
+  cancel-in-progress: true
+
+jobs:
+  build:
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out latest portfolio
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Check out autonomous CommerceLint source
+        uses: actions/checkout@v4
+        with:
+          repository: pri8771/autonomous_apps
+          ref: main
+          path: .commercelint-source
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Test portfolio generator
+        run: python3 -m unittest discover -s tests -v
+
+      - name: Generate and validate portfolio
+        run: |
+          python3 scripts/generate_site.py
+          python3 scripts/check_site.py
+          node --check site/experiences.js
+          node --check site/app-themes.js
+          test -z "$(git status --porcelain --untracked-files=all -- site)"
+
+      - name: Mount and validate CommerceLint
+        run: python3 scripts/sync_commercelint.py .commercelint-source/docs site/commercelint
+
+      - name: Preserve CommerceLint privacy and analytics invariants
+        shell: bash
+        run: |
+          node --check site/commercelint/assets/analytics.js
+          test -z "$(grep -RIlE '246481057|js\.hs-scripts\.com' site/commercelint || true)"
+          test -z "$(grep -RIl 'googletagmanager.com/gtag/js' site/commercelint --include='*.html' || true)"
+          grep -q 'G-MC3PB0Q7EX' site/commercelint/assets/analytics.js
+          grep -q 'commercelint:analyticsConsent:v1' site/commercelint/assets/analytics.js
+          grep -q 'CommerceLint' site/commercelint/index.html
+
+      - name: Mount and validate BidetFit
+        run: python3 scripts/sync_bidetfit.py ventures/bidetfit/public site/bidetfit
+
+      - name: Check BidetFit launch guardrails
+        shell: bash
+        run: |
+          node --check site/bidetfit/assets/fit-checker.js
+          grep -q 'BidetFit' site/bidetfit/index.html
+          grep -q 'fit-form' site/bidetfit/fit-checker.html
+          grep -q 'No affiliate links are active' site/bidetfit/disclosure.html
+          test -z "$(grep -RIlE '246481057|js\.hs-scripts\.com|data-affiliate=\"active\"' site/bidetfit || true)"
+          python -m json.tool site/bidetfit/status.json >/dev/null
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Deploy combined public artifact
+        id: deployment
+        uses: actions/deploy-pages@v4
+
+  verify:
+    runs-on: ubuntu-latest
+    needs: deploy
+    timeout-minutes: 10
+    steps:
+      - name: Verify BidetFit public beta
+        shell: bash
+        run: |
+          set -euo pipefail
+          home="$(mktemp)"
+          checker="$(mktemp)"
+          status="$(mktemp)"
+          sitemap="$(mktemp)"
+          success=false
+          for attempt in $(seq 1 24); do
+            if curl -fsSL --max-time 20 "https://priyanshchordia.com/bidetfit/" -o "$home" \
+              && curl -fsSL --max-time 20 "https://priyanshchordia.com/bidetfit/fit-checker.html" -o "$checker" \
+              && curl -fsSL --max-time 20 "https://priyanshchordia.com/bidetfit/status.json" -o "$status" \
+              && curl -fsSL --max-time 20 "https://priyanshchordia.com/bidetfit/sitemap.xml" -o "$sitemap" \
+              && grep -q "Measure once. Buy the bidet that fits." "$home" \
+              && grep -q "fit-form" "$checker" \
+              && grep -q '"brand": "BidetFit"' "$status" \
+              && grep -q '"active_affiliate_links": 0' "$status" \
+              && grep -q "https://priyanshchordia.com/bidetfit/fit-checker.html" "$sitemap" \
+              && python -m json.tool "$status" >/dev/null; then
+              success=true
+              break
+            fi
+            echo "BidetFit production verification attempt $attempt did not pass yet."
+            sleep 10
+          done
+          test "$success" = true
+          echo "BidetFit public beta is healthy."
+
+      - name: Resolve prior BidetFit deployment incident
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          title="[BidetFit] Production deployment incident"
+          existing="$(gh issue list --state open --search "in:title $title" --json number --jq '.[0].number // empty')"
+          if [ -n "$existing" ]; then
+            gh issue comment "$existing" --body "The BidetFit build, deployment, and public HTTP verification passed in ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}."
+            gh issue close "$existing" --reason completed
+          fi
+
+  report_failure:
+    if: ${{ always() && (needs.build.result == 'failure' || needs.deploy.result == 'failure' || needs.verify.result == 'failure') }}
+    runs-on: ubuntu-latest
+    needs: [build, deploy, verify]
+    steps:
+      - name: Open or refresh BidetFit deployment incident
+        env:
+          GH_TOKEN: ${{ github.token }}
+          BUILD_RESULT: ${{ needs.build.result }}
+          DEPLOY_RESULT: ${{ needs.deploy.result }}
+          VERIFY_RESULT: ${{ needs.verify.result }}
+        shell: bash
+        run: |
+          title="[BidetFit] Production deployment incident"
+          run_url="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
+          body="BidetFit did not pass its deployment gate. Build: ${BUILD_RESULT}; deploy: ${DEPLOY_RESULT}; verify: ${VERIFY_RESULT}. Run: ${run_url}"
+          existing="$(gh issue list --state open --search "in:title $title" --json number --jq '.[0].number // empty')"
+          if [ -n "$existing" ]; then
+            gh issue comment "$existing" --body "$body"
+          else
+            gh issue create --title "$title" --body "$body"
+          fi
