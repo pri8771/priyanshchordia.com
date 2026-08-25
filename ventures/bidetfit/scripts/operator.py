@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
 """Deterministic, zero-cost BidetFit operator.
 
-This runner validates persistent state and public health. It deliberately does
-not generate prose, invent metrics, apply to affiliate programs, or call a paid
-model. Substantive editorial work remains a separately authorized action.
+This runner validates persistent state, governance records, and public health.
+It deliberately does not generate prose, invent metrics, apply to affiliate
+programs, answer customer email, process returns, or call a paid model.
+Substantive editorial and customer-operations work remains separately
+authorized and is tracked through BF work items.
 """
 
 from __future__ import annotations
@@ -41,6 +43,27 @@ REQUIRED_FILES = (
     "DIARY.md",
     "NICHE_SCORECARD.csv",
     "RUNS.csv",
+    "AGENTS.md",
+    "CLAUDE.md",
+    ".ai/standards-version.json",
+    ".ai/APP_FACTORY_OPERATING_STANDARD.md",
+    "docs/DOCUMENTATION_INDEX.md",
+    "docs/PROJECT_DOCUMENTATION.md",
+    "docs/STATUS.md",
+    "docs/TASKS.md",
+    "docs/WORK_ITEMS.csv",
+    "docs/TIME_LOG.csv",
+    "docs/WORK_ITEM_TEMPLATE.md",
+    "docs/BUGS.md",
+    "docs/DECISIONS.md",
+    "docs/RISKS.md",
+    "docs/ASSUMPTIONS.md",
+    "docs/DEFINITION_OF_READY.md",
+    "docs/DEFINITION_OF_DONE.md",
+    "docs/PROMPT_LOG.md",
+    "docs/JIRA_SYNC_PENDING.md",
+    "docs/HANDOFF.md",
+    "docs/AUTONOMOUS_CUSTOMER_OPERATIONS.md",
 )
 
 CSV_HEADERS = {
@@ -50,6 +73,14 @@ CSV_HEADERS = {
     "EXPERIMENTS.csv": {"experiment_id", "hypothesis", "primary_metric", "status"},
     "METRICS.csv": {"date", "site_status", "affiliate_clicks", "cash_received_usd"},
     "RUNS.csv": {"run_id", "started_at", "finished_at", "trigger", "result"},
+    "docs/WORK_ITEMS.csv": {
+        "work_item_id", "title", "work_item_type", "status", "priority",
+        "estimated_hours", "actuals_confidence", "verification_evidence",
+    },
+    "docs/TIME_LOG.csv": {
+        "work_item_id", "date", "contributor", "duration_minutes",
+        "evidence", "actuals_confidence",
+    },
 }
 
 
@@ -67,6 +98,8 @@ def load_state() -> dict[str, Any]:
         raise ValueError("STATE.json does not identify BidetFit")
     if payload.get("experiment", {}).get("status") not in {"active", "paused", "stopped"}:
         raise ValueError("STATE.json has an invalid experiment status")
+    if payload.get("governance", {}).get("scope_version") != "BF-1.1-governed-autonomy":
+        raise ValueError("STATE.json does not identify the governed BidetFit scope")
     return payload
 
 
@@ -97,7 +130,7 @@ def validate_files() -> list[str]:
 
 
 def fetch_json(url: str) -> tuple[int | None, dict[str, Any] | None, str]:
-    request = urllib.request.Request(url, headers={"User-Agent": "BidetFit-Operator/1.0"})
+    request = urllib.request.Request(url, headers={"User-Agent": "BidetFit-Operator/1.1"})
     try:
         with urllib.request.urlopen(request, timeout=25) as response:
             status = int(response.status)
@@ -162,7 +195,7 @@ def main() -> int:
                 result = "failure"
                 notes.extend(errors)
             else:
-                notes.append("required files, CSV schemas, and public-source files passed")
+                notes.append("required mission, governance, work-item, CSV, and public-source files passed")
 
             if not args.local_only and result != "failure":
                 status_url = str(state["site"]["canonical_url"]).rstrip("/") + "/status.json"
