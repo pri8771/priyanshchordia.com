@@ -1,0 +1,60 @@
+{
+  "schema_version": 1,
+  "project": "BidetFit",
+  "experiment": {
+    "status": "active",
+    "start_date": "2026-08-24",
+    "end_date": "2026-11-21",
+    "current_day": 2
+  },
+  "site": {
+    "canonical_url": "https://priyanshchordia.com/bidetfit/",
+    "host": "GitHub Pages",
+    "source_path": "ventures/bidetfit/public",
+    "status": "launching",
+    "last_verified_at": null
+  },
+  "niche": {
+    "name": "bidet and toilet compatibility",
+    "brand": "BidetFit",
+    "status": "selected",
+    "core_value": "Conservative fit guidance from user measurements and manufacturer requirements",
+    "selection_date": "2026-08-25"
+  },
+  "automation": {
+    "status": "configured_pending_first_external_run",
+    "workflow": ".github/workflows/bidetfit-operator.yml",
+    "cadence": "every 6 hours",
+    "last_run_at": null,
+    "last_run_result": null
+  },
+  "monetization": {
+    "active_affiliate_links": 0,
+    "applications_submitted": 0,
+    "programs_approved": 0,
+    "pending_commission_usd": 0.0,
+    "approved_commission_usd": 0.0,
+    "cash_received_usd": 0.0,
+    "reinvestment_spend_usd": 0.0
+  },
+  "metrics": {
+    "search_impressions": 0,
+    "search_clicks": 0,
+    "affiliate_clicks": 0,
+    "verified_sales": 0,
+    "email_subscribers": 0,
+    "returning_visitors": 0
+  },
+  "next_actions": [
+    "Deploy the public beta and independently verify every route",
+    "Run the first scheduled operator execution outside chat",
+    "Submit a bundled set of affiliate applications after the useful beta is public",
+    "Expand the fit checker into a model-level compatibility database",
+    "Publish the initial measurement and special-toilet topic cluster"
+  ],
+  "blockers": [
+    "Affiliate applications may require owner identity, tax, payout, agreement, or two-factor steps",
+    "No merchant tracking links may be published before approval and exact-link verification"
+  ],
+  "updated_at": "2026-08-25T15:36:00Z"
+}

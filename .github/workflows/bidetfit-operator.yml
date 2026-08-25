@@ -1,0 +1,75 @@
+name: BidetFit autonomous operator
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "17 */6 * * *"
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/bidetfit-operator.yml"
+      - "ventures/bidetfit/scripts/**"
+      - "ventures/bidetfit/public/**"
+
+permissions:
+  contents: write
+  issues: write
+
+concurrency:
+  group: bidetfit-operator
+  cancel-in-progress: false
+
+jobs:
+  operate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Read state, validate health, and record evidence
+        run: python3 ventures/bidetfit/scripts/operator.py
+
+      - name: Commit durable run state
+        shell: bash
+        run: |
+          git config user.name "bidetfit-operator[bot]"
+          git config user.email "pchordia@unsubscriber.me"
+          git add \
+            ventures/bidetfit/STATE.json \
+            ventures/bidetfit/RUNS.csv \
+            ventures/bidetfit/DIARY.md \
+            ventures/bidetfit/logs/runs.jsonl
+          if git diff --cached --quiet; then
+            echo "No durable state change."
+            exit 0
+          fi
+          git commit -m "Record BidetFit autonomous run"
+          for attempt in 1 2 3; do
+            git pull --rebase origin main
+            if git push origin HEAD:main; then
+              exit 0
+            fi
+            sleep $((attempt * 3))
+          done
+          exit 1
+
+      - name: Open or refresh operator incident
+        if: ${{ failure() }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          title="[BidetFit] Operator incident"
+          run_url="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
+          body="The scheduled BidetFit operator failed. Inspect ${run_url}, the latest RUNS.csv row, and logs/runs.jsonl."
+          existing="$(gh issue list --state open --search "in:title $title" --json number --jq '.[0].number // empty')"
+          if [ -n "$existing" ]; then
+            gh issue comment "$existing" --body "$body"
+          else
+            gh issue create --title "$title" --body "$body"
+          fi

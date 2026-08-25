@@ -1,0 +1,6 @@
+experiment_id,hypothesis,variant_a,variant_b,primary_metric,start_date,end_date,status,minimum_evidence,result,decision
+EXP-001,A measurement-first hero will generate more useful engagement than a generic buying-guide hero,Start the fit checker,Read buying guide,checker_start_rate,,,planned,100 eligible sessions,,
+EXP-002,Showing the reason behind each fit warning will improve checker completion,Reason shown inline,Reason hidden until result,checker_completion_rate,,,planned,100 checker starts,,
+EXP-003,A contextual merchant choice after results will outperform a generic shop button,Constraint-matched merchant CTA,Generic shop CTA,affiliate_click_rate,,,blocked_until_approval,100 completed checks,,
+EXP-004,A printable measurement sheet will increase returning visits,Downloadable sheet,No sheet,returning_visitor_rate,,,planned,100 guide sessions,,
+EXP-005,Special-toilet problem pages will reach qualified buyers faster than broad best-bidet pages,French curve and skirted cluster,Generic best bidets article,qualified_organic_clicks,,,planned,28-day comparison,,
