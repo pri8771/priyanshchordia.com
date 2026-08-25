@@ -1,0 +1,9 @@
+{
+  "project": "BidetFit",
+  "standard": "APP_FACTORY_OPERATING_STANDARD",
+  "version": "1.1",
+  "scope_version": "BF-1.1-governed-autonomy",
+  "canonical_repository_path": "ventures/bidetfit",
+  "owner": "Priyansh Chordia",
+  "applied_on": "2026-08-25"
+}
