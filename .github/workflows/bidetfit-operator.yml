@@ -32,14 +32,15 @@ jobs:
           python-version: "3.12"
 
       - name: Read state, validate health, and record evidence
-        run: python3 ventures/bidetfit/scripts/operator.py
+        run: python3 -m ventures.bidetfit.scripts.operator
 
       - name: Commit durable run state
+        if: ${{ always() }}
         shell: bash
         run: |
           git config user.name "bidetfit-operator[bot]"
           git config user.email "pchordia@unsubscriber.me"
-          git add \
+          git add --ignore-errors \
             ventures/bidetfit/STATE.json \
             ventures/bidetfit/RUNS.csv \
             ventures/bidetfit/DIARY.md \
@@ -57,6 +58,19 @@ jobs:
             sleep $((attempt * 3))
           done
           exit 1
+
+      - name: Resolve prior operator incident
+        if: ${{ success() }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          title="[BidetFit] Operator incident"
+          existing="$(gh issue list --state open --search "in:title $title" --json number --jq '.[0].number // empty')"
+          if [ -n "$existing" ]; then
+            gh issue comment "$existing" --body "The BidetFit operator completed successfully in ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}."
+            gh issue close "$existing" --reason completed
+          fi
 
       - name: Open or refresh operator incident
         if: ${{ failure() }}
