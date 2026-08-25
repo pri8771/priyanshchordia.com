@@ -1,20 +1,20 @@
 {
   "schema_version": 1,
   "status": "live",
-  "verified_at_utc": "2026-08-24T20:54:14Z",
+  "verified_at_utc": "2026-08-25T15:19:55Z",
   "brand": "CommerceLint",
   "url": "https://priyanshchordia.com/commercelint/",
   "scanner_url": "https://priyanshchordia.com/commercelint/scanner.html",
   "legacy_url": "https://priyanshchordia.com/machinecart/",
-  "portfolio_commit": "e97da394b91f568842568c5807e69f40812ee802",
-  "source_commit": "fc0aa65387b123a7b22641b597794cc946bc488e",
+  "portfolio_commit": "f5613ab674a2e2ed144e1dc28c26fba8642e2fda",
+  "source_commit": "3a72d932c2a9f7e8b9f4d36479e8e1659eaddb0b",
   "source_changed": true,
   "pages_url": "https://priyanshchordia.com/",
-  "workflow_run_url": "https://github.com/pri8771/priyanshchordia.com/actions/runs/32776441380",
+  "workflow_run_url": "https://github.com/pri8771/priyanshchordia.com/actions/runs/32864777018",
   "indexnow": {
     "outcome": "success",
     "http_status": "200",
-    "url_count": 13
+    "url_count": 14
   },
   "checks": [
     "home returned HTTP success and contained CommerceLint",
@@ -22,6 +22,8 @@
     "status.json returned valid JSON",
     "legacy route pointed to the CommerceLint canonical path",
     "excluded Primandir analytics references were absent",
+    "GA4 runtime used the verified property and explicit opt-in consent",
+    "public HTML did not load the Google tag before consent",
     "IndexNow ownership key was publicly reachable"
   ]
 }
