@@ -38,6 +38,7 @@ REQUIRED_FILES = (
     "founding-audit.html",
     "agency.html",
     "assets/site.css",
+    "assets/analytics.js",
     "guides/index.html",
     "sitemap.xml",
 )
@@ -133,15 +134,6 @@ def rewrite_public_tree(target: Path) -> None:
         if path.suffix.lower() == ".html":
             text = replace_or_insert_canonical(text, canonical_for(path.relative_to(target)))
         path.write_text(text, encoding="utf-8")
-
-
-def analytics_javascript() -> str:
-    return """(() => {
-  "use strict";
-  const noOp = function () {};
-  window.commerceLintTrack = noOp;
-})();
-"""
 
 
 def og_card_svg() -> str:
@@ -304,16 +296,40 @@ def validate(target: Path) -> list[str]:
             errors.append(f"scanner.html: missing functional marker {marker}")
     privacy = (target / "privacy.html").read_text(encoding="utf-8") if (target / "privacy.html").exists() else ""
     privacy_lower = privacy.lower()
-    has_tracker_disclosure = (
-        "third-party analytics" in privacy_lower
-        and ("advertising tracker" in privacy_lower or "advertising trackers" in privacy_lower)
-    )
-    has_no_network_disclosure = any(
-        marker in privacy_lower
-        for marker in ("no network events", "sends no page or scanner data", "no-network")
-    )
-    if not (has_tracker_disclosure and has_no_network_disclosure):
-        errors.append("privacy.html: no-network analytics disclosure is missing")
+    for marker in (
+        "google analytics 4",
+        "only after you select",
+        "does <strong>not</strong> send pasted html",
+        "global privacy control",
+    ):
+        if marker not in privacy_lower:
+            errors.append(f"privacy.html: missing consent disclosure marker {marker!r}")
+
+    analytics_path = target / "assets" / ANALYTICS_FILENAME
+    analytics = analytics_path.read_text(encoding="utf-8") if analytics_path.exists() else ""
+    for marker in (
+        "G-MC3PB0Q7EX",
+        "commercelint:analyticsConsent:v1",
+        "window.commerceLintTrack = track",
+        "send_page_view: false",
+        'readConsent() !== "granted"',
+    ):
+        if marker not in analytics:
+            errors.append(f"analytics.js: missing consent marker {marker!r}")
+    for forbidden in ("storeUrl", "pageTitle", "246481057", "js.hs-scripts.com"):
+        if forbidden in analytics:
+            errors.append(f"analytics.js: prohibited marker {forbidden!r}")
+
+    loader_pattern = re.compile(r'<script\b[^>]*src=["\'][^"\']*assets/analytics\.js["\']', re.I)
+    for page in sorted(target.rglob("*.html")):
+        page_text = page.read_text(encoding="utf-8")
+        loader_count = len(loader_pattern.findall(page_text))
+        if loader_count != 1:
+            errors.append(
+                f"{page.relative_to(target)}: expected one local analytics loader, found {loader_count}"
+            )
+        if "googletagmanager.com/gtag/js" in page_text:
+            errors.append(f"{page.relative_to(target)}: Google tag is loaded directly before consent")
     return errors
 
 
@@ -348,7 +364,6 @@ def main() -> int:
     rewrite_public_tree(target)
     assets = target / "assets"
     assets.mkdir(parents=True, exist_ok=True)
-    (assets / ANALYTICS_FILENAME).write_text(analytics_javascript(), encoding="utf-8")
     (assets / "og-card.svg").write_text(og_card_svg(), encoding="utf-8")
     deployment = {
         "schema_version": 1,
@@ -357,10 +372,18 @@ def main() -> int:
         "source_repository": "pri8771/autonomous_apps",
         "source_commit": source_sha(source),
         "analytics": {
-            "provider": "None",
-            "mode": "disabled",
-            "consent_required": False,
-            "network_requests": False,
+            "provider": "Google Analytics 4",
+            "measurement_id": "G-MC3PB0Q7EX",
+            "mode": "explicit_opt_in",
+            "consent_required": True,
+            "network_requests_before_consent": False,
+            "network_requests_after_consent": True,
+            "event_namespace": "cl_",
+            "data_minimization": [
+                "query strings removed from page location",
+                "no pasted HTML, scanned URLs, scanned titles, evidence, emails, or form contents",
+                "advertising storage, Google signals, ad personalization, and ad user data disabled",
+            ],
         },
     }
     (target / "deployment.json").write_text(json.dumps(deployment, indent=2) + "\n", encoding="utf-8")

@@ -95,11 +95,17 @@ jobs:
       - name: Mount and validate latest CommerceLint release
         run: python3 scripts/sync_commercelint.py .commercelint-source/docs site/commercelint
 
-      - name: Check CommerceLint privacy and JavaScript invariants
+      - name: Check CommerceLint privacy and analytics invariants
         shell: bash
         run: |
           node --check site/commercelint/assets/analytics.js
           test -z "$(grep -RIlE '246481057|js\.hs-scripts\.com' site/commercelint || true)"
+          test -z "$(grep -RIl 'googletagmanager.com/gtag/js' site/commercelint --include='*.html' || true)"
+          grep -q 'G-MC3PB0Q7EX' site/commercelint/assets/analytics.js
+          grep -q 'commercelint:analyticsConsent:v1' site/commercelint/assets/analytics.js
+          grep -q 'window.commerceLintTrack = track' site/commercelint/assets/analytics.js
+          grep -q 'send_page_view: false' site/commercelint/assets/analytics.js
+          grep -q 'only after you select' site/commercelint/privacy.html
           grep -q 'CommerceLint' site/commercelint/index.html
           grep -q 'priyanshchordia.com/commercelint/' site/commercelint/index.html
           grep -q 'priyanshchordia.com/commercelint/' site/machinecart/index.html
@@ -140,17 +146,23 @@ jobs:
           scanner="$(mktemp)"
           status="$(mktemp)"
           legacy="$(mktemp)"
+          analytics="$(mktemp)"
           success=false
           for attempt in $(seq 1 24); do
             if curl -fsSL --max-time 20 "https://priyanshchordia.com/commercelint/" -o "$home" \
               && curl -fsSL --max-time 20 "https://priyanshchordia.com/commercelint/scanner.html" -o "$scanner" \
               && curl -fsSL --max-time 20 "https://priyanshchordia.com/commercelint/status.json" -o "$status" \
               && curl -fsSL --max-time 20 "https://priyanshchordia.com/machinecart/" -o "$legacy" \
+              && curl -fsSL --max-time 20 "https://priyanshchordia.com/commercelint/assets/analytics.js" -o "$analytics" \
               && curl -fsSL --max-time 20 "https://priyanshchordia.com/commercelint/1d88808c1ec138f77fe50484f83e6de7.txt" | grep -q "1d88808c1ec138f77fe50484f83e6de7" \
               && grep -q "CommerceLint" "$home" \
               && grep -q "Turn product-page defects" "$home" \
               && grep -q "analyzeMarkup" "$scanner" \
               && grep -q "priyanshchordia.com/commercelint/" "$legacy" \
+              && grep -q "G-MC3PB0Q7EX" "$analytics" \
+              && grep -q "commercelint:analyticsConsent:v1" "$analytics" \
+              && grep -q "window.commerceLintTrack = track" "$analytics" \
+              && ! grep -q "const noOp" "$analytics" \
               && ! grep -qE "246481057|js\.hs-scripts\.com" "$home" \
               && python -m json.tool "$status" >/dev/null; then
               success=true
@@ -287,6 +299,8 @@ jobs:
                   "status.json returned valid JSON",
                   "legacy route pointed to the CommerceLint canonical path",
                   "excluded Primandir analytics references were absent",
+                  "GA4 runtime used the verified property and explicit opt-in consent",
+                  "public HTML did not load the Google tag before consent",
                   "IndexNow ownership key was publicly reachable",
               ],
           }
