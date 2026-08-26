@@ -16,6 +16,10 @@
 - Documented a phased laptop-off customer-support architecture using a cloud support mailbox, private ticket store, bounded external model runtime, deterministic policy and approval layer, draft-first rollout, owner escalation, audit receipts, and kill switches.
 - Recorded that BidetFit cannot process affiliate-merchant returns under the current business model; returns require seller or explicit delegated merchant authority.
 - Added core governance documents and work-item CSV schemas to unattended operator health validation.
+- Created Jira epic `PCH-90` and one Jira work item for every `BF-001` through `BF-033` record.
+- Created the BidetFit Notion command-center project, 33 task mirrors, 12 canonical document indexes, and decision mirrors for `D-009` through `D-017`.
+- Added `TRACKER_LINKS.csv` and `TRACKER_INDEX.md` with permanent GitHub, Jira, and Notion references, synchronization caveats, sample verification, and conflict procedure.
+- Extended the unattended operator to require and validate tracker-link files before reporting project health.
 
 ## 2026-08-24
 - Experiment started.

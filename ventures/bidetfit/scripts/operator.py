@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 """Deterministic, zero-cost BidetFit operator.
 
-This runner validates persistent state, governance records, and public health.
-It deliberately does not generate prose, invent metrics, apply to affiliate
-programs, answer customer email, process returns, or call a paid model.
-Substantive editorial and customer-operations work remains separately
+This runner validates persistent state, governance records, tracker links, and
+public health. It deliberately does not generate prose, invent metrics, apply
+to affiliate programs, answer customer email, process returns, or call a paid
+model. Substantive editorial and customer-operations work remains separately
 authorized and is tracked through BF work items.
 """
 
@@ -53,6 +53,8 @@ REQUIRED_FILES = (
     "docs/TASKS.md",
     "docs/WORK_ITEMS.csv",
     "docs/TIME_LOG.csv",
+    "docs/TRACKER_LINKS.csv",
+    "docs/TRACKER_INDEX.md",
     "docs/WORK_ITEM_TEMPLATE.md",
     "docs/BUGS.md",
     "docs/DECISIONS.md",
@@ -80,6 +82,10 @@ CSV_HEADERS = {
     "docs/TIME_LOG.csv": {
         "work_item_id", "date", "contributor", "duration_minutes",
         "evidence", "actuals_confidence",
+    },
+    "docs/TRACKER_LINKS.csv": {
+        "work_item_id", "jira_key", "jira_url", "notion_url",
+        "canonical_status", "last_verified_at",
     },
 }
 
@@ -195,7 +201,7 @@ def main() -> int:
                 result = "failure"
                 notes.extend(errors)
             else:
-                notes.append("required mission, governance, work-item, CSV, and public-source files passed")
+                notes.append("required mission, governance, tracker, work-item, CSV, and public-source files passed")
 
             if not args.local_only and result != "failure":
                 status_url = str(state["site"]["canonical_url"]).rstrip("/") + "/status.json"
