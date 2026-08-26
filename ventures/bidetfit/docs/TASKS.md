@@ -2,10 +2,10 @@
 
 **Scope version:** `BF-1.1-governed-autonomy`  
 **Operating standard:** App Factory Operating Standard 1.1  
-**Canonical detailed data:** `WORK_ITEMS.csv`  
+**Canonical detailed data:** `WORK_ITEMS.csv` plus governed item records under `docs/work_items/`  
 **Lifecycle mirror:** Jira  
 **Command-center mirror:** Notion  
-**Last updated:** 2026-08-25 local / 2026-08-26 UTC
+**Last updated:** 2026-08-26
 
 This ledger backfills every substantive task, bug, decision, story, and release gate completed or identified in the BidetFit experiment. Mechanical clicks and tiny implementation steps are not split into artificial work items. Historical exact hours remain blank when durable evidence is insufficient.
 
@@ -50,6 +50,7 @@ Canonical statuses are Open, In Progress, Blocked, Deferred, and Done. Review st
 | BF-031 | Task | Implement owner notifications, escalation channels, and service health summaries | Open | P1 | 6h | Priyansh | ChatGPT | Yes |
 | BF-032 | Release Gate | Complete privacy, security, legal, and commercial-policy review for autonomous customer operations | Open | P0 | 8h | Priyansh | ChatGPT | Yes |
 | BF-033 | Release Gate | Launch autonomous customer operations v1 | Blocked | P1 | 8h | Priyansh | ChatGPT | Yes |
+| BF-034 | Story | Establish the event-driven cloud agent runtime | Open | P0 | 8h | Priyansh | ChatGPT | Yes |
 
 ## Historical evidence and timing
 
@@ -57,16 +58,19 @@ BF-001 through BF-011 are retrospective work-item records grounded in the missio
 
 BF-012 is complete. App Factory governance was merged in PR #6, all Jira/Notion mirrors were created, permanent link-back was merged in PR #7, sample reconciliation passed, Jira and Notion were closed, and unattended operator run `32916545607` validated the merged tracker system and public site. Its exact active hours remain `Unknown / Needs Backfill` because no reliable contemporaneous duration receipt was recorded.
 
+BF-034 is the current autonomy-foundation item. The architecture, Jira issue PCH-127, Notion mirror, and governed item record exist. It remains Open because the strict-zero runner expansion is not implemented and the robust Google Cloud path is blocked on explicit owner approval for billing linkage, app installation, OAuth/API credentials, and model-provider access.
+
 ## Current sequencing
 
-1. Run BF-013, BF-014, BF-015, and BF-030 in parallel where dependencies allow.
-2. Implement the trusted Jira command bridge under BF-017.
-3. Begin customer operations with BF-018, BF-019, BF-020, BF-022, BF-023, and BF-032.
-4. Connect the external model only in BF-021 after provider, data, budget, and policy approval.
-5. Run BF-024 draft-only.
-6. Enable BF-025 only after measured QA and owner approval.
-7. Keep BF-026 through BF-028 Deferred until BidetFit has customer accounts/orders and seller or delegated merchant authority.
-8. Launch BF-033 only after every release gate passes.
+1. Execute BF-034's strict-zero no-op vertical slice and prepare the robust infrastructure as code.
+2. Run BF-013, BF-014, BF-015, and BF-030 where dependencies allow.
+3. Implement the trusted Jira command bridge under BF-017 on the BF-034 runtime.
+4. Connect an approved external model under BF-021 only after provider, data, budget, and policy approval.
+5. Build the metrics and experiment loop under BF-029.
+6. Begin customer operations with BF-018, BF-019, BF-020, BF-022, BF-023, and BF-032.
+7. Run BF-024 draft-only and enable BF-025 only after measured QA and owner approval.
+8. Keep BF-026 through BF-028 Deferred until BidetFit has customer accounts/orders and seller or delegated merchant authority.
+9. Launch BF-033 only after every release gate passes.
 
 ## Required body
 
@@ -85,4 +89,4 @@ Every Jira and Notion work-item page uses:
 - Approval requirement
 - Jira, Notion, GitHub, test, and deployment links
 
-`WORK_ITEMS.csv` carries the canonical field-level details for all 33 records. `TRACKER_LINKS.csv` carries the permanent cross-system mappings. `WORK_ITEM_TEMPLATE.md`, `DEFINITION_OF_READY.md`, and `DEFINITION_OF_DONE.md` define future maintenance.
+`WORK_ITEMS.csv` carries the field-level ledger through BF-033, and governed item records under `docs/work_items/` carry subsequent detailed additions until the next consolidated CSV migration. `TRACKER_LINKS.csv` carries permanent cross-system mappings. `WORK_ITEM_TEMPLATE.md`, `DEFINITION_OF_READY.md`, and `DEFINITION_OF_DONE.md` define future maintenance.
