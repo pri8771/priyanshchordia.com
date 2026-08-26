@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "work_item": "BF-012",
+  "scope_version": "BF-1.1-governed-autonomy",
+  "status": "done",
+  "governance_pr": 6,
+  "governance_merge": "6f4ff67886167fa5defd7f7fc1dc162e6d5137af",
+  "tracker_sync_pr": 7,
+  "tracker_sync_merge": "4ca038e91779613bff86f9254ffa1ee1c52b50de",
+  "jira_epic": "PCH-90",
+  "jira_work_item": "PCH-103",
+  "notion_project_id": "3c8ab1f2-2765-81f2-a8fe-ea94435bc7a2",
+  "notion_work_item_id": "3c8ab1f2-2765-81ff-80b8-ea544b4c73c6",
+  "pre_closeout_operator_run": "32916545607",
+  "created_at": "2026-08-26T00:51:00Z",
+  "purpose": "Trigger and bind the final unattended operator verification after canonical governance closeout is merged."
+}

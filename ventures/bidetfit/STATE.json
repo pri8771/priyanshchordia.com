@@ -36,11 +36,13 @@
     "lifecycle_system": "Jira",
     "command_center": "Notion",
     "work_item_range": "BF-001..BF-033",
-    "backfill_status": "tracker_links_synced_pending_closeout",
+    "backfill_status": "synced",
     "jira_epic_url": "https://priyanshchordia-1779372280524.atlassian.net/browse/PCH-90",
     "notion_project_url": "https://app.notion.com/p/3c8ab1f2276581f2a8feea94435bc7a2?pvs=204",
     "github_governance_pr": "https://github.com/pri8771/priyanshchordia.com/pull/6",
-    "tracker_links_path": "docs/TRACKER_LINKS.csv"
+    "github_tracker_sync_pr": "https://github.com/pri8771/priyanshchordia.com/pull/7",
+    "tracker_links_path": "docs/TRACKER_LINKS.csv",
+    "closeout_operator_run": "32916545607"
   },
   "customer_operations": {
     "status": "not_deployed",
@@ -73,10 +75,10 @@
     "returning_visitors": 0
   },
   "next_actions": [
-    "Complete BF-012 after post-merge operator proof and external tracker closeout",
     "Configure Search Console and privacy-conscious analytics under BF-013",
     "Reverify and submit affiliate applications under BF-014",
     "Build the exact compatibility data schema under BF-015",
+    "Implement the trusted Jira command/control bridge under BF-017",
     "Provision and authorize the support mailbox under BF-018",
     "Implement browser-level tests under BF-030"
   ],
@@ -89,5 +91,5 @@
     "BidetFit has no seller-of-record or delegated merchant authority for returns, replacements, cancellations, or refunds",
     "Customer operations cannot launch until privacy, security, policy, testing, and owner approval gates pass"
   ],
-  "updated_at": "2026-08-26T00:48:35Z"
+  "updated_at": "2026-08-26T00:50:55Z"
 }

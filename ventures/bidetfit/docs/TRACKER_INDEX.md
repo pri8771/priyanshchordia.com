@@ -1,7 +1,8 @@
 # BidetFit Tracker Index
 
 **Scope version:** `BF-1.1-governed-autonomy`  
-**Last verified:** 2026-08-25  
+**Last verified:** 2026-08-25 local / 2026-08-26 UTC  
+**Synchronization status:** Complete  
 **Canonical system:** GitHub repository documentation and evidence
 
 ## Project links
@@ -10,6 +11,8 @@
 - **GitHub project path:** https://github.com/pri8771/priyanshchordia.com/tree/main/ventures/bidetfit
 - **Governance PR:** https://github.com/pri8771/priyanshchordia.com/pull/6
 - **Governance merge:** `6f4ff67886167fa5defd7f7fc1dc162e6d5137af`
+- **Tracker synchronization PR:** https://github.com/pri8771/priyanshchordia.com/pull/7
+- **Tracker synchronization merge:** `4ca038e91779613bff86f9254ffa1ee1c52b50de`
 - **Jira epic:** https://priyanshchordia-1779372280524.atlassian.net/browse/PCH-90
 - **Notion project:** https://app.notion.com/p/3c8ab1f2276581f2a8feea94435bc7a2?pvs=204
 
@@ -21,6 +24,7 @@
 - 12 canonical project-document records in the App Factory Notion Docs Library.
 - Nine new governance/customer-operations decision mirrors: `D-009` through `D-017`.
 - Complete per-item cross-links: `TRACKER_LINKS.csv`.
+- Governance closeout item `BF-012`: Done in GitHub, Jira, and Notion.
 
 ## Status mapping
 
@@ -35,7 +39,7 @@ The following samples were checked across all three systems:
 - `BF-001`: historical owner authorization — Done.
 - `BF-006`: public beta implementation — Done.
 - `BF-009`: operator import bug and repair — Done.
-- `BF-012`: governance synchronization — In Progress at link-back creation.
+- `BF-012`: governance synchronization — Done with PR, tracker, Jira, Notion, and unattended operator evidence.
 - `BF-018`: support mailbox — Blocked on owner mailbox/OAuth/2FA actions.
 - `BF-021`: external model runtime — Blocked on provider, data, credentials, and budget approval.
 - `BF-026`: authenticated customer/order lookup — Deferred.
@@ -43,7 +47,7 @@ The following samples were checked across all three systems:
 
 ## Operator evidence
 
-After the App Factory governance merge, the external BidetFit operator completed successfully, validated the expanded mission/governance/work-item file set, verified the public status endpoint, and persisted healthy state. The current state file records `last_run_result: success` and the public site remains live.
+After tracker synchronization merged, external BidetFit operator run `32916545607` completed successfully. Its state/health validation, durable evidence commit, and incident-resolution steps all passed. It validated the expanded mission, governance, work-item, tracker, CSV, and public-source file set and verified the public status endpoint. The public site remained live.
 
 ## Conflict procedure
 

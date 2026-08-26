@@ -5,7 +5,7 @@
 **Canonical detailed data:** `WORK_ITEMS.csv`  
 **Lifecycle mirror:** Jira  
 **Command-center mirror:** Notion  
-**Last updated:** 2026-08-25
+**Last updated:** 2026-08-25 local / 2026-08-26 UTC
 
 This ledger backfills every substantive task, bug, decision, story, and release gate completed or identified in the BidetFit experiment. Mechanical clicks and tiny implementation steps are not split into artificial work items. Historical exact hours remain blank when durable evidence is insufficient.
 
@@ -28,7 +28,7 @@ Canonical statuses are Open, In Progress, Blocked, Deferred, and Done. Review st
 | BF-009 | Bug | Fix Python standard-library shadowing in the unattended operator | Done | P0 | 2h | Priyansh | ChatGPT | No |
 | BF-010 | Bug | Fix false-negative deployment incident cleanup | Done | P1 | 1.5h | Priyansh | ChatGPT | No |
 | BF-011 | Task | Research post-launch competitors and narrow BidetFit differentiation | Done | P1 | 3h | Priyansh | ChatGPT | No |
-| BF-012 | Task | Adopt App Factory Operating Standard 1.1 and backfill canonical governance records | In Progress | P0 | 8h | Priyansh | ChatGPT | Yes |
+| BF-012 | Task | Adopt App Factory Operating Standard 1.1 and backfill canonical governance records | Done | P0 | 8h | Priyansh | ChatGPT | Yes |
 | BF-013 | Task | Configure Search Console, analytics ownership, and indexing baseline | Open | P0 | 4h | Priyansh | ChatGPT | Yes |
 | BF-014 | Task | Reverify affiliate program terms and prepare owner-ready application package | Open | P0 | 6h | Priyansh | ChatGPT | Yes |
 | BF-015 | Story | Define and implement the exact toilet-model × bidet-model compatibility data schema | Open | P0 | 8h | Priyansh | ChatGPT | No |
@@ -55,12 +55,12 @@ Canonical statuses are Open, In Progress, Blocked, Deferred, and Done. Review st
 
 BF-001 through BF-011 are retrospective work-item records grounded in the mission, diary, decision log, public source, GitHub workflows, and workflow-run evidence. Known dates are recorded. Exact active hours were not measured contemporaneously and remain `Unknown / Needs Backfill`; no exact duration is inferred from elapsed wall-clock time.
 
-BF-012 is the active governance and tracker backfill. It remains In Progress until Jira and Notion records are created, links are written back, and sampled synchronization is verified.
+BF-012 is complete. App Factory governance was merged in PR #6, all Jira/Notion mirrors were created, permanent link-back was merged in PR #7, sample reconciliation passed, Jira and Notion were closed, and unattended operator run `32916545607` validated the merged tracker system and public site. Its exact active hours remain `Unknown / Needs Backfill` because no reliable contemporaneous duration receipt was recorded.
 
 ## Current sequencing
 
-1. Finish BF-012.
-2. Run BF-013, BF-014, BF-015, and BF-030 in parallel where dependencies allow.
+1. Run BF-013, BF-014, BF-015, and BF-030 in parallel where dependencies allow.
+2. Implement the trusted Jira command bridge under BF-017.
 3. Begin customer operations with BF-018, BF-019, BF-020, BF-022, BF-023, and BF-032.
 4. Connect the external model only in BF-021 after provider, data, budget, and policy approval.
 5. Run BF-024 draft-only.
@@ -85,4 +85,4 @@ Every Jira and Notion work-item page uses:
 - Approval requirement
 - Jira, Notion, GitHub, test, and deployment links
 
-`WORK_ITEMS.csv` carries the canonical field-level details for all 33 records. `WORK_ITEM_TEMPLATE.md`, `DEFINITION_OF_READY.md`, and `DEFINITION_OF_DONE.md` define future maintenance.
+`WORK_ITEMS.csv` carries the canonical field-level details for all 33 records. `TRACKER_LINKS.csv` carries the permanent cross-system mappings. `WORK_ITEM_TEMPLATE.md`, `DEFINITION_OF_READY.md`, and `DEFINITION_OF_DONE.md` define future maintenance.
