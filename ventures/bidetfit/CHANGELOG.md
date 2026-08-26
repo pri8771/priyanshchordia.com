@@ -20,6 +20,10 @@
 - Created the BidetFit Notion command-center project, 33 task mirrors, 12 canonical document indexes, and decision mirrors for `D-009` through `D-017`.
 - Added `TRACKER_LINKS.csv` and `TRACKER_INDEX.md` with permanent GitHub, Jira, and Notion references, synchronization caveats, sample verification, and conflict procedure.
 - Extended the unattended operator to require and validate tracker-link files before reporting project health.
+- Merged tracker synchronization in GitHub PR #7 at `4ca038e91779613bff86f9254ffa1ee1c52b50de`.
+- Verified the merged governance and tracker system through unattended operator run `32916545607`; the validation, durable state commit, and incident-resolution steps all passed.
+- Transitioned Jira `PCH-103` and the Notion `BF-012` task to Done only after the post-merge cloud proof.
+- Closed the canonical App Factory governance backfill and recorded `governance.backfill_status` as `synced`.
 
 ## 2026-08-24
 - Experiment started.
