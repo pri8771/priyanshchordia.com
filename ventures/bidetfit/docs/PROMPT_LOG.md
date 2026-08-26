@@ -9,7 +9,8 @@
 | PRM-BF-003 | 2026-08-24 | BF-001 | `START` activation | `docs/prompts/PRM-BF-003-start.md` | Experiment activated | Responded |
 | PRM-BF-004 | 2026-08-25 | BF-007–BF-010 | Deploy the system and make it independent of the chat | `docs/prompts/PRM-BF-004-deploy-system.md` | GitHub Pages beta and external operator | Responded |
 | PRM-BF-005 | 2026-08-25 | BF-011, BF-013, BF-017 | Explain website, autonomy, analytics, communication, Jira, and runtime | `docs/prompts/PRM-BF-005-autonomy-audit.md` | Competitive adjustment and architecture gap analysis | Responded |
-| PRM-BF-006 | 2026-08-25 | BF-012, BF-017–BF-033 | Apply App Factory governance and design laptop-off customer email and return operations | `docs/prompts/PRM-BF-006-governance-customer-operations.md` | Canonical governance backfill and customer-operations architecture | In Progress |
+| PRM-BF-006 | 2026-08-25 | BF-012, BF-017–BF-033 | Apply App Factory governance and design laptop-off customer email and return operations | `docs/prompts/PRM-BF-006-governance-customer-operations.md` | Canonical governance backfill and customer-operations architecture | Responded |
+| PRM-BF-007 | 2026-08-26 | BF-034 | Establish a 24×7-as-needed external runtime for analytics, code changes, and bounded autonomous operations | `docs/prompts/PRM-BF-007-cloud-autonomy-runtime.md` | Jira PCH-127, Notion mirror, D-018, runtime architecture and owner gates | Responded; implementation open |
 
 ## Provider and receipt note
 

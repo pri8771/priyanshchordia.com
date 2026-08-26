@@ -111,3 +111,14 @@
 **Decision:** AI output is a proposal, not authority. A deterministic service classifies action risk, verifies identity and policy, checks environment and financial scope, enforces idempotency, validates a scoped approval token, writes an immutable receipt, and honors kill switches before any email, account, order, return, refund, deletion, or destructive action.  
 **Why:** Prompt constraints alone cannot safely authorize external side effects.  
 **Default:** Unclassified, ambiguous, unsupported, or high-risk actions deny or escalate.
+
+## D-018 — Use an event-driven cloud agent rather than an always-on VM
+**Date:** 2026-08-26  
+**Status:** Adopted architecture; robust deployment blocked on owner billing authorization  
+**Decision:** Build autonomy around event-driven disposable workers with durable external state. Use the existing GitHub Actions environment for the strict-zero-budget pilot, and prepare a Google Cloud foundation using Cloud Run, Cloud Run Jobs, Firestore, Pub/Sub or Cloud Tasks, Cloud Scheduler, Secret Manager, monitoring, a private GitHub App, Jira events, and a separately approved model API. Do not operate an idle permanent VM.  
+**Why:** The workload is intermittent. Event-driven compute is continuously available without consuming compute while idle, is easier to patch and recover, and supports signed webhooks, retries, private state, least-privilege identities, and independent execution receipts. Cloud Run instances are disposable, so all mission, task, approval, and execution state must live outside the container.  
+**Cost decision:** Pilot with minimum instances 0, maximum instances 1, concurrency 1, bounded jobs, provider quotas, spend controls, and kill switches. Google Cloud requires a valid billing account even for free-tier usage, so linking billing is an explicit owner exception to the original no-card rule and does not authorize paid usage.  
+**Model decision:** A ChatGPT subscription is not an API runtime. Use a separately authorized model API. A provider free tier may be used only for public or properly redacted material and only after its data-use terms are accepted; raw customer or confidential data requires an approved private-data tier.  
+**Code authority:** The runtime may create branches, commits, pull requests, tests, reports, and Jira receipts. It may not bypass branch protection, read secrets, directly push to production, accept agreements, or perform customer, merchant, legal, privacy, or financial actions outside an approved deterministic policy.  
+**Affected work:** BF-013, BF-017, BF-021, BF-023, BF-029, BF-030, BF-031, and BF-034.  
+**Revisit trigger:** Measured traffic or workload makes scale-to-zero latency unacceptable, or an equally secure zero-cost runtime becomes available.
