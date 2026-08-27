@@ -12,7 +12,7 @@
     "host": "GitHub Pages",
     "source_path": "ventures/bidetfit/public",
     "status": "live",
-    "last_verified_at": "2026-08-26T20:01:43Z"
+    "last_verified_at": "2026-08-27T09:45:56Z"
   },
   "niche": {
     "name": "bidet and toilet compatibility",
@@ -26,7 +26,7 @@
     "status": "healthy",
     "workflow": ".github/workflows/bidetfit-operator.yml",
     "cadence": "every 6 hours",
-    "last_run_at": "2026-08-26T20:01:43Z",
+    "last_run_at": "2026-08-27T09:45:56Z",
     "last_run_result": "success"
   },
   "governance": {
@@ -91,5 +91,5 @@
     "BidetFit has no seller-of-record or delegated merchant authority for returns, replacements, cancellations, or refunds",
     "Customer operations cannot launch until privacy, security, policy, testing, and owner approval gates pass"
   ],
-  "updated_at": "2026-08-26T20:01:43Z"
+  "updated_at": "2026-08-27T09:45:56Z"
 }
