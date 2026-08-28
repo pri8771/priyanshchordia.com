@@ -1,20 +1,20 @@
 {
   "schema_version": 1,
   "status": "live",
-  "verified_at_utc": "2026-08-28T05:29:42Z",
+  "verified_at_utc": "2026-08-28T18:51:00Z",
   "brand": "CommerceLint",
   "url": "https://priyanshchordia.com/commercelint/",
   "scanner_url": "https://priyanshchordia.com/commercelint/scanner.html",
   "legacy_url": "https://priyanshchordia.com/machinecart/",
-  "portfolio_commit": "a4735de6ca9034312b70891bc2f27818ea865fac",
-  "source_commit": "9e8609e80a4dd6d16eef8d6cf37f355f62880833",
+  "portfolio_commit": "48d3d8e0db3828695e57deb5325ea2db3fdce4ce",
+  "source_commit": "5ad8b16b3da90f537a8d85cb6fcf789c4137af5e",
   "source_changed": true,
   "pages_url": "https://priyanshchordia.com/",
-  "workflow_run_url": "https://github.com/pri8771/priyanshchordia.com/actions/runs/33144891307",
+  "workflow_run_url": "https://github.com/pri8771/priyanshchordia.com/actions/runs/33201115535",
   "indexnow": {
     "outcome": "success",
     "http_status": "200",
-    "url_count": 16
+    "url_count": 17
   },
   "checks": [
     "home returned HTTP success and contained CommerceLint",
