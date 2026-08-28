@@ -186,4 +186,13 @@ This changes the strategy but does not invalidate the niche. It proves exact fit
 - Public site state observed: **live**.
 - Evidence detail: required mission, governance, tracker, work-item, CSV, and public-source files passed; public status endpoint verified
 - Additional same-day runs are retained in `RUNS.csv` and `logs/runs.jsonl`.
+---
+
+## Automated evidence — 2026-08-28
+
+<!-- operator:2026-08-28 -->
+- First scheduled operator evidence for this UTC day: **success**.
+- Public site state observed: **live**.
+- Evidence detail: required mission, governance, tracker, work-item, CSV, and public-source files passed; public status endpoint verified
+- Additional same-day runs are retained in `RUNS.csv` and `logs/runs.jsonl`.
 
