@@ -1,5 +1,16 @@
 # BidetFit Status
 
+## 2026-09-12 observation-freshness correction (PCH-104 / PCH-120)
+
+The implementation now distinguishes recorded site/operator health from commercial
+measurement. Traffic and commission collection remain unavailable; current values
+are null/unmeasured. The Aug 24–25 CSV rows and the dated status snapshot below are
+historical records, not a current zero-traffic or zero-revenue observation. Public
+status generation keeps the last CSV record date separate from the null actual
+observation timestamp. Eleven local tests passed, including three freshness tests.
+Integration and public readback remain with the release owner. BF-013/BF-029 remain
+Open; this correction does not complete analytics setup or the learning loop.
+
 **As of:** 2026-08-25 local / 2026-08-26 UTC  
 **Scope version:** `BF-1.1-governed-autonomy`  
 **Experiment day:** 2 of 90  

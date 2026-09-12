@@ -59,20 +59,20 @@
     "active_affiliate_links": 0,
     "applications_submitted": 0,
     "programs_approved": 0,
-    "pending_commission_usd": 0.0,
-    "approved_commission_usd": 0.0,
-    "cash_received_usd": 0.0,
-    "reinvestment_spend_usd": 0.0
+    "pending_commission_usd": null,
+    "approved_commission_usd": null,
+    "cash_received_usd": null,
+    "reinvestment_spend_usd": null
   },
   "metrics": {
     "public_html_pages": 11,
-    "known_indexed_pages": 0,
-    "search_impressions": 0,
-    "search_clicks": 0,
-    "affiliate_clicks": 0,
-    "verified_sales": 0,
-    "email_subscribers": 0,
-    "returning_visitors": 0
+    "known_indexed_pages": null,
+    "search_impressions": null,
+    "search_clicks": null,
+    "affiliate_clicks": null,
+    "verified_sales": null,
+    "email_subscribers": null,
+    "returning_visitors": null
   },
   "next_actions": [
     "Configure Search Console and privacy-conscious analytics under BF-013",
@@ -91,5 +91,12 @@
     "BidetFit has no seller-of-record or delegated merchant authority for returns, replacements, cancellations, or refunds",
     "Customer operations cannot launch until privacy, security, policy, testing, and owner approval gates pass"
   ],
-  "updated_at": "2026-09-12T20:32:17Z"
+  "updated_at": "2026-09-12T20:32:17Z",
+  "updated_at_scope": "operator_health_only",
+  "metrics_observation": {
+    "status": "unmeasured",
+    "last_observed_at": null,
+    "historical_records": "METRICS.csv",
+    "note": "Traffic and commission collection are not configured. Historical launch-day rows are preserved; their zeros are not current observations."
+  }
 }

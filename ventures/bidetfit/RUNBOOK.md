@@ -18,6 +18,26 @@ Workflow: `.github/workflows/bidetfit-operator.yml`
 Cadence: every six hours, plus manual dispatch and relevant source/workflow changes.  
 The operator uses only Python's standard library and GitHub's included runner services. It performs deterministic state, schema, source, and public-health work while the chat is closed. It does not invent editorial judgment or silently call a paid model.
 
+### Health and measurement freshness — BF-013 / PCH-104, BF-029 / PCH-120
+
+`STATE.json.updated_at` has scope `operator_health_only`. A successful run may
+advance health timestamps; it does not advance `metrics_observation.last_observed_at`
+or turn unavailable traffic, sales or commission values into zero.
+
+The public build produces status schema 2 from the recorded state and unchanged
+`METRICS.csv`. `health` contains the last recorded verification/run times, not a
+claim that deployment just checked the site. `metrics_observation.last_recorded_date`
+identifies the newest dated historical CSV row; it is distinct from an actual
+observation timestamp. The uninstrumented beta reports `status: unmeasured`, a null
+observation timestamp, null traffic and null verified commission. The old launch-day
+CSV rows remain intact. A future collector needs a reviewed observation contract
+before these fields can report measured values; adding a CSV row alone does not
+establish coverage. Public snapshots refresh on the existing deployment path.
+
+Verification: `python3 -m unittest discover -s tests -v` includes stale/absent
+measurement coverage and a mocked successful health run. These checks make no
+provider requests and do not claim public deployment or business outcomes.
+
 ## Deployment
 Workflow: `.github/workflows/bidetfit-pages-overlay.yml`  
 The deployment rebuilds the public portfolio, mounts CommerceLint as a separate business, mounts and validates BidetFit, deploys the combined artifact, and verifies the BidetFit homepage, checker, status endpoint, and sitemap over public HTTPS.

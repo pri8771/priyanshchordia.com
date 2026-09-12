@@ -1,5 +1,5 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "brand": "BidetFit",
   "status": "public_beta",
   "canonical_url": "https://priyanshchordia.com/bidetfit/",
@@ -7,7 +7,28 @@
   "launched_date": "2026-08-25",
   "active_affiliate_links": 0,
   "affiliate_programs_approved": 0,
-  "verified_commission_usd": 0.0,
+  "verified_commission_usd": null,
   "analytics": "none_in_launch_beta",
-  "last_content_review": "2026-08-25"
+  "last_content_review": "2026-08-25",
+  "health": {
+    "last_public_verified_at": "2026-09-12T20:32:17Z",
+    "last_operator_run_at": "2026-09-12T20:32:17Z",
+    "last_operator_result": "success",
+    "scope": "site and repository health; not commercial observation"
+  },
+  "metrics_observation": {
+    "status": "unmeasured",
+    "last_observed_at": null,
+    "last_recorded_date": "2026-08-25",
+    "historical_records": "ventures/bidetfit/METRICS.csv",
+    "note": "Historical rows do not establish current traffic or commission coverage."
+  },
+  "traffic": {
+    "search_impressions": null,
+    "search_clicks": null,
+    "organic_sessions": null,
+    "returning_visitors": null,
+    "affiliate_clicks": null,
+    "verified_sales": null
+  }
 }
