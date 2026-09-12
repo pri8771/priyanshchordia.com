@@ -331,3 +331,18 @@ This changes the strategy but does not invalidate the niche. It proves exact fit
 - Evidence detail: required mission, governance, tracker, work-item, CSV, and public-source files passed; public status endpoint verified
 - Additional same-day runs are retained in `RUNS.csv` and `logs/runs.jsonl`.
 
+## 2026-09-12 — PCH-104/PCH-120 observation-freshness repair
+
+Prompt reference: `BF-013-freshness-20260912` (root release handoff). Requested a
+bounded correctness repair so fresh health receipts cannot imply fresh commercial
+observations. Worked in isolated branch `codex/PCH-104-bidetfit-observation-freshness`
+from `22cd41a451a5edebb7d01fef8c40e2412d735951`.
+
+The public producer now separates recorded health times, historical CSV row dates
+and actual observation time. Unavailable current traffic/commission values remain
+null. Historical CSV rows and experiment results were not changed. Eleven local
+tests passed; three cover stale/unavailable measurements and the public build.
+Tests used temporary state and mocked provider responses. No live operator run,
+push, merge, deployment, account setup or tracker mutation occurred in this lane.
+Release owner retains integration, public readback and any tracker projection.
+Existing estimates remain unchanged; exact historical actuals were not backfilled.

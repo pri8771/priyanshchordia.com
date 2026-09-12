@@ -223,6 +223,8 @@ def main() -> int:
         state["automation"]["last_run_at"] = iso(finished)
         state["automation"]["last_run_result"] = result
         state["updated_at"] = iso(finished)
+        state["updated_at_scope"] = "operator_health_only"
+        notes.append("health evidence only; commercial metrics were not observed")
         STATE_PATH.write_text(json.dumps(state, indent=2) + "\n", encoding="utf-8")
 
         note_text = "; ".join(notes) or "no notes"

@@ -4,11 +4,13 @@
 from __future__ import annotations
 
 import argparse
+import csv
 import json
 import shutil
 import sys
 import xml.etree.ElementTree as ET
 from collections import Counter
+from datetime import date
 from html.parser import HTMLParser
 from pathlib import Path
 from urllib.parse import unquote, urlsplit
@@ -22,6 +24,44 @@ REQUIRED_FILES = (
     "privacy.html", "status.json", "robots.txt", "sitemap.xml",
     "assets/site.css", "assets/fit-checker.js", "assets/og.svg",
 )
+
+
+def status_snapshot(template: dict, state: dict, metrics_path: Path) -> dict:
+    """Publish health evidence separately from the uninstrumented beta's metrics.
+
+    METRICS.csv contains dated records, not proof of collector coverage. Neither
+    a new row nor a successful health check makes its commercial values measured.
+    A future collector must supply its own reviewed observation contract.
+    """
+    dates = []
+    if metrics_path.is_file():
+        with metrics_path.open(newline="", encoding="utf-8") as stream:
+            for row in csv.DictReader(stream):
+                try:
+                    dates.append(date.fromisoformat(row.get("date", "")))
+                except (TypeError, ValueError):
+                    continue
+    result = dict(template)
+    result["schema_version"] = 2
+    result["health"] = {
+        "last_public_verified_at": state.get("site", {}).get("last_verified_at"),
+        "last_operator_run_at": state.get("automation", {}).get("last_run_at"),
+        "last_operator_result": state.get("automation", {}).get("last_run_result"),
+        "scope": "site and repository health; not commercial observation",
+    }
+    result["metrics_observation"] = {
+        "status": "unmeasured",
+        "last_observed_at": None,
+        "last_recorded_date": max(dates).isoformat() if dates else None,
+        "historical_records": "ventures/bidetfit/METRICS.csv",
+        "note": "Historical rows do not establish current traffic or commission coverage.",
+    }
+    result["traffic"] = {key: None for key in (
+        "search_impressions", "search_clicks", "organic_sessions",
+        "returning_visitors", "affiliate_clicks", "verified_sales",
+    )}
+    result["verified_commission_usd"] = None
+    return result
 
 
 class Parser(HTMLParser):
@@ -169,6 +209,11 @@ def main() -> int:
     if not source.is_dir(): print(f"source missing: {source}", file=sys.stderr); return 1
     if target.exists(): shutil.rmtree(target)
     shutil.copytree(source, target)
+    mission = source.parent
+    state = json.loads((mission / "STATE.json").read_text(encoding="utf-8"))
+    status_path = target / "status.json"
+    template = json.loads(status_path.read_text(encoding="utf-8"))
+    status_path.write_text(json.dumps(status_snapshot(template, state, mission / "METRICS.csv"), indent=2) + "\n", encoding="utf-8")
     errors = validate(target)
     if errors:
         print("BidetFit validation failed:", file=sys.stderr)
