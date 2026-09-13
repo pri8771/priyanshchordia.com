@@ -346,3 +346,13 @@ Tests used temporary state and mocked provider responses. No live operator run,
 push, merge, deployment, account setup or tracker mutation occurred in this lane.
 Release owner retains integration, public readback and any tracker projection.
 Existing estimates remain unchanged; exact historical actuals were not backfilled.
+---
+
+## Automated evidence — 2026-09-13
+
+<!-- operator:2026-09-13 -->
+- First scheduled operator evidence for this UTC day: **success**.
+- Public site state observed: **live**.
+- Evidence detail: required mission, governance, tracker, work-item, CSV, and public-source files passed; public status endpoint verified; health evidence only; commercial metrics were not observed
+- Additional same-day runs are retained in `RUNS.csv` and `logs/runs.jsonl`.
+
