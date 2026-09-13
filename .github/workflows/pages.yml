@@ -110,6 +110,16 @@ jobs:
           grep -q 'priyanshchordia.com/commercelint/' site/commercelint/index.html
           grep -q 'priyanshchordia.com/commercelint/' site/machinecart/index.html
 
+      - name: Preserve the existing BidetFit release in the combined artifact
+        run: python3 scripts/sync_bidetfit.py ventures/bidetfit/public site/bidetfit
+
+      - name: Mount reviewed One Person Ops Contract Check
+        run: |
+          python3 scripts/sync_contract_check.py ventures/onepersonops/contract-check site/one-person-ops/contract-check
+          node --check site/one-person-ops/contract-check/web/app.mjs
+          node --check site/one-person-ops/contract-check/src/validator.mjs
+          node --check site/one-person-ops/contract-check/src/cli.mjs
+
       - uses: actions/configure-pages@v5
 
       - uses: actions/upload-pages-artifact@v3

@@ -1,0 +1,228 @@
+:root {
+  --bg0: #0f1c18;
+  --bg1: #163028;
+  --ink: #e8f2ec;
+  --muted: #9bb5a8;
+  --accent: #d4a017;
+  --accent-ink: #1a1400;
+  --fail: #e07060;
+  --ok: #5ecf9a;
+  --line: rgba(232, 242, 236, 0.14);
+  --panel: rgba(12, 28, 22, 0.72);
+  --font-display: "Avenir Next", "Segoe UI", "Helvetica Neue", sans-serif;
+  --font-mono: "IBM Plex Mono", "Cascadia Mono", "Consolas", monospace;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  min-height: 100%;
+}
+
+body {
+  color: var(--ink);
+  font-family: var(--font-display);
+  background: radial-gradient(1200px 700px at 10% -10%, #245544 0%, transparent 55%),
+    radial-gradient(900px 600px at 100% 0%, #3a2c10 0%, transparent 50%),
+    linear-gradient(160deg, var(--bg0), var(--bg1) 55%, #0b1512);
+}
+
+.atmosphere {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background-image: linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+  background-size: 48px 48px;
+  mask-image: radial-gradient(circle at 30% 20%, black, transparent 70%);
+  opacity: 0.45;
+  animation: drift 18s linear infinite;
+}
+
+@keyframes drift {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(48px);
+  }
+}
+
+.brand-bar {
+  padding: 2.5rem 1.5rem 1rem;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.brand {
+  margin: 0;
+  font-size: clamp(2.2rem, 5vw, 3.4rem);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  animation: rise 0.7s ease-out both;
+}
+
+.product {
+  margin: 0.35rem 0 0;
+  color: var(--accent);
+  font-size: 1.15rem;
+  font-weight: 600;
+  animation: rise 0.7s ease-out 0.08s both;
+}
+
+.tagline {
+  max-width: 42rem;
+  color: var(--muted);
+  line-height: 1.5;
+  animation: rise 0.7s ease-out 0.16s both;
+}
+
+.meta {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+main {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 1.5rem 3rem;
+  display: grid;
+  gap: 1.25rem;
+}
+
+.panel {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  padding: 1.25rem;
+  backdrop-filter: blur(8px);
+}
+
+h1,
+h2 {
+  margin: 0 0 0.4rem;
+  font-size: 1.25rem;
+}
+
+.lede {
+  margin: 0 0 1rem;
+  color: var(--muted);
+}
+
+.field {
+  display: grid;
+  gap: 0.35rem;
+  margin-bottom: 0.85rem;
+}
+
+.field span {
+  font-size: 0.8rem;
+  color: var(--muted);
+  font-family: var(--font-mono);
+}
+
+input,
+textarea {
+  width: 100%;
+  border: 1px solid var(--line);
+  background: rgba(0, 0, 0, 0.28);
+  color: var(--ink);
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  padding: 0.7rem 0.8rem;
+  border-radius: 0;
+}
+
+.split {
+  display: grid;
+  gap: 0.85rem;
+}
+
+@media (min-width: 860px) {
+  .split {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+button {
+  appearance: none;
+  border: 0;
+  background: var(--accent);
+  color: var(--accent-ink);
+  font-family: var(--font-display);
+  font-weight: 700;
+  padding: 0.7rem 1.1rem;
+  cursor: pointer;
+  transition: transform 0.15s ease, filter 0.15s ease;
+}
+
+button:hover {
+  filter: brightness(1.05);
+  transform: translateY(-1px);
+}
+
+button.ghost {
+  background: transparent;
+  color: var(--ink);
+  border: 1px solid var(--line);
+}
+
+.status[data-kind='ok'] {
+  color: var(--ok);
+}
+.status[data-kind='fail'],
+.status[data-kind='error'] {
+  color: var(--fail);
+}
+.status[data-kind='loading'] {
+  color: var(--accent);
+}
+
+.error-banner {
+  color: var(--fail);
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+}
+
+.receipt {
+  margin: 0;
+  white-space: pre-wrap;
+  word-break: break-word;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  line-height: 1.45;
+  min-height: 8rem;
+}
+
+.empty {
+  color: var(--muted);
+}
+
+footer {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 1.5rem 2.5rem;
+  color: var(--muted);
+  font-size: 0.85rem;
+}

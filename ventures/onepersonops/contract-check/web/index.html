@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>One Person Ops — Contract Check</title>
+    <link rel="stylesheet" href="/web/styles.css" />
+  </head>
+  <body>
+    <div class="atmosphere" aria-hidden="true"></div>
+    <header class="brand-bar">
+      <p class="brand">One Person Ops</p>
+      <p class="product">Contract Check</p>
+      <p class="tagline">
+        Deterministic JSON-contract validation with path-specific failures and a
+        verifiable receipt. No network. No models. No payments.
+      </p>
+      <p id="meta-version" class="meta"></p>
+    </header>
+
+    <main>
+      <section class="panel" aria-labelledby="input-heading">
+        <h1 id="input-heading">Validate a contract request</h1>
+        <p class="lede">
+          Paste a schema subset and data. Output is a ValidationReceiptV1 shown
+          as plain text only.
+        </p>
+
+        <label class="field">
+          <span>request_id</span>
+          <input id="request-id" type="text" autocomplete="off" />
+        </label>
+
+        <div class="split">
+          <label class="field">
+            <span>schema</span>
+            <textarea id="schema" rows="14" spellcheck="false"></textarea>
+          </label>
+          <label class="field">
+            <span>data</span>
+            <textarea id="data" rows="14" spellcheck="false"></textarea>
+          </label>
+        </div>
+
+        <div class="actions">
+          <button
+            id="run"
+            type="button"
+          >
+            Validate
+          </button>
+          <button
+            id="download"
+            type="button"
+            class="ghost"
+            disabled
+          >
+            Download receipt
+          </button>
+          <button
+            id="clear"
+            type="button"
+            class="ghost"
+          >
+            Reset sample
+          </button>
+        </div>
+
+        <p id="status" class="status" data-kind="idle" role="status"></p>
+        <p id="error-banner" class="error-banner" hidden></p>
+      </section>
+
+      <section class="panel receipt-panel" aria-labelledby="receipt-heading">
+        <h2 id="receipt-heading">Receipt</h2>
+        <p id="empty-state" class="empty">No receipt yet.</p>
+        <pre id="receipt" class="receipt" aria-live="polite"></pre>
+      </section>
+    </main>
+
+    <footer>
+      <p>
+        Free 14-day pilot · $19 assisted-review is a hypothesis only · no
+        checkout in this release
+      </p>
+    </footer>
+
+    <script type="module" src="/web/app.mjs"></script>
+    <script nomodule>
+      document.getElementById('error-banner').hidden = false;
+      document.getElementById('error-banner').textContent =
+        'This browser cannot load ES modules required by Contract Check.';
+    </script>
+    <script type="module">
+      // Surface import/boot failures instead of a silent dead UI.
+      window.addEventListener('unhandledrejection', (ev) => {
+        const banner = document.getElementById('error-banner');
+        if (!banner) return;
+        banner.hidden = false;
+        banner.textContent = `Boot error: ${ev.reason?.message || ev.reason || ev}`;
+      });
+    </script>
+  </body>
+</html>

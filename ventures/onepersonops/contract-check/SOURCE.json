@@ -1,0 +1,11 @@
+{
+  "source_commit": "3175fa2c1cef5746bd5d6cb6f222bcf36bc8b0e7",
+  "files": {
+    "web/index.html": "dbc87379e8704f7e01b4b0ce13fe99c5b64423f21638a3ae58f131a778c0e95f",
+    "web/app.mjs": "2df694c5d9d9652d0781f2d3c39000beeac448f4d894b22c3e26261734b4255e",
+    "web/styles.css": "809c94467bdfb813aa6ca68702df6a9efa0e102f4b1e51cba664af895dc69bcf",
+    "src/validator.mjs": "3f67b972676f223d70db9f5b8f3dc34e2fb513414b69c0d3334e11b6a4d4d69a",
+    "src/cli.mjs": "e635fffc02440c2e03d5480ae27b1b5c395791e2b9d9bfde32697b83081f3528",
+    "contract/validation-receipt.schema.json": "2755d0bf6e9aafdbe0944f205f80bf4c6adffb0e86c56d22103a743dadd03ce6"
+  }
+}
