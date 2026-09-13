@@ -356,3 +356,23 @@ Existing estimates remain unchanged; exact historical actuals were not backfille
 - Evidence detail: required mission, governance, tracker, work-item, CSV, and public-source files passed; public status endpoint verified; health evidence only; commercial metrics were not observed
 - Additional same-day runs are retained in `RUNS.csv` and `logs/runs.jsonl`.
 
+
+## 2026-09-13 — BF-018 / PCH-109 public support contact candidate
+
+Prompt: `BF-018-support-contact-20260913`. The owner provisioned
+`bidetfit@unsubscriber.me` as a private Google Group and reported receipt of a
+controlled inbound test; outbound verification is still pending. Added an email
+link to all 11 current public pages, inquiry/correction guidance to the method
+page, and email data-handling details to the privacy page. Updated the account
+record and mailbox-specific state without changing health or commercial metrics.
+Manual contact is distinct from the not-deployed automated support runtime.
+
+Source: accepted portfolio main `1207de101c6e44813d7d3f0a4c8a26b2afb0d5a5`,
+isolated branch `codex/PCH-109-support-contact-20260913`. S01’s two-answer
+candidate `ee67821fee25b0984962d21534b26f335a43253f` remains separate and intact.
+No affiliate approval, guaranteed fit, seller/refund authority, response-time
+promise, market feedback, or public release is claimed. Verification and source
+patch are returned to the release owner in the Astra planning packet at
+`planning/cursor-200h-streams-2026-09-13/unblock-execution/bidetfit/`.
+No deployment, tracker mutation, account change, or customer email was performed
+by this source-authoring task.
