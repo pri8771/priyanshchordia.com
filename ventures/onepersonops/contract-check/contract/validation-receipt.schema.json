@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://one-person-ops.local/contract-check/validation-receipt.schema.json",
+  "title": "ValidationReceiptV1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "contract_version",
+    "request_id",
+    "schema_sha256",
+    "input_sha256",
+    "validator_version",
+    "valid",
+    "errors",
+    "processed_at"
+  ],
+  "properties": {
+    "contract_version": { "type": "string", "const": "ValidationReceiptV1" },
+    "request_id": { "type": ["string", "null"] },
+    "schema_sha256": { "type": ["string", "null"], "pattern": "^([a-f0-9]{64})?$" },
+    "input_sha256": { "type": ["string", "null"], "pattern": "^([a-f0-9]{64})?$" },
+    "validator_version": { "type": "string" },
+    "valid": { "type": "boolean" },
+    "errors": {
+      "type": "array",
+      "maxItems": 100,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["path", "code", "expected", "actual_type", "hint"],
+        "properties": {
+          "path": { "type": "string" },
+          "code": { "type": "string" },
+          "expected": { "type": "string" },
+          "actual_type": { "type": "string" },
+          "hint": { "type": "string" }
+        }
+      }
+    },
+    "processed_at": { "type": "string", "format": "date-time" }
+  }
+}

@@ -74,6 +74,13 @@ jobs:
           test -z "$(grep -RIlE '246481057|js\.hs-scripts\.com|data-affiliate=\"active\"' site/bidetfit || true)"
           python -m json.tool site/bidetfit/status.json >/dev/null
 
+      - name: Mount reviewed One Person Ops Contract Check
+        run: |
+          python3 scripts/sync_contract_check.py ventures/onepersonops/contract-check site/one-person-ops/contract-check
+          node --check site/one-person-ops/contract-check/web/app.mjs
+          node --check site/one-person-ops/contract-check/src/validator.mjs
+          node --check site/one-person-ops/contract-check/src/cli.mjs
+
       - uses: actions/configure-pages@v5
 
       - uses: actions/upload-pages-artifact@v3
