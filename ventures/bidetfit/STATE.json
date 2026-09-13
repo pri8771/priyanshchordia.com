@@ -47,13 +47,20 @@
   "customer_operations": {
     "status": "not_deployed",
     "current_capability": "deterministic site and repository health only",
-    "support_mailbox": "not_provisioned",
+    "support_mailbox": "bidetfit@unsubscriber.me",
     "private_ticket_store": "not_deployed",
     "external_model_runtime": "not_connected",
     "email_mode": "none",
     "seller_of_record": false,
     "return_refund_authority": "none",
-    "target_first_release": "draft-only support with owner approval"
+    "target_first_release": "draft-only support with owner approval",
+    "support_mailbox_verification": {
+      "as_of_date": "2026-09-13",
+      "source": "owner-controlled provisioning and inbound test reported to release coordinator",
+      "inbound": "controlled_owner_test_received",
+      "outbound": "pending_verification",
+      "automation": "not_deployed"
+    }
   },
   "monetization": {
     "active_affiliate_links": 0,
@@ -79,14 +86,14 @@
     "Reverify and submit affiliate applications under BF-014",
     "Build the exact compatibility data schema under BF-015",
     "Implement the trusted Jira command/control bridge under BF-017",
-    "Provision and authorize the support mailbox under BF-018",
+    "Complete outbound support-mailbox verification and manual routing under BF-018",
     "Implement browser-level tests under BF-030"
   ],
   "blockers": [
     "Affiliate applications may require owner identity, tax, payout, agreement, CAPTCHA, or two-factor steps",
     "Search Console or analytics ownership may require an owner grant or verification action",
     "No merchant tracking links may be published before approval and exact-link verification",
-    "Support alias, Gmail OAuth, two-factor authentication, and account recovery require owner action",
+    "Support contact exists; outbound delivery and any future automated-mail authorization remain unverified",
     "No external model runtime is authorized; ChatGPT subscription is not treated as API runtime",
     "BidetFit has no seller-of-record or delegated merchant authority for returns, replacements, cancellations, or refunds",
     "Customer operations cannot launch until privacy, security, policy, testing, and owner approval gates pass"
