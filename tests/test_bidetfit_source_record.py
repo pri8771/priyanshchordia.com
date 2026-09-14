@@ -13,7 +13,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 MISSION = ROOT / "ventures" / "bidetfit"
 SPEC = importlib.util.spec_from_file_location(
-    "source_record", MISSION / "scripts" / "source_record.py"
+    "source_record", MISSION / "tools" / "source_record.py"
 )
 assert SPEC and SPEC.loader
 SOURCE_RECORD = importlib.util.module_from_spec(SPEC)
@@ -38,7 +38,7 @@ class SourceRecordTests(unittest.TestCase):
         rules_path = MISSION / "public" / "assets" / "fit-checker-rules.json"
         before = rules_path.read_text(encoding="utf-8") if rules_path.is_file() else ""
         result = subprocess.run(
-            [sys.executable, str(MISSION / "scripts" / "source_record.py"), "--export-rules"],
+            [sys.executable, str(MISSION / "tools" / "source_record.py"), "--export-rules"],
             cwd=ROOT,
             capture_output=True,
             text=True,
