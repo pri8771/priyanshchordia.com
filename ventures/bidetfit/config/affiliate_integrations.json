@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "active_links": 0,
+  "integrations": [
+    {
+      "integration_id": "manybidets-awin-107926",
+      "merchant": "ManyBidets",
+      "network": "Awin",
+      "advertiser_id": "107926",
+      "status": "inactive",
+      "application_status": "prepared_not_submitted",
+      "approval_status": "not_approved",
+      "preparation_source": "planning/cursor-200h-streams-2026-09-13/unattended-next-wave/affiliate-packages/MANYBIDETS_AWIN.md",
+      "application_url": "https://ui.awin.com/publisher-signup/us/awin?advertiser=107926",
+      "published_terms_note": "General Terms advertise 5% sitewide and 10% on selected products; overview shows 12% on selected products. No rate is assigned until onboarding.",
+      "tracking_url": null,
+      "destination_example": null,
+      "disclosure_label": "Affiliate link inactive — merchant approval pending",
+      "premium_bidet_exception": {
+        "merchant": "Premium Bidet",
+        "route_status": "unavailable",
+        "verified_http_status": 404,
+        "note": "Former programme URL returns 404; do not submit or link until a verified current destination exists."
+      }
+    },
+    {
+      "integration_id": "icleaningo-direct",
+      "merchant": "ICleaningo",
+      "network": "direct",
+      "status": "inactive",
+      "application_status": "prepared_not_submitted",
+      "approval_status": "not_approved",
+      "preparation_source": "planning/cursor-200h-streams-2026-09-13/unattended-next-wave/affiliate-packages/ICLEANINGO.md",
+      "application_url": "https://af.uppromote.com/icleaningo/register",
+      "published_terms_note": "Official page and form advertise 10% commission and 45-day cookie; full agreement unpublished.",
+      "tracking_url": null,
+      "destination_example": null,
+      "disclosure_label": "Affiliate link inactive — merchant approval pending"
+    }
+  ]
+}

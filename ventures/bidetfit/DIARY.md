@@ -357,6 +357,11 @@ Existing estimates remain unchanged; exact historical actuals were not backfille
 - Additional same-day runs are retained in `RUNS.csv` and `logs/runs.jsonl`.
 
 
+## 2026-09-14 — S06 fit-checker tools and inactive affiliate guards
+
+Prompt: S06 BidetFit stream (300h package). Isolated branch `codex/S06-bidetfit-tools-affiliate-20260914`.
+Added manufacturer source-record interface with Bio Bidet Sept 2026 recheck (bolt spacing 5.5–7.5 in, French-curve citation, 1.5 in rear minimum). Fit checker now exports a printable measurement packet with missing-measurement checklist and session aggregate events (no raw measurements). Disclosure documents inactive ManyBidets and ICleaningo integrations; Premium Bidet 404 exception preserved. Support reply outbound verification remains parked — no mailbox session in worker. Fifteen local tests pass. Not deployed from this lane.
+
 ## 2026-09-13 — BF-018 / PCH-109 public support contact candidate
 
 Prompt: `BF-018-support-contact-20260913`. The owner provisioned

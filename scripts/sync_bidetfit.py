@@ -22,7 +22,7 @@ REQUIRED_FILES = (
     "round-vs-elongated.html", "electric-vs-non-electric.html",
     "no-outlet-bidet-options.html", "about.html", "disclosure.html",
     "privacy.html", "status.json", "robots.txt", "sitemap.xml",
-    "assets/site.css", "assets/fit-checker.js", "assets/og.svg",
+    "assets/site.css", "assets/fit-checker.js", "assets/fit-checker-rules.json", "assets/og.svg",
 )
 
 
