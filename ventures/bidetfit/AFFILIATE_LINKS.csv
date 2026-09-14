@@ -1,1 +1,3 @@
 link_id,page_id,merchant,destination_url,tracking_url,status,approval_evidence,verified_at,last_http_status,notes
+manybidets-disclosure-inactive,disclosure,ManyBidets,,,inactive,prepared_not_submitted,2026-09-13,,No tracking URL until Awin approval and exact link readback
+icleaningo-disclosure-inactive,disclosure,ICleaningo,,,inactive,prepared_not_submitted,2026-09-13,,No tracking URL until merchant approval

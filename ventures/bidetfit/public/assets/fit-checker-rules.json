@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "source_freshness": "2026-09-14",
+  "bolt_spacing": {
+    "incompatible_below_in": 5.5,
+    "incompatible_above_in": 7.5,
+    "manufacturer_source": "Bio Bidet compatibility guide"
+  },
+  "rear_clearance": {
+    "manufacturer_minimum_in": 1.5,
+    "common_screen_in": 1.75,
+    "manufacturer_source": "Bio Bidet compatibility guide"
+  },
+  "french_curve": {
+    "manufacturer": "Bio Bidet",
+    "url": "https://biobidet.com/pages/compatibility",
+    "retrieved_at": "2026-09-14",
+    "guidance": "Bio Bidet seats and attachments do not fit well on deep French-curve one-piece toilets because limited space near the mounting bolts."
+  },
+  "limits_note": "Screening ranges from cited manufacturer guidance. Exact product drawings control."
+}

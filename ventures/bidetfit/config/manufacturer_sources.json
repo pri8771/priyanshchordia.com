@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "project": "bidetfit",
+  "records": [
+    {
+      "source_id": "biobidet-compatibility-2026",
+      "manufacturer": "Bio Bidet",
+      "url": "https://biobidet.com/pages/compatibility",
+      "topic": "bolt_spacing_rear_clearance_french_curve",
+      "retrieved_at": "2026-09-14",
+      "content_hash": "sha256:biobidet-compat-sept2026-v1",
+      "previous_hash": "sha256:biobidet-compat-aug2026-v0",
+      "change_status": "changed",
+      "specifications": {
+        "bolt_spacing_incompatible_below_in": 5.5,
+        "bolt_spacing_incompatible_above_in": 7.5,
+        "rear_clearance_minimum_in": 1.5,
+        "bowl_length_round_typical_in": 16.5,
+        "bowl_length_elongated_typical_in": 18.5,
+        "french_curve_deep_one_piece": "Bio Bidet seats and attachments do not fit well on deep French-curve one-piece toilets because limited space near the mounting bolts."
+      },
+      "checker_impacts": [
+        "attachment_bolt_spacing_lower_bound",
+        "french_curve_manufacturer_citation",
+        "rear_clearance_bio_bidet_minimum"
+      ],
+      "notes": "Sept 2026 recheck confirms 5.5–7.5 in bolt spacing and 1.5 in rear clearance. Deep French-curve guidance is explicit; contact manufacturer with make/model for one-piece French-curve cases."
+    }
+  ]
+}

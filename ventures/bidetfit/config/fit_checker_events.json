@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "project_id": "bidetfit",
+  "contract": "astra_shared_business_event",
+  "allowed_event_types": [
+    "fit_checker.started",
+    "fit_checker.completed",
+    "fit_checker.unresolved"
+  ],
+  "forbidden_payload_fields": [
+    "rear_clearance",
+    "bolt_spacing",
+    "bowl_length",
+    "toilet_model",
+    "email",
+    "message_body"
+  ],
+  "allowed_aggregate_fields": [
+    "outcome_level",
+    "high_count",
+    "caution_count",
+    "missing_basic_count",
+    "product_type",
+    "has_french_curve_flag",
+    "has_skirted_flag",
+    "packet_printed"
+  ],
+  "storage": "sessionStorage",
+  "note": "Aggregate session counters only. Not audience demand or traffic measurement."
+}
