@@ -1,0 +1,126 @@
+diff --git a/ventures/bidetfit/public/answers/elongated-vs-round-seat.html b/ventures/bidetfit/public/answers/elongated-vs-round-seat.html
+new file mode 100644
+index 0000000..43e8da0
+--- /dev/null
++++ b/ventures/bidetfit/public/answers/elongated-vs-round-seat.html
+@@ -0,0 +1,44 @@
++<!doctype html>
++<html lang="en">
++<head>
++  <meta charset="utf-8">
++  <meta name="viewport" content="width=device-width,initial-scale=1">
++  <meta name="theme-color" content="#087b69">
++  <title>Will an elongated toilet take a round bidet seat? | BidetFit</title>
++  <meta name="description" content="Manufacturer-backed answer: bowl length and seat shape must match. Sources from Bio Bidet compatibility guidance.">
++  <link rel="canonical" href="https://priyanshchordia.com/bidetfit/answers/elongated-vs-round-seat.html">
++  <link rel="stylesheet" href="../assets/site.css">
++</head>
++<body>
++  <a class="skip-link" href="#content">Skip to content</a>
++  <header class="site-header"><div class="header-inner"><a class="logo" href="/bidetfit/"><span class="logo-mark" aria-hidden="true">B</span>BidetFit</a><nav class="site-nav" aria-label="Primary"><a href="/bidetfit/">Home</a><a class="nav-primary" href="/bidetfit/fit-checker.html">Fit checker</a><a href="/bidetfit/how-to-measure.html">Measure</a><a href="/bidetfit/disclosure.html">Disclosure</a></nav></div></header>
++  <main id="content">
++    <section class="page-hero"><div class="narrow">
++      <div class="breadcrumb"><a href="/bidetfit/">BidetFit</a><span>/</span><span>Answers</span></div>
++      <span class="eyebrow">Fit question</span>
++      <h1>Will an elongated toilet take a round bidet seat?</h1>
++      <p class="lede">Usually no. Manufacturer fit guidance treats round and elongated as different seat geometries. Measure the bowl before buying.</p>
++    </div></section>
++    <article class="section"><div class="narrow prose">
++      <h2>Short answer</h2>
++      <p>Choose a seat shape that matches the toilet bowl. An elongated bowl generally needs an elongated seat; a round bowl generally needs a round seat. Mixing shapes is a common return cause and is not something BidetFit recommends as a workaround.</p>
++      <h2>What manufacturers say</h2>
++      <ul>
++        <li><a href="https://biobidet.com/pages/compatibility" rel="noreferrer">Bio Bidet compatibility guide</a> — start with toilet/seat compatibility checks rather than guessing from a photograph.</li>
++        <li><a href="https://biobidet.com/blogs/news/will-a-bidet-fit-my-toilet" rel="noreferrer">Bio Bidet “Will a bidet fit my toilet?”</a> — emphasizes measuring and confirming shape/clearance before purchase.</li>
++        <li><a href="https://bidetking.com/pages/bidet-toilet-seats-buyer-guide" rel="noreferrer">BidetKing electronic seat buyer/fitment guidance</a> — seat dimensions and bowl type remain first-order filters.</li>
++      </ul>
++      <p>Source pages were listed in BidetFit research on 2026-08-25 and re-checked for this answer on 2026-09-13. Re-read the live manufacturer page before acting; models change.</p>
++      <h2>What to measure</h2>
++      <ol>
++        <li>Bowl shape: round vs elongated vs unusual.</li>
++        <li>Bolt spacing and rear flat clearance for the seat housing.</li>
++        <li>Whether the seat overhangs or leaves gaps after mounting.</li>
++      </ol>
++      <div class="callout"><strong>No affiliate commission is claimed here.</strong> BidetFit has not activated approved affiliate links for this answer. See <a href="../disclosure.html">disclosure</a>.</div>
++      <div class="button-row"><a class="button" href="../fit-checker.html">Run the fit checker</a><a class="button secondary" href="../round-vs-elongated.html">Round vs elongated overview</a></div>
++    </div></article>
++  </main>
++  <footer class="site-footer"><div class="shell footer-grid"><div><a class="logo" href="/bidetfit/"><span class="logo-mark" aria-hidden="true">B</span>BidetFit</a><p class="small">Manufacturer requirements are reported as manufacturer requirements.</p></div><div class="footer-links"><a href="../about.html">Method</a><a href="../disclosure.html">Disclosure</a><a href="../privacy.html">Privacy</a></div></div></footer>
++</body>
++</html>
+diff --git a/ventures/bidetfit/public/answers/no-outlet-electric-seat.html b/ventures/bidetfit/public/answers/no-outlet-electric-seat.html
+new file mode 100644
+index 0000000..4ecb554
+--- /dev/null
++++ b/ventures/bidetfit/public/answers/no-outlet-electric-seat.html
+@@ -0,0 +1,44 @@
++<!doctype html>
++<html lang="en">
++<head>
++  <meta charset="utf-8">
++  <meta name="viewport" content="width=device-width,initial-scale=1">
++  <meta name="theme-color" content="#087b69">
++  <title>No nearby outlet: what manufacturers imply for electric seats | BidetFit</title>
++  <meta name="description" content="Manufacturer-backed answer for bathrooms without a suitable outlet. Prefer non-electric categories unless a proper receptacle exists.">
++  <link rel="canonical" href="https://priyanshchordia.com/bidetfit/answers/no-outlet-electric-seat.html">
++  <link rel="stylesheet" href="../assets/site.css">
++</head>
++<body>
++  <a class="skip-link" href="#content">Skip to content</a>
++  <header class="site-header"><div class="header-inner"><a class="logo" href="/bidetfit/"><span class="logo-mark" aria-hidden="true">B</span>BidetFit</a><nav class="site-nav" aria-label="Primary"><a href="/bidetfit/">Home</a><a class="nav-primary" href="/bidetfit/fit-checker.html">Fit checker</a><a href="/bidetfit/how-to-measure.html">Measure</a><a href="/bidetfit/disclosure.html">Disclosure</a></nav></div></header>
++  <main id="content">
++    <section class="page-hero"><div class="narrow">
++      <div class="breadcrumb"><a href="/bidetfit/">BidetFit</a><span>/</span><span>Answers</span></div>
++      <span class="eyebrow">Fit question</span>
++      <h1>No nearby outlet: should I still buy an electric bidet seat?</h1>
++      <p class="lede">Only if a suitable bathroom receptacle is available or will be installed correctly. Otherwise start with non-electric categories that use water pressure.</p>
++    </div></section>
++    <article class="section"><div class="narrow prose">
++      <h2>Short answer</h2>
++      <p>Electric seats need power. If the fit checker flags no suitable outlet, treat that as a category blocker for electric seats—not a cue to use an extension cord as the product plan. Non-electric attachments, some non-electric seats, and handheld sprayers remain the practical path until power is resolved.</p>
++      <h2>Manufacturer and merchant sources</h2>
++      <ul>
++        <li><a href="https://support.hellotushy.com/en-US/what-are-tushy%E2%80%99s-electric-bidet-seat-dimensions-3543339" rel="noreferrer">TUSHY electric seat dimensions support article</a> — electric seats are dimensioned as powered products; power availability is part of install planning.</li>
++        <li><a href="https://bidetking.com/pages/non-electric-bidet-attachment-fitment-guide" rel="noreferrer">BidetKing non-electric attachment fitment guide</a> — documents attachment fit checks that do not assume electricity.</li>
++        <li><a href="https://biobidet.com/pages/compatibility" rel="noreferrer">Bio Bidet compatibility guide</a> — compatibility screening before purchase.</li>
++      </ul>
++      <p>BidetFit does not provide electrical code advice. Wet-location receptacle work belongs to qualified local guidance and the product’s own instructions.</p>
++      <h2>Decision order</h2>
++      <ol>
++        <li>Confirm outlet availability honestly (yes / no / unsure).</li>
++        <li>If no or unsure, screen non-electric categories first.</li>
++        <li>Still verify rear clearance, bolt spacing, bowl length, and water connection.</li>
++      </ol>
++      <div class="callout danger"><strong>No commission claim.</strong> Affiliate applications are not approvals. This page contains no affiliate checkout links.</div>
++      <div class="button-row"><a class="button" href="../fit-checker.html">Re-run the fit checker</a><a class="button secondary" href="../no-outlet-bidet-options.html">No-outlet category guide</a></div>
++    </div></article>
++  </main>
++  <footer class="site-footer"><div class="shell footer-grid"><div><a class="logo" href="/bidetfit/"><span class="logo-mark" aria-hidden="true">B</span>BidetFit</a><p class="small">Useful answers can publish without affiliate links.</p></div><div class="footer-links"><a href="../about.html">Method</a><a href="../disclosure.html">Disclosure</a><a href="../privacy.html">Privacy</a></div></div></footer>
++</body>
++</html>
+diff --git a/ventures/bidetfit/public/index.html b/ventures/bidetfit/public/index.html
+index 944853f..590d0c0 100644
+--- a/ventures/bidetfit/public/index.html
++++ b/ventures/bidetfit/public/index.html
+@@ -13,7 +13,7 @@
+ <main id="content">
+ <section class="hero"><div class="shell hero-grid"><div><span class="eyebrow">Compatibility before checkout</span><h1>Measure once. Buy the bidet that fits.</h1><p class="lede">A bidet can be excellent and still be wrong for your toilet. BidetFit checks the geometry, mounting space, plumbing access, and power questions that generic “best bidet” lists skip.</p><div class="hero-actions"><a class="button" href="fit-checker.html">Check my toilet</a><a class="button secondary" href="how-to-measure.html">Show me how to measure</a></div><p class="small">Free beta. No login. No product was physically tested by BidetFit. No affiliate links are active yet.</p></div><div class="measure-card" aria-label="Illustration of a toilet bowl with measurement line"><div class="toilet-diagram"><div class="toilet-shape"><span class="ruler" aria-hidden="true"></span></div></div><div class="measure-list"><span><b>A</b> rear clearance</span><span><b>B</b> bolt spacing</span><span><b>C</b> bowl length</span></div></div></div></section>
+ <section class="section alt"><div class="shell"><div class="section-head"><span class="kicker">The fast screen</span><h2>Four ways a purchase goes wrong</h2><p class="lede">Fit is not just round versus elongated. A product can match the bowl and still fail at the tank, bolts, valve, or outlet.</p></div><div class="grid"><article class="card"><span class="number">01</span><h3>Rear geometry</h3><p>French curves and rising porcelain can collide with the housing of a seat or attachment.</p></article><article class="card"><span class="number">02</span><h3>Mounting dimensions</h3><p>Bolt spacing, bowl length, and the flat area behind the holes must match the exact installation drawing.</p></article><article class="card"><span class="number">03</span><h3>Plumbing access</h3><p>Skirted toilets can hide the tank connection where a standard T-adapter expects to go.</p></article><article class="card"><span class="number">04</span><h3>Power</h3><p>Electric seats need a suitable receptacle and product-specific cord reach—not a permanent extension-cord workaround.</p></article><article class="card"><span class="number">05</span><h3>Model variation</h3><p>Compact elongated and remolded toilet versions can defeat broad model-name claims.</p></article><article class="card"><span class="number">06</span><h3>Return limitations</h3><p>Hygiene products can have strict unused-only policies, making pre-purchase verification unusually valuable.</p></article></div></div></section>
+-<section class="section"><div class="shell"><div class="section-head"><span class="kicker">Start with the constraint</span><h2>Useful guides, not a wall of rankings</h2></div><div class="grid"><a class="card card-link" href="french-curve-toilets.html"><h3>French-curve toilets</h3><p>Why a smooth one-piece profile can block a bidet housing—and what evidence is strong enough to buy.</p></a><a class="card card-link" href="skirted-toilets.html"><h3>Skirted toilets</h3><p>Separate seat compatibility from the hidden-water-connection problem.</p></a><a class="card card-link" href="round-vs-elongated.html"><h3>Round vs. elongated</h3><p>Use the bolt-centerline measurement and understand the ambiguous middle range.</p></a><a class="card card-link" href="electric-vs-non-electric.html"><h3>Electric vs. non-electric</h3><p>Choose by installation constraint before comparing premium features.</p></a><a class="card card-link" href="no-outlet-bidet-options.html"><h3>No outlet?</h3><p>Categories that work without electricity and the tradeoffs that remain.</p></a><a class="card card-link" href="how-to-measure.html"><h3>Three measurements</h3><p>A repeatable sequence for rear clearance, bolt spacing, and bowl length.</p></a></div></div></section>
++<section class="section"><div class="shell"><div class="section-head"><span class="kicker">Start with the constraint</span><h2>Useful guides, not a wall of rankings</h2></div><div class="grid"><a class="card card-link" href="french-curve-toilets.html"><h3>French-curve toilets</h3><p>Why a smooth one-piece profile can block a bidet housing—and what evidence is strong enough to buy.</p></a><a class="card card-link" href="skirted-toilets.html"><h3>Skirted toilets</h3><p>Separate seat compatibility from the hidden-water-connection problem.</p></a><a class="card card-link" href="round-vs-elongated.html"><h3>Round vs. elongated</h3><p>Use the bolt-centerline measurement and understand the ambiguous middle range.</p></a><a class="card card-link" href="electric-vs-non-electric.html"><h3>Electric vs. non-electric</h3><p>Choose by installation constraint before comparing premium features.</p></a><a class="card card-link" href="no-outlet-bidet-options.html"><h3>No outlet?</h3><p>Categories that work without electricity and the tradeoffs that remain.</p></a><a class="card card-link" href="answers/elongated-vs-round-seat.html"><h3>Elongated vs round seat</h3><p>Manufacturer-backed answer: matching bowl and seat shape before you buy.</p></a><a class="card card-link" href="answers/no-outlet-electric-seat.html"><h3>No outlet + electric seat?</h3><p>Manufacturer-backed answer: treat missing power as an electric-seat blocker.</p></a><a class="card card-link" href="how-to-measure.html"><h3>Three measurements</h3><p>A repeatable sequence for rear clearance, bolt spacing, and bowl length.</p></a></div></div></section>
+ <section class="notice"><div class="shell"><strong>Commercial disclosure:</strong><span>BidetFit may later earn from clearly labeled links. <a href="disclosure.html">No affiliate links are active in this beta.</a></span></div></section>
+ </main>
+ <footer class="site-footer"><div class="shell footer-grid"><div><a class="logo" href="/bidetfit/"><span class="logo-mark" aria-hidden="true">B</span>BidetFit</a><p class="small">Independent compatibility analysis from public manufacturer and retailer specifications. Exact product documentation always wins.</p></div><div class="footer-links"><a href="about.html">Method</a><a href="disclosure.html">Disclosure</a><a href="privacy.html">Privacy</a><a href="status.json">Status</a></div></div></footer>
+diff --git a/ventures/bidetfit/public/sitemap.xml b/ventures/bidetfit/public/sitemap.xml
+index 6beeefb..e6457bf 100644
+--- a/ventures/bidetfit/public/sitemap.xml
++++ b/ventures/bidetfit/public/sitemap.xml
+@@ -8,6 +8,8 @@
+   <url><loc>https://priyanshchordia.com/bidetfit/round-vs-elongated.html</loc><lastmod>2026-08-25</lastmod></url>
+   <url><loc>https://priyanshchordia.com/bidetfit/electric-vs-non-electric.html</loc><lastmod>2026-08-25</lastmod></url>
+   <url><loc>https://priyanshchordia.com/bidetfit/no-outlet-bidet-options.html</loc><lastmod>2026-08-25</lastmod></url>
++  <url><loc>https://priyanshchordia.com/bidetfit/answers/elongated-vs-round-seat.html</loc><lastmod>2026-09-13</lastmod></url>
++  <url><loc>https://priyanshchordia.com/bidetfit/answers/no-outlet-electric-seat.html</loc><lastmod>2026-09-13</lastmod></url>
+   <url><loc>https://priyanshchordia.com/bidetfit/about.html</loc><lastmod>2026-08-25</lastmod></url>
+   <url><loc>https://priyanshchordia.com/bidetfit/disclosure.html</loc><lastmod>2026-08-25</lastmod></url>
+   <url><loc>https://priyanshchordia.com/bidetfit/privacy.html</loc><lastmod>2026-08-25</lastmod></url>

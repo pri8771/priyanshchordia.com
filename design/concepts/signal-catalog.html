@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="A signal-catalogue direction for a portfolio of independent software.">
+  <title>Signal Catalog — Design Concept</title>
+  <style>
+    :root{--bg:#070908;--panel:#0d110f;--ink:#e9fff1;--muted:#83a28e;--line:#1d3024;--acid:#a7ff8a;--amber:#f5be65}
+    *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--ink);font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+    a{color:inherit}.wrap{width:min(1380px,calc(100% - 32px));margin:auto}.top{position:sticky;top:0;z-index:5;display:flex;justify-content:space-between;gap:24px;padding:18px 0;background:rgba(7,9,8,.92);border-bottom:1px solid var(--line);backdrop-filter:blur(14px)}
+    .brand{font-weight:800;letter-spacing:.12em;text-decoration:none}.status{color:var(--acid)}nav{display:flex;gap:18px}nav a{color:var(--muted);text-decoration:none}nav a:hover{color:var(--ink)}
+    .hero{min-height:72vh;display:grid;grid-template-columns:1.5fr .5fr;align-items:end;gap:40px;padding:9vw 0 48px;border-bottom:1px solid var(--line)}.kicker,.label{color:var(--acid);font-size:12px;letter-spacing:.15em;text-transform:uppercase}
+    h1{max-width:950px;margin:16px 0 0;font:700 clamp(64px,12vw,176px)/.78 Arial,sans-serif;letter-spacing:-.075em}.hero p{max-width:32ch;color:var(--muted);line-height:1.6}
+    section{padding:80px 0;border-bottom:1px solid var(--line)}.section-head{display:grid;grid-template-columns:180px 1fr;gap:24px;margin-bottom:36px}.section-head h2{margin:0;font:700 clamp(38px,6vw,78px)/.95 Arial,sans-serif;letter-spacing:-.05em}
+    .products{display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid var(--line);border-left:1px solid var(--line)}.product{min-height:230px;padding:22px;display:flex;flex-direction:column;border-right:1px solid var(--line);border-bottom:1px solid var(--line);background:var(--panel);text-decoration:none;transition:background .2s ease,color .2s ease}.product:hover{background:var(--acid);color:#071008}.product:hover .meta{color:#17361c}
+    .num{font-size:11px;color:var(--acid)}.product h3{margin:auto 0 14px;font:700 28px/1 Arial,sans-serif;letter-spacing:-.04em}.product p{margin:0;color:var(--muted);font:13px/1.5 Arial,sans-serif}.meta{margin-top:16px;color:var(--amber);font-size:10px;text-transform:uppercase}
+    .journal{display:grid;grid-template-columns:1fr 1fr;gap:16px}.journal-index{border-top:1px solid var(--line)}.entry{display:grid;grid-template-columns:90px 1fr auto;gap:16px;padding:20px 0;border-bottom:1px solid var(--line);text-decoration:none}.entry span{color:var(--muted)}.entry:hover strong{color:var(--acid)}
+    .post,.detail{padding:clamp(28px,5vw,72px);background:var(--panel);border:1px solid var(--line)}.post h3,.detail h3{margin:14px 0 24px;font:700 clamp(36px,5vw,68px)/.95 Arial,sans-serif;letter-spacing:-.05em}.post p{max-width:65ch;color:#b8c8bd;line-height:1.75}.facts{display:grid;grid-template-columns:repeat(2,1fr);margin-top:36px;border-top:1px solid var(--line)}.fact{padding:18px 0;border-bottom:1px solid var(--line)}.fact small{display:block;color:var(--muted);margin-bottom:8px}
+    footer{display:flex;justify-content:space-between;padding:28px 0;color:var(--muted);font-size:11px;text-transform:uppercase}
+    @media(max-width:900px){.products{grid-template-columns:repeat(2,1fr)}.journal{grid-template-columns:1fr}.hero{grid-template-columns:1fr}.section-head{grid-template-columns:1fr}.hero p{max-width:60ch}}
+    @media(max-width:560px){.wrap{width:min(100% - 20px,1380px)}.top{align-items:flex-start}.status{display:none}nav{gap:10px;font-size:12px}.hero{min-height:64vh;padding-top:90px}.products{grid-template-columns:1fr}.product{min-height:190px}.entry{grid-template-columns:58px 1fr}.entry span:last-child{display:none}.facts{grid-template-columns:1fr}}
+    @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.product{transition:none}}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header class="top"><a class="brand" href="#top">P/C <span class="status">●</span></a><nav aria-label="Primary"><a href="#work">Work</a><a href="#journal">Journal</a><a href="#product">Record</a></nav></header>
+    <main id="top">
+      <section class="hero"><div><div class="kicker">Independent software / live index</div><h1>Useful<br>signals.</h1></div><p>Seventeen focused products. Games, private utilities, spiritual practice, and tools for clearer work—catalogued for direct browsing.</p></section>
+      <section id="work"><div class="section-head"><span class="label">01 / Catalog</span><h2>Everything transmitting.</h2></div><div class="products" id="product-grid" aria-label="All products"></div></section>
+      <section id="journal"><div class="section-head"><span class="label">02 / Journal</span><h2>Notes from the workbench.</h2></div><div class="journal"><div class="journal-index"><a class="entry" href="#post"><span>001</span><strong>Public product pages should be generated</strong><span>4 min</span></a><a class="entry" href="#post"><span>002</span><strong>Local-first is a product decision</strong><span>6 min</span></a><a class="entry" href="#post"><span>003</span><strong>A smaller release can be more complete</strong><span>3 min</span></a></div><article class="post" id="post"><span class="label">Post 001 / Systems</span><h3>Public pages should be generated.</h3><p>A portfolio page is easiest to trust when its facts come from one deliberately public source. The catalogue should not copy private planning records or depend on manual edits across seventeen pages.</p><p>The useful rule is simple: approve a small set of public fields, validate them, then generate every index and detail view from that projection.</p></article></div></section>
+      <section id="product"><div class="section-head"><span class="label">03 / Product record</span><h2>One signal, expanded.</h2></div><article class="detail"><span class="label">Featured / Consumer spiritual</span><h3>Japa</h3><p>Eyes-free local iOS digital mala with interruption-safe counting and tactile completion.</p><div class="facts"><div class="fact"><small>Stage</small>Building</div><div class="fact"><small>Surface</small>iOS</div><div class="fact"><small>Portfolio lane</small>Consumer spiritual</div><div class="fact"><small>Public tier</small>Featured</div></div></article></section>
+    </main>
+    <footer><span>priyanshchordia.com</span><span>Concept 01 / Signal catalog</span></footer>
+  </div>
+  <script>
+    const products = [
+      ["Japa","Eyes-free local iOS digital mala with interruption-safe counting and tactile completion.","consumer-spiritual","featured"],
+      ["Moonloom","Feature-rich local iOS idle dream-factory game with prestige, rewards, and purchases.","consumer-game","featured"],
+      ["PartyTable","Local pass-and-play iOS platform with 17 games and reusable PartyGameKit.","consumer-game","featured"],
+      ["Pocket Party Court","Offline one-phone party game where friends put silly disputes on trial.","consumer-game","featured"],
+      ["Tessera","Calm daily iOS tessellation puzzle with deterministic generation and a pure solver-backed engine.","consumer-game","featured"],
+      ["Anjali","Offline-first iOS micro-prayer companion centered on one short sacred pause.","consumer-spiritual","lab"],
+      ["AuraFit","Private on-device iOS outfit and camera coach using Apple vision and imaging frameworks.","consumer-utility","lab"],
+      ["Cadence","Creative operations and social-publishing platform with a broad deterministic demo mode.","b2b-marketing","lab"],
+      ["Digital Temple","Deep local-first prayer and spiritual-practice companion with optional Firebase sync.","consumer-spiritual","lab"],
+      ["Foldlight","Cozy folding-and-light iOS puzzle game with daily and infinite progression.","consumer-game","lab"],
+      ["Hindsight","Private local decision journal for predictions, outcomes, and decision-quality learning.","consumer-utility","lab"],
+      ["Nurture","Private relationship-maintenance iOS app built around a capped weekly ritual.","consumer-utility","lab"],
+      ["Patchwork","Private iOS map-completion game that colors Census ZCTA patches as users visit them.","consumer-location","lab"],
+      ["Roam","Local quantified-self iOS tracker for visited ZIP and Census ZCTA areas.","consumer-location","lab"],
+      ["Svara","Broad Hindu spiritual-wellness iOS app spanning practice, learning, festivals, stories, and progression.","consumer-spiritual","lab"],
+      ["Umbra","Offline AR sun-and-shade planner using honest user-placed proxy geometry.","consumer-utility","lab"],
+      ["Unsubscriber","Trust-first Gmail control app for subscriptions, filters, unsubscribe actions, and history.","consumer-web","lab"]
+    ];
+    const grid=document.querySelector("#product-grid");
+    products.forEach((p,i)=>{const a=document.createElement("a");a.className="product";a.href="#product";a.innerHTML=`<span class="num">${String(i+1).padStart(2,"0")}</span><h3>${p[0]}</h3><p>${p[1]}</p><span class="meta">${p[2].replaceAll("-"," ")} / ${p[3]}</span>`;grid.append(a)});
+  </script>
+</body>
+</html>
