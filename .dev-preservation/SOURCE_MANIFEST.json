@@ -1,0 +1,329 @@
+{
+  "project": "priyanshchordia.com",
+  "remote": "https://github.com/pri8771/priyanshchordia.com",
+  "visibility": null,
+  "previous_dev": null,
+  "status": "in_progress",
+  "source_tip_count": 34,
+  "recovery": [
+    {
+      "sha": "704058baf0ef27124ee37fbc44fdb5f5f69f864f",
+      "refs": [
+        "refs/captured/priyanshchordia.com-19"
+      ],
+      "base": "4372f225424c57f47b184495095a3552e2d8abea",
+      "patch": ".dev-preservation/704058baf0ef2712.patch",
+      "sha256": "417cb10e892637defa656dd42cf3787c3dfdd1d147aed4087a730505901c0089",
+      "status": "preserved_not_integrated",
+      "omitted": []
+    },
+    {
+      "sha": "09d3a6b10a23fb0c215fba5c8579d3009f05c5dd",
+      "refs": [
+        "refs/source/541129b1/codex/S01-W208-portfolio-pages"
+      ],
+      "base": "eb0daf61013a35398a38fe88e790ff2c551ed3b6",
+      "patch": ".dev-preservation/09d3a6b10a23fb0c.patch",
+      "sha256": "2b6ffd248eddf97ccf33403b474038685ac88286d2c5f3af15dbf681494eb633",
+      "status": "preserved_not_integrated",
+      "omitted": []
+    },
+    {
+      "sha": "ee67821fee25b0984962d21534b26f335a43253f",
+      "refs": [
+        "refs/source-heads/2",
+        "refs/source/40094fa1/codex/S01-W207-manufacturer-answers"
+      ],
+      "base": "e42a2dff1f959a33e12a6fd319d7dc444b9cb5a7",
+      "patch": ".dev-preservation/ee67821fee25b098.patch",
+      "sha256": "1ae57aae333b9575b0eaf35aec5d83af6d961bd0c55f3c2b7c30d411a85375d2",
+      "status": "preserved_not_integrated",
+      "omitted": []
+    },
+    {
+      "sha": "cefb20db6555a38a117b239df77eac2c0a21333e",
+      "refs": [
+        "refs/source-heads/17",
+        "refs/source-heads/18",
+        "refs/source-heads/5",
+        "refs/source/ffc0c695/codex/overnight-website-20260911",
+        "refs/source/ffc0c695/codex/pch-146-150-integration-20260911",
+        "refs/source/ffc0c695/main"
+      ],
+      "base": "4372f225424c57f47b184495095a3552e2d8abea",
+      "patch": ".dev-preservation/cefb20db6555a38a.patch",
+      "sha256": "7ccb960d0e45accdfc503d2397716530404b36700c50457793b78306cae066cd",
+      "status": "preserved_not_integrated",
+      "omitted": []
+    },
+    {
+      "sha": "4dcd7ba5d9d5a81731fc64c0d994b52e052fa9d3",
+      "refs": [
+        "refs/source-heads/22",
+        "refs/source/ffc0c695/cursor/pch-146-150-merge-preview-20260911-corrective"
+      ],
+      "base": "7fb4907697cca9af1b1de3614906e7da42b78882",
+      "patch": ".dev-preservation/4dcd7ba5d9d5a817.patch",
+      "sha256": "7ccb960d0e45accdfc503d2397716530404b36700c50457793b78306cae066cd",
+      "status": "preserved_not_integrated",
+      "omitted": []
+    },
+    {
+      "sha": "99b65816aacc7add309802f967062c86ba2dee05",
+      "refs": [
+        "refs/source-heads/21",
+        "refs/source/ffc0c695/cursor/pch-146-150-merge-preview-20260911"
+      ],
+      "base": "4372f225424c57f47b184495095a3552e2d8abea",
+      "patch": ".dev-preservation/99b65816aacc7add.patch",
+      "sha256": "7ccb960d0e45accdfc503d2397716530404b36700c50457793b78306cae066cd",
+      "status": "preserved_not_integrated",
+      "omitted": []
+    },
+    {
+      "sha": "da99988db245e8d11b8bffe8ae156af77e6a8d33",
+      "refs": [
+        "refs/source-heads/13",
+        "refs/source/ffc0c695/cursor/intwave-s08-website-20260909"
+      ],
+      "base": "56653c2b3458ea61792f1e3556d72c58e04e431e",
+      "patch": ".dev-preservation/da99988db245e8d1.patch",
+      "sha256": "574445b851ca3ef47e6445fd5b663585e9018d1e4c6ec086626000a45400f6e0",
+      "status": "preserved_not_integrated",
+      "omitted": []
+    },
+    {
+      "sha": "226bf55e647aeebcd4e4f862693b304561277fa5",
+      "refs": [
+        "refs/source-heads/12",
+        "refs/source/ffc0c695/cursor/compwave-s19-website-20260909"
+      ],
+      "base": "4372f225424c57f47b184495095a3552e2d8abea",
+      "patch": ".dev-preservation/226bf55e647aeebc.patch",
+      "sha256": "d17a6cff47511f819cf5b351503cc304fbc8cd695296080b49b028deb37d885b",
+      "status": "preserved_not_integrated",
+      "omitted": []
+    },
+    {
+      "sha": "1d6102801dcd78eaf07d0cd61dc81932974dc938",
+      "refs": [
+        "refs/source-heads/24",
+        "refs/source/ffc0c695/pch-148-generator-data"
+      ],
+      "base": "4372f225424c57f47b184495095a3552e2d8abea",
+      "patch": ".dev-preservation/1d6102801dcd78ea.patch",
+      "sha256": "59426e38e40bb72af0056a40f69fd978a0f88e14836edcccdbbfc9411fa9d519",
+      "status": "preserved_not_integrated",
+      "omitted": []
+    },
+    {
+      "sha": "cb1235fb6aec80828185852d5dab84e4b9a83c46",
+      "refs": [
+        "refs/source-heads/25",
+        "refs/source/ffc0c695/pch-149-client-assets"
+      ],
+      "base": "4372f225424c57f47b184495095a3552e2d8abea",
+      "patch": ".dev-preservation/cb1235fb6aec8082.patch",
+      "sha256": "ba0c6c3718ac92906b315e2e1b292275fd597a51cf150bf764dde97e1264a72e",
+      "status": "preserved_not_integrated",
+      "omitted": []
+    },
+    {
+      "sha": "b287e4ea5b1af28a3a4b553a3b9e2e4fa9442b6c",
+      "refs": [
+        "refs/source-heads/26",
+        "refs/source/ffc0c695/pch-150-discovery"
+      ],
+      "base": "4372f225424c57f47b184495095a3552e2d8abea",
+      "patch": ".dev-preservation/b287e4ea5b1af28a.patch",
+      "sha256": "dbe76e1896f2f015aceaa8c5ef04d7d07ac4719b9b6083f4ef3fa1ad2fc1cd21",
+      "status": "preserved_not_integrated",
+      "omitted": []
+    },
+    {
+      "sha": "381776e56d37a499853031e6cdfedd01fced5026",
+      "refs": [
+        "refs/source-heads/20",
+        "refs/source/ffc0c695/pch-146-waitlist"
+      ],
+      "base": "4372f225424c57f47b184495095a3552e2d8abea",
+      "patch": ".dev-preservation/381776e56d37a499.patch",
+      "sha256": "78d601fb609fed53f0017089a10fee09c842fc82598c9b48dc3d900fe1e5a053",
+      "status": "preserved_not_integrated",
+      "omitted": []
+    },
+    {
+      "sha": "4d836fc4393a7fcd4db726b08df5e15722bbb1d8",
+      "refs": [
+        "refs/source/ffc0c695/design-concepts"
+      ],
+      "status": "code_merged_alternative_docs_preserved",
+      "paths": [
+        "COLLAB.md"
+      ]
+    }
+  ],
+  "excluded": [],
+  "source_merged": [
+    "3570e4bded165172471304a1eadb3cbfb70b415b",
+    "4d836fc4393a7fcd4db726b08df5e15722bbb1d8"
+  ],
+  "windows_imports": [],
+  "source_tips": {
+    "704058baf0ef27124ee37fbc44fdb5f5f69f864f": [
+      "refs/captured/priyanshchordia.com-19"
+    ],
+    "85a23d118158006d931ece90dc87f4d78aa49144": [
+      "refs/source-heads/0",
+      "refs/source/40094fa1/codex/S06-bidetfit-source-record-test-path"
+    ],
+    "e42a2dff1f959a33e12a6fd319d7dc444b9cb5a7": [
+      "refs/source-heads/1",
+      "refs/source/40094fa1/codex/PCH-104-bidetfit-observation-freshness",
+      "refs/source/541129b1/codex/PCH-104-bidetfit-observation-freshness"
+    ],
+    "43b48dd3e6da05b77475b1cc5cb6f0a8c501fcb6": [
+      "refs/source-heads/10",
+      "refs/source/ffc0c695/codex/pch-accessibility-portability-20260907"
+    ],
+    "98f034592dd609447f7c65d6c538a355ff938e86": [
+      "refs/source-heads/11",
+      "refs/source/ffc0c695/codex/pch-release-readiness-20260907"
+    ],
+    "226bf55e647aeebcd4e4f862693b304561277fa5": [
+      "refs/source-heads/12",
+      "refs/source/ffc0c695/cursor/compwave-s19-website-20260909"
+    ],
+    "da99988db245e8d11b8bffe8ae156af77e6a8d33": [
+      "refs/source-heads/13",
+      "refs/source/ffc0c695/cursor/intwave-s08-website-20260909"
+    ],
+    "ddb66aab468af31e2a43a4b47b63c0b46e08a583": [
+      "refs/source-heads/14",
+      "refs/source/ffc0c695/codex/pch-catalog-truth-20260908"
+    ],
+    "9afd0079317d6b4a0c35d88b01514b15a4816177": [
+      "refs/source-heads/15",
+      "refs/source/ffc0c695/cursor/website-24h-s05-20260908"
+    ],
+    "ba88c4123a1261855399394dfb2e51ee10fc781d": [
+      "refs/source-heads/16",
+      "refs/source-heads/19",
+      "refs/source-heads/7",
+      "refs/source/ffc0c695/cursor/batch2-s17-document-order-program-ios-factory-website-20260908",
+      "refs/source/ffc0c695/cursor/batch2-s18-ios-factory-portfolio-organization-website-20260908",
+      "refs/source/ffc0c695/pch-146-147-integrate"
+    ],
+    "cefb20db6555a38a117b239df77eac2c0a21333e": [
+      "refs/source-heads/17",
+      "refs/source-heads/18",
+      "refs/source-heads/5",
+      "refs/source/ffc0c695/codex/overnight-website-20260911",
+      "refs/source/ffc0c695/codex/pch-146-150-integration-20260911",
+      "refs/source/ffc0c695/main"
+    ],
+    "ee67821fee25b0984962d21534b26f335a43253f": [
+      "refs/source-heads/2",
+      "refs/source/40094fa1/codex/S01-W207-manufacturer-answers"
+    ],
+    "381776e56d37a499853031e6cdfedd01fced5026": [
+      "refs/source-heads/20",
+      "refs/source/ffc0c695/pch-146-waitlist"
+    ],
+    "99b65816aacc7add309802f967062c86ba2dee05": [
+      "refs/source-heads/21",
+      "refs/source/ffc0c695/cursor/pch-146-150-merge-preview-20260911"
+    ],
+    "4dcd7ba5d9d5a81731fc64c0d994b52e052fa9d3": [
+      "refs/source-heads/22",
+      "refs/source/ffc0c695/cursor/pch-146-150-merge-preview-20260911-corrective"
+    ],
+    "3570e4bded165172471304a1eadb3cbfb70b415b": [
+      "refs/source-heads/23",
+      "refs/source/ffc0c695/pch-147-links"
+    ],
+    "1d6102801dcd78eaf07d0cd61dc81932974dc938": [
+      "refs/source-heads/24",
+      "refs/source/ffc0c695/pch-148-generator-data"
+    ],
+    "cb1235fb6aec80828185852d5dab84e4b9a83c46": [
+      "refs/source-heads/25",
+      "refs/source/ffc0c695/pch-149-client-assets"
+    ],
+    "b287e4ea5b1af28a3a4b553a3b9e2e4fa9442b6c": [
+      "refs/source-heads/26",
+      "refs/source/ffc0c695/pch-150-discovery"
+    ],
+    "6190e5904ea80b80ea201279722dc8a488b7df8a": [
+      "refs/source-heads/3",
+      "refs/source/40094fa1/codex/PCH-109-support-contact-20260913"
+    ],
+    "b165ff01708f4dd1d8142bfc5347f811c79b8756": [
+      "refs/source-heads/4",
+      "refs/source/541129b1/codex/S07-01-PCH-129-regenerate-site"
+    ],
+    "7d85e098e5c51aec1e5084e7f68e238ab7de0e10": [
+      "refs/source-heads/6",
+      "refs/source/ffc0c695/cursor/cursor-200h-s10-web-portfolio-20260909"
+    ],
+    "9014a8b97ac5cd3a3fecbd0d71d6910713c9a7c2": [
+      "refs/source-heads/8",
+      "refs/source/ffc0c695/codex/pch-browser-release-hardening-20260907"
+    ],
+    "9ae658f43f7a7e5413731887f9a79e009d24c597": [
+      "refs/source-heads/9",
+      "refs/source/ffc0c695/codex/pch-runtime-release-integrity-20260907"
+    ],
+    "03402574360e05528ff5e67733f408acf8b2a436": [
+      "refs/source/40094fa1/codex/BOTS-134-bidetfit-answers-20260913"
+    ],
+    "7996b08ac6003bdb4f4147236f04f08536dd6451": [
+      "refs/source/40094fa1/codex/S06-bidetfit-source-record-path-fix"
+    ],
+    "963361b082f8d0e13ac494d84b7a7f119a4e63a2": [
+      "refs/source/40094fa1/codex/S06-bidetfit-tools-affiliate-20260914"
+    ],
+    "22cd41a451a5edebb7d01fef8c40e2412d735951": [
+      "refs/source/40094fa1/main"
+    ],
+    "eb0daf61013a35398a38fe88e790ff2c551ed3b6": [
+      "refs/source/541129b1/codex/BOTS-126-publish-contract-check"
+    ],
+    "09d3a6b10a23fb0c215fba5c8579d3009f05c5dd": [
+      "refs/source/541129b1/codex/S01-W208-portfolio-pages"
+    ],
+    "ec7bcf5b26ad00a0c529fe6e7db55f8893b12a57": [
+      "refs/source/541129b1/codex/S07-01-PCH-129-portfolio-pages"
+    ],
+    "4372f225424c57f47b184495095a3552e2d8abea": [
+      "refs/source/ffc0c695/aurafit-full-free-1.0-3",
+      "refs/source/ffc0c695/backup/main-pre-pch-146-150-integration-20260911"
+    ],
+    "4d836fc4393a7fcd4db726b08df5e15722bbb1d8": [
+      "refs/source/ffc0c695/design-concepts"
+    ],
+    "76c82989b25dfccb508ffc6ae00bee8aefbe7d28": [
+      "refs/remotes/origin/main"
+    ]
+  },
+  "captured_worktrees": [
+    {
+      "worktree": "/Users/pchordia/Documents/wip_apps/platforms/priyanshchordia.com-wt/integrate",
+      "sha": "704058baf0ef27124ee37fbc44fdb5f5f69f864f",
+      "ref": "refs/codex-preservation/20260914/priyanshchordia.com-19",
+      "paths": [
+        "BATCH_MANIFEST.md",
+        "PROJECT_HANDOFF.md",
+        "SESSION_3_RETURN.md",
+        "WEBSITE_RETURN.md",
+        "site/products/anjali/index.html",
+        "site/products/aurafit/index.html",
+        "site/products/hindsight/index.html",
+        "site/products/mala/index.html",
+        "site/products/roam/index.html",
+        "site/products/svara/index.html",
+        "site/waitlist.js"
+      ]
+    }
+  ]
+}
