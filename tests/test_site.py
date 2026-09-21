@@ -25,6 +25,31 @@ class GeneratorTests(unittest.TestCase):
             "<ul><li>Local data</li><li>No account</li></ul>",
         )
 
+    def test_markdown_preserves_fenced_code(self) -> None:
+        rendered = GEN.markdown(
+            "```python\n"
+            "if ready:\n"
+            "    print(\"ship it\")\n"
+            "```"
+        )
+        self.assertIn('class="language-python"', rendered)
+        self.assertIn("    print(&quot;ship it&quot;)", rendered)
+        self.assertIn("white-space:pre", rendered)
+
+    def test_draft_post_is_public_but_noindex(self) -> None:
+        rendered = GEN.post_page({
+            "slug": "draft-example",
+            "title": "Draft example",
+            "date": "2026-09-20",
+            "series": "Own Your AI Stack",
+            "status": "draft",
+            "summary": "Example draft.",
+            "body": "Working notes.",
+            "minutes": 1,
+        })
+        self.assertIn("DRAFT", rendered)
+        self.assertIn('name="robots" content="noindex,follow"', rendered)
+
     def test_inline_script_json_cannot_close_script_element(self) -> None:
         rendered = GEN.safe_script_json({"summary": "</script><script>alert(1)</script>"})
         self.assertNotIn("</script", rendered.lower())

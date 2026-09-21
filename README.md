@@ -54,10 +54,12 @@ Hindsight now has a public private-beta landing page. Its App Store privacy/supp
 owner/legal and exact-Build-1 gates in
 `docs/LANDING_PAGES_ICONS_AND_WAITLIST_PLAN.md` are satisfied.
 
-The generated `site/` directory is committed. Do not hand-edit it: regenerate
-after changing source data, themes, experiences, or the generator. CI repeats the
-tests, generation, route/markup validation, JavaScript syntax check, and verifies
-that the committed output is current before deployment.
+The generated `site/` directory is an inspectable snapshot. Do not hand-edit
+it: source changes belong in data, content, themes, experiences, or the generator.
+CI regenerates the complete site from those sources on every deployment, then
+runs the tests, route/markup validation, and JavaScript syntax checks before
+publishing the generated artifact. The checked-in snapshot may lag the deployed
+artifact between explicit snapshot refreshes.
 
 ## App Store URL contract
 
