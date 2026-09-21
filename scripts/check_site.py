@@ -144,6 +144,18 @@ def is_legacy_journal_redirect(path: Path, parser: PageParser) -> bool:
     return parser.canonicals[0].startswith(BASE_URL + "/blogs/")
 
 
+def is_private_blog_vault(path: Path, parser: PageParser) -> bool:
+    """The encrypted private blog route is deliberately unlinked and noindex."""
+    try:
+        rel = path.relative_to(SITE.resolve())
+    except ValueError:
+        return False
+    return (
+        rel == Path("blogs/private/index.html")
+        and "noindex" in parser.meta_name_values.get("robots", "").lower()
+    )
+
+
 def parse_pages() -> tuple[dict[Path, PageParser], list[str]]:
     errors: list[str] = []
     parsed: dict[Path, PageParser] = {}
@@ -235,7 +247,7 @@ def validate_links(pages: dict[Path, PageParser]) -> list[str]:
     ignored = {(SITE / "404.html").resolve()}
     ignored.update(
         path for path, parser in pages.items()
-        if is_legacy_journal_redirect(path, parser)
+        if is_legacy_journal_redirect(path, parser) or is_private_blog_vault(path, parser)
     )
     for path in sorted(set(pages) - reachable - ignored):
         errors.append(f"{path.relative_to(SITE.resolve())}: HTML page is orphaned")
