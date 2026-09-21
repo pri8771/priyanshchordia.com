@@ -4,28 +4,42 @@ slug: "repo-is-the-agent"
 date: "2026-09-20"
 summary: "If the rules, decisions, tasks, and state live in Git, changing AI models becomes a worker swap instead of a project migration."
 series: "Own Your AI Stack"
-status: "draft"
+status: "published"
+internal_status: "working-draft"
 ---
 
-I use ChatGPT, Claude, Cursor, and Gemini. That sounds like an absurd amount of AI capacity until you actually start using them as development workers instead of occasional chatbots.
+I use ChatGPT, Claude, Cursor, and Gemini. Some of that capacity is paid, some is bundled, and some is promotional. Jio, for example, currently advertises an [18-month Google AI Pro offer for eligible 5G users](https://www.jio.com/google-gemini-offer/), which makes Gemini another useful pool of capacity for me.
 
-Then the limits show up everywhere.
+And I still run out of inference.
 
-A provider gets rate-limited. A coding tool runs out of fast requests. A long conversation accumulates too much context. A free tier is available on one service but not another. In my case, Jio currently offers eligible users an extended Google AI Pro subscription, which makes Gemini another useful pool of capacity rather than a model I need to treat as my permanent home. [Jio describes the current offer here](https://www.jio.com/google-gemini-offer/).
+That sounds ridiculous until the AI tools stop being occasional chatbots and start acting like development workers. One session is planning. Another is implementing. Another is reviewing. A long-running conversation accumulates too much context. A coding tool hits a usage limit. A provider throttles. A "free" source is available, but only in a different product.
 
-The obvious response is to keep buying more inference.
+The obvious response is to buy more AI.
 
-I think the more important response is to stop letting any one AI own the project.
+My response has increasingly been: **stop letting any one AI own the project.**
 
-## The project should survive the model
+If the project survives the model, then changing models is not a migration. It is a worker swap.
 
-Most AI coding workflows accidentally make the conversation the source of truth.
+## The failure mode: the chat becomes the database
 
-The chat contains the requirements. The model remembers why a decision was made. The next task is buried 200 messages deep. The coding agent has a private mental model of the architecture that nobody else can see.
+A lot of AI coding workflows quietly make the conversation the source of truth.
 
-That works until you change models.
+The requirements are in the chat. The reason for a design decision is in the chat. The next task is somewhere 180 messages back. The model has a private mental picture of the architecture that nobody else can inspect.
 
-My preferred shape now looks more like this:
+That works until the session ends or I switch providers.
+
+Then the handoff looks like this:
+
+- summarize the project;
+- paste a pile of files;
+- explain the current branch;
+- repeat the rules;
+- explain which bugs are real and which were already fixed;
+- hope the new model does not reinterpret the whole thing.
+
+That is exactly the wrong place for durable project state.
+
+The better shape, for me, is a repository that carries not just code but the minimum operating context required to continue the work.
 
 ```text
 repository/
@@ -43,19 +57,29 @@ repository/
 └── tests/
 ```
 
-The code is only part of the repository. The repository also carries the operating context needed to continue the work.
+The exact filenames are not important. The separation is.
 
-That changes the relationship with the model.
+- `AGENTS.md` says how a worker is allowed to operate.
+- architecture docs explain durable structure.
+- memory explains decisions that are easy to lose.
+- `STATE.json` says what is true now.
+- the queue says what is next.
+- messages preserve handoffs that have not yet been folded into canonical state.
+- tests encode as much "done" as can be made deterministic.
 
-ChatGPT is not the project. Claude is not the project. Cursor is not the project.
+Now ChatGPT is not the project. Claude is not the project. Cursor is not the project.
 
 They are workers that can read the project.
 
-## A bootstrap prompt becomes very small
+## A new session should need a small bootstrap prompt
 
-If the repository carries enough state, a new session should not need a giant hand-written prompt.
+A useful test is this:
 
-A useful bootstrap can be closer to this:
+**How much do I have to explain when I open a brand-new session?**
+
+If the answer is "twenty minutes of project history," the repo is missing context.
+
+A healthy bootstrap can be closer to:
 
 ```text
 Pull the latest repository.
@@ -66,28 +90,35 @@ Read, in order:
 3. docs/PROJECT_MEMORY.md
 4. docs/coordination/STATE.json
 5. docs/coordination/WORK_QUEUE.md
-6. unread docs/coordination/AGENT_MESSAGES.md entries
+6. unread coordination messages
 
-Do not infer current status from chat history.
+Do not infer current project state from this chat.
 Use repository evidence as the source of truth.
-Take the highest-priority unblocked task you are authorized to perform.
-Run the required tests, document what changed, and leave a handoff.
+
+Take only work you are authorized to perform.
+Run the required checks.
+Record evidence.
+Leave a handoff before you stop.
 ```
 
-That prompt works whether the worker is ChatGPT, Claude, Cursor, Gemini, or something local later.
+That is intentionally boring.
 
-The model changes. The contract does not.
+The prompt is not trying to re-create the entire project in natural language. It tells the worker **where truth lives**.
 
-## State should be machine-readable too
+The same bootstrap pattern can work in ChatGPT, Claude, Cursor, Gemini, a local model, or something I have not started using yet.
 
-Markdown is great for humans and LLMs, but some project state should be unambiguous.
+The model changes. The project contract does not.
 
-For example:
+## Make current state machine-readable
+
+Markdown is great for people and LLMs. Some project state should still be explicit enough that nobody has to interpret prose.
+
+A small state file can do a lot:
 
 ```json
 {
   "version": "0.4",
-  "status": "verified",
+  "status": "implementation_complete_acceptance_pending",
   "current_goal": "complete one real end-to-end example",
   "blocked_by": [],
   "next_tasks": [
@@ -98,23 +129,21 @@ For example:
 }
 ```
 
-Now a worker does not have to interpret a paragraph like "I think we are basically around v0.4."
+That is better than a sentence like:
 
-It can read a state file.
+> I think we are basically done with 0.4, except maybe the live test.
 
-## Handoffs become commits, not memories
+The state file forces me to choose what I actually mean.
 
-Imagine Claude reaches a limit halfway through a task.
+It also makes automation easier. A worker can parse the state. A heartbeat can report it. A scheduler can decide whether there is unblocked work. A reviewer can compare a claimed milestone with the artifacts that are supposed to prove it.
 
-The old workflow is painful:
+## Handoffs become repository events, not memories
 
-- summarize the conversation;
-- open another tool;
-- explain the project again;
-- paste code;
-- hope nothing important was lost.
+Suppose Claude is halfway through a parser and hits a limit.
 
-The repo-centric workflow is closer to:
+The old handoff is another summary.
+
+The repo-centric handoff is:
 
 ```bash
 git add .
@@ -122,19 +151,35 @@ git commit -m "Checkpoint parser work and record remaining failures"
 git push
 ```
 
-The next worker pulls, reads the state and handoff, then continues.
+Then the worker leaves a short structured note:
+
+```yaml
+task: parser-042
+state: review-needed
+changed:
+  - src/parser.py
+  - tests/test_parser.py
+evidence:
+  - "41 parser tests passed"
+remaining:
+  - "one multi-line fixture still fails"
+do_not_assume:
+  - "customer matcher behavior was not reviewed"
+```
+
+The next worker pulls the same branch, reads the same contract, sees the same failing fixture, and continues.
 
 The important unit is no longer the chat session.
 
-It is the repository state.
+It is the **repository state**.
 
-## This makes free and paid inference more fungible
+## This makes inference more fungible
 
-I do not mean all models are equivalent. They clearly are not.
+I do not mean that all models are equivalent. They are not.
 
-A difficult architecture decision may deserve a stronger model. A repetitive test-writing task may not. A code review may benefit from a different model than the one that wrote the code.
+Some work deserves the strongest reasoning model I have. Some work is mechanical. Some review is more useful when it comes from a different provider than the one that wrote the code.
 
-Repo-centric context lets me route work by capability and available inference instead of by loyalty.
+Once context is portable, I can route work by capability and available capacity instead of by provider loyalty.
 
 Conceptually:
 
@@ -149,33 +194,75 @@ def choose_worker(task, capacity):
     if task.kind == "review":
         return capacity.different_provider_than(task.author)
 
-    return capacity.cheapest_available_worker()
+    return capacity.cheapest_qualified_worker()
 ```
 
-That is much harder when each provider has a different private copy of the project's history.
+The key word there is `qualified`.
 
-## The repo does not magically solve memory
+A free model is not useful just because it is free. It has to be good enough for the bounded task and the output still needs verification.
 
-There is an obvious failure mode here: dumping everything into Git and assuming every model will read all of it.
+## The repo does not solve context by itself
 
-That just creates a different context problem.
+There is an easy way to ruin this idea: dump everything into Git and tell every model to read all of it.
 
-The repository needs structure.
+That is just a context window problem with folders.
 
-Some files are durable policy. Some are current state. Some are historical decisions. Some are task-specific evidence. Old messages should become less important as canonical state is updated.
+The repository needs hierarchy.
 
-The design goal is not "store infinite context."
+I think of the information in roughly four layers:
 
-It is "make the minimum required context easy to recover."
+```text
+durable rules
+    ↓
+architecture + decisions
+    ↓
+current machine-readable state
+    ↓
+task-specific evidence and handoffs
+```
 
-## Why I think this matters beyond coding
+Old handoff messages should become less important as canonical state gets updated. Historical notes should not outrank current contracts. A worker should not need to read six months of logs to understand what it can do today.
 
-Once the repository is the durable workspace, something interesting happens.
+The goal is not "store infinite context."
 
-You can have multiple workers on multiple machines using multiple providers without needing all of them to share one chat session.
+The goal is **make the minimum required context recoverable**.
 
-That is the next part of this series.
+## The bigger idea: the repo becomes the operating environment
 
-I am currently treating my Mac, an always-on Windows machine, and eventually local server capacity as worker hosts attached to the same projects.
+This started as a way to switch between AI tools without losing my place.
 
-If enough people want the starter structure, I will turn the repo conventions, state schema, handoff format, and bootstrap prompts into a small open-source template instead of leaving them embedded in my own projects.
+It is becoming something bigger.
+
+Once the repository contains enough durable context, I can have multiple workers on multiple machines using multiple providers without requiring them to share a single conversation.
+
+My Mac can host one worker. A Windows machine can host another. A server can run local inference or background workers. They can all pull the same project contracts and leave evidence in the same place.
+
+That is the next article in this series: [how I am turning AI sessions and computers into remote workers](/blogs/ai-remote-workers/).
+
+## What I may open-source
+
+If this pattern is useful to other people, the first thing I would open-source is not a giant agent framework.
+
+It would be a tiny repo starter:
+
+```text
+AGENTS.md
+docs/
+  PROJECT_MEMORY.md
+  ARCHITECTURE.md
+  coordination/
+    STATE.schema.json
+    STATE.json
+    WORK_QUEUE.md
+    HANDOFF.template.md
+scripts/
+  validate_state.py
+```
+
+That is enough to make the experiment reproducible without forcing anyone to adopt my entire stack.
+
+If there is interest, I will turn the conventions I am using into a clean starter repository and link it here.
+
+The model should be replaceable.
+
+The project should not be.
