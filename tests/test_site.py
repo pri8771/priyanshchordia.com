@@ -58,6 +58,20 @@ class GeneratorTests(unittest.TestCase):
         self.assertIn('name="robots" content="noindex,follow"', rendered)
         self.assertIn('window.location.replace("/blogs/repo-is-the-agent/")', rendered)
 
+    def test_private_blog_vault_is_unlisted_noindex_and_encrypted(self) -> None:
+        rendered = GEN.private_blogs_page()
+        self.assertIn('name="robots" content="noindex,follow"', rendered)
+        self.assertIn('fetch("payload.json"', rendered)
+        self.assertNotIn("Building SwarmAI", rendered)
+
+        encrypted = (ROOT / "data" / "private_blogs.enc.json").read_text(encoding="utf-8")
+        self.assertNotIn("Building SwarmAI", encrypted)
+        self.assertNotIn("Building My Own Inference Server", encrypted)
+        self.assertIn('"ciphertext"', encrypted)
+
+        sitemap = GEN.sitemap(GEN.load_products(), GEN.load_posts(), GEN.load_apps(GEN.load_products()))
+        self.assertNotIn("/blogs/private/", sitemap)
+
     def test_inline_script_json_cannot_close_script_element(self) -> None:
         rendered = GEN.safe_script_json({"summary": "</script><script>alert(1)</script>"})
         self.assertNotIn("</script", rendered.lower())
