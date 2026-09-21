@@ -29,7 +29,7 @@ DATA = ROOT / "data" / "registry.public.json"
 APPS = ROOT / "data" / "apps.json"
 LANDING_PAGES = ROOT / "data" / "landing_pages.json"
 POSTS = ROOT / "content" / "posts"
-PRIVATE_BLOGS = ROOT / "data" / "private_blogs.enc.json"
+PRIVATE_BLOGS = ROOT / "data" / "private_blogs"
 OUT = ROOT / "site"
 ASSETS = ROOT / "assets"
 THEMES_DIR = ROOT / "scripts" / "themes"
@@ -978,8 +978,8 @@ placeholder="Password" required>
     return out;
   }
 
-  async function decrypt(password) {
-    var encrypted = await fetch("payload.json", {cache: "no-store"}).then(function (response) {
+  async function decryptFile(filename, password) {
+    var encrypted = await fetch(filename, {cache: "no-store"}).then(function (response) {
       if (!response.ok) throw new Error("Encrypted payload is unavailable.");
       return response.json();
     });
@@ -1003,7 +1003,7 @@ placeholder="Password" required>
       key,
       bytes(encrypted.ciphertext)
     );
-    return JSON.parse(decoder.decode(clear));
+    return JSON.parse(decoder.decode(clear)).article;
   }
 
   function renderIndex() {
@@ -1067,7 +1067,11 @@ placeholder="Password" required>
       if (!window.crypto || !window.crypto.subtle) {
         throw new Error("This browser does not support the Web Crypto API.");
       }
-      payload = await decrypt(input.value);
+      var files = ["04.json", "05.json", "06.json", "07.json"];
+      var articles = await Promise.all(files.map(function (filename) {
+        return decryptFile(filename, input.value);
+      }));
+      payload = {articles: articles};
       input.value = "";
       document.getElementById("private-gate").hidden = true;
       document.getElementById("private-vault").hidden = false;
@@ -1148,7 +1152,8 @@ def main() -> int:
     write(OUT / "index.html", home(products, posts))
     write(OUT / "blogs" / "index.html", journal_index(posts))
     write(OUT / "blogs" / "private" / "index.html", private_blogs_page())
-    write(OUT / "blogs" / "private" / "payload.json", PRIVATE_BLOGS.read_text(encoding="utf-8"))
+    for source in sorted(PRIVATE_BLOGS.glob("*.json")):
+        write(OUT / "blogs" / "private" / source.name, source.read_text(encoding="utf-8"))
     write(OUT / "journal" / "index.html", legacy_blog_redirect("/blogs/", "../"))
     write(OUT / "apps" / "index.html", apps_index(apps))
     write(OUT / "404.html", not_found_page())
