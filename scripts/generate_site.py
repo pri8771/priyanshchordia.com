@@ -237,7 +237,7 @@ def load_landing_pages(products: list[dict[str, object]]) -> dict[str, dict[str,
     return apps
 
 
-RESERVED_ROUTES = {"products", "journal", "apps", "assets", "static", "index"}
+RESERVED_ROUTES = {"products", "journal", "blogs", "apps", "assets", "static", "index"}
 
 
 FRONT_MATTER = re.compile(r"^---\s*\n(.*?)\n---\s*\n(.*)$", re.S)
@@ -515,7 +515,7 @@ def chrome(title: str, body: str, prefix: str = "", active: str = "",
 <header class="top"><div class="left">
 {theme_control}
 <a class="brand" href="{prefix}index.html">P/C <span class="status" aria-hidden="true">&#9679;</span></a></div>
-<nav aria-label="Primary"><a{nav_attrs('work')} href="{prefix}index.html#work">Work</a><a{nav_attrs('apps')} href="{prefix}apps/">App URLs</a><a{nav_attrs('journal')} href="{prefix}journal/">Journal</a></nav></header>
+<nav aria-label="Primary"><a{nav_attrs('work')} href="{prefix}index.html#work">Work</a><a{nav_attrs('apps')} href="{prefix}apps/">App URLs</a><a{nav_attrs('blogs')} href="{prefix}blogs/">Blogs</a></nav></header>
 <main id="main">{body}</main>
 <footer><span>{esc(SITE_NAME)}</span><span>Independent software, built with privacy in mind.</span></footer>
 </div>{extra}{switcher}{json_ld}</body></html>"""
@@ -531,18 +531,14 @@ def product_tile(product: dict[str, object], index: int, prefix: str = "") -> st
     )
 
 
+
 def entry_row(post: dict[str, object], index: int, prefix: str = "") -> str:
     status = " / draft" if post.get("status") == "draft" else ""
     return (
-        f'<a class="entry" href="{prefix}journal/{esc(post["slug"])}/">'
+        f'<a class="entry" href="{prefix}blogs/{esc(post["slug"])}/">'
         f'<span>{index:03d}</span><strong>{esc(post["title"])}</strong>'
         f'<span>{esc(post["minutes"])} min{status}</span></a>'
     )
-
-
-# --------------------------------------------------------------------------
-# pages
-# --------------------------------------------------------------------------
 
 def home(products: list[dict[str, object]], posts: list[dict[str, object]]) -> str:
     tiles = "".join(product_tile(p, i + 1) for i, p in enumerate(products))
@@ -556,7 +552,7 @@ def home(products: list[dict[str, object]], posts: list[dict[str, object]]) -> s
 <p class="lede">{len(products)} independent iOS apps in private beta &mdash; private, focused, and built for everyday use.</p></section>
 <section id="work"><div class="section-head"><span class="label">01 / Catalog</span><h2>Everything transmitting.</h2></div>
 <div class="products">{tiles}</div></section>
-<section id="journal"><div class="section-head"><span class="label">02 / Journal</span><h2>Notes from the workbench.</h2></div>
+<section id="blogs"><div class="section-head"><span class="label">02 / Blogs</span><h2>Notes from the workbench.</h2></div>
 {journal}</section>"""
     payload = safe_script_json([
         {"name": p["name"], "summary": p["summary"], "href": f"products/{p['slug']}/",
@@ -779,17 +775,18 @@ def product_page(product: dict[str, object], landing: dict[str, object],
     )
 
 
+
 def journal_index(posts: list[dict[str, object]]) -> str:
     if posts:
         rows = "".join(entry_row(p, i + 1, "../") for i, p in enumerate(posts))
         listing = f'<div class="journal-index">{rows}</div>'
     else:
-        listing = '<p class="empty">No entries published yet. Check back for notes from the workbench.</p>'
-    body = f"""<section><div class="section-head"><span class="label">Journal</span><h1>Notes from the workbench.</h1></div>
+        listing = '<p class="empty">No posts published yet. Check back for notes from the workbench.</p>'
+    body = f"""<section><div class="section-head"><span class="label">Blogs</span><h1>Notes from the workbench.</h1></div>
 {listing}</section>"""
     return chrome(
-        f"Journal — {SITE_NAME}", body, prefix="../", active="journal",
-        path="/journal/", description="Notes on independent software, product craft, and the work behind the catalogue.",
+        f"Blogs — {SITE_NAME}", body, prefix="../", active="blogs",
+        path="/blogs/", description="Technical essays and build notes on AI systems, software architecture, infrastructure, and independent products.",
     )
 
 
@@ -804,14 +801,13 @@ def post_page(post: dict[str, object]) -> str:
     meta = " / ".join(x for x in meta_parts if x)
     body = f"""<section><article class="post"><span class="label">{esc(meta)}</span>
 <h1>{esc(post["title"])}</h1>{markdown(str(post["body"]))}</article>
-<a class="back" href="../">&larr; All entries</a></section>"""
+<a class="back" href="../">&larr; All posts</a></section>"""
     return chrome(
-        f"{post['title']} — {SITE_NAME}", body, prefix="../../", active="journal",
+        f"{post['title']} — {SITE_NAME}", body, prefix="../../", active="blogs",
         description=str(post.get("summary") or post["title"]),
-        path=f"/journal/{post['slug']}/",
+        path=f"/blogs/{post['slug']}/",
         robots="noindex,follow" if status == "draft" else "index,follow",
     )
-
 
 def apps_index(apps: list[dict[str, object]]) -> str:
     enabled = [app for app in apps if app.get("route_enabled") is True]
@@ -936,12 +932,30 @@ def not_found_page() -> str:
     )
 
 
+
+def legacy_blog_redirect(target: str, prefix: str) -> str:
+    """Keep old /journal URLs useful while /blogs is canonical."""
+    target_json = safe_script_json(target)
+    body = f"""<section><article class="detail"><span class="label">Moved</span>
+<h1>This post moved to Blogs.</h1>
+<p>The canonical writing URL is now under <code>/blogs/</code>.</p>
+<div class="resource-links"><a class="resource-link" href="{esc(target)}">Continue to the post</a></div>
+</article></section>"""
+    return chrome(
+        f"Moved — {SITE_NAME}", body, prefix=prefix, active="blogs",
+        path=target, description="This writing URL moved to the Blogs section.",
+        robots="noindex,follow",
+        extra=f"<script>window.location.replace({target_json})</script>",
+    )
+
+
+
 def sitemap(products: list[dict[str, object]], posts: list[dict[str, object]],
             apps: list[dict[str, object]]) -> str:
-    paths = ["/", "/journal/", "/apps/"]
+    paths = ["/", "/blogs/", "/apps/"]
     paths.extend(f"/products/{product['slug']}/" for product in products)
     paths.extend(
-        f"/journal/{post['slug']}/" for post in posts
+        f"/blogs/{post['slug']}/" for post in posts
         if post.get("status") != "draft"
     )
     for app in apps:
@@ -949,7 +963,6 @@ def sitemap(products: list[dict[str, object]], posts: list[dict[str, object]],
             paths.extend((f"/apps/{app['slug']}/privacy/", f"/apps/{app['slug']}/support/"))
     urls = "".join(f"<url><loc>{esc(canonical_url(path))}</loc></url>" for path in paths)
     return f'<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">{urls}</urlset>'
-
 
 def main() -> int:
     global CSS_V, XP_V, APP_THEME_V
@@ -976,7 +989,8 @@ def main() -> int:
         # otherwise lose the custom domain on the next deploy.
         write(OUT / "CNAME", CUSTOM_DOMAIN + "\n")
     write(OUT / "index.html", home(products, posts))
-    write(OUT / "journal" / "index.html", journal_index(posts))
+    write(OUT / "blogs" / "index.html", journal_index(posts))
+    write(OUT / "journal" / "index.html", legacy_blog_redirect("/blogs/", "../"))
     write(OUT / "apps" / "index.html", apps_index(apps))
     write(OUT / "404.html", not_found_page())
     write(OUT / "robots.txt", f"User-agent: *\nAllow: /\nSitemap: {BASE_URL}/sitemap.xml\n")
@@ -989,7 +1003,11 @@ def main() -> int:
             product_page(product, landing_pages[str(product["slug"])], app),
         )
     for post in posts:
-        write(OUT / "journal" / str(post["slug"]) / "index.html", post_page(post))
+        write(OUT / "blogs" / str(post["slug"]) / "index.html", post_page(post))
+        write(
+            OUT / "journal" / str(post["slug"]) / "index.html",
+            legacy_blog_redirect(f"/blogs/{post['slug']}/", "../../"),
+        )
 
     for app in enabled_apps:
         base = OUT / "apps" / str(app["slug"])
@@ -1010,7 +1028,7 @@ def main() -> int:
                 shutil.copy2(source, destination)
 
     print(f"generated: catalog + {len(products)} product pages, "
-          f"journal + {len(posts)} posts, {len(enabled_apps)} app store page pairs")
+          f"blogs + {len(posts)} posts, {len(enabled_apps)} app store page pairs")
     disabled = [str(app["slug"]) for app in apps if app.get("route_enabled") is not True]
     if disabled:
         print(f"routes withheld: {', '.join(disabled)}")
