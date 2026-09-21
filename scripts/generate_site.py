@@ -1014,7 +1014,7 @@ placeholder="Password" required>
     var reader = document.getElementById("private-blog-reader");
     index.hidden = false;
     reader.hidden = true;
-    index.innerHTML = '<div class="section-head"><span class="label">Private archive</span><h2>Unpublished follow-ups.</h2></div>';
+    index.innerHTML = '<div class="section-head"><span class="label">Private archive</span><h2>Private articles.</h2></div>';
     var list = document.createElement("div");
     list.className = "journal-index";
     payload.articles.forEach(function (article, position) {
