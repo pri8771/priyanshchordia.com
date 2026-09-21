@@ -61,7 +61,7 @@ class GeneratorTests(unittest.TestCase):
     def test_private_blog_vault_is_unlisted_noindex_and_encrypted(self) -> None:
         rendered = GEN.private_blogs_page()
         self.assertIn('name="robots" content="noindex,follow"', rendered)
-        self.assertIn('decryptFile(filename, input.value)', rendered)
+        self.assertIn('decryptFile(filenames, input.value)', rendered)
         self.assertNotIn("Building SwarmAI", rendered)
 
         private_files = sorted((ROOT / "data" / "private_blogs").iterdir())
