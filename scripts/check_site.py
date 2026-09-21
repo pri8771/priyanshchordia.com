@@ -129,6 +129,21 @@ def local_target(current: Path, raw_url: str) -> Path | None:
         return Path("__outside_site__")
 
 
+def is_legacy_journal_redirect(path: Path, parser: PageParser) -> bool:
+    """Allow noindex /journal/ compatibility pages to canonicalize to /blogs/."""
+    try:
+        rel = path.relative_to(SITE.resolve())
+    except ValueError:
+        return False
+    if not rel.parts or rel.parts[0] != "journal":
+        return False
+    if "noindex" not in parser.meta_name_values.get("robots", "").lower():
+        return False
+    if len(parser.canonicals) != 1:
+        return False
+    return parser.canonicals[0].startswith(BASE_URL + "/blogs/")
+
+
 def parse_pages() -> tuple[dict[Path, PageParser], list[str]]:
     errors: list[str] = []
     parsed: dict[Path, PageParser] = {}
@@ -169,7 +184,10 @@ def parse_pages() -> tuple[dict[Path, PageParser], list[str]]:
             if rel.name == "index.html" and rel.parent != Path("."):
                 expected_path = "/" + rel.parent.as_posix() + "/"
             expected_canonical = BASE_URL + expected_path
-            if parser.canonicals[0] != expected_canonical:
+            if (
+                parser.canonicals[0] != expected_canonical
+                and not is_legacy_journal_redirect(path.resolve(), parser)
+            ):
                 errors.append(
                     f"{rel}: canonical is {parser.canonicals[0]!r}, expected {expected_canonical!r}"
                 )
@@ -215,6 +233,10 @@ def validate_links(pages: dict[Path, PageParser]) -> list[str]:
         reachable.add(page)
         queue.extend(graph.get(page, set()) - reachable)
     ignored = {(SITE / "404.html").resolve()}
+    ignored.update(
+        path for path, parser in pages.items()
+        if is_legacy_journal_redirect(path, parser)
+    )
     for path in sorted(set(pages) - reachable - ignored):
         errors.append(f"{path.relative_to(SITE.resolve())}: HTML page is orphaned")
     return errors
