@@ -64,13 +64,15 @@ class GeneratorTests(unittest.TestCase):
         self.assertIn('decryptFile(filename, input.value)', rendered)
         self.assertNotIn("Building SwarmAI", rendered)
 
-        encrypted_files = sorted((ROOT / "data" / "private_blogs").glob("*.json"))
-        self.assertEqual([path.name for path in encrypted_files], ["04.json", "05.json", "06.json", "07.json"])
-        for path in encrypted_files:
-            encrypted = path.read_text(encoding="utf-8")
-            self.assertNotIn("Building SwarmAI", encrypted)
-            self.assertNotIn("Building My Own Inference Server", encrypted)
-            self.assertIn('"ciphertext"', encrypted)
+        private_files = sorted((ROOT / "data" / "private_blogs").iterdir())
+        self.assertEqual(
+            [path.name for path in private_files],
+            ["04.json", "05.json", "06.1.part", "06.2.part", "06.3.part", "07.1.part", "07.2.part", "07.3.part"],
+        )
+        combined = "\n".join(path.read_text(encoding="utf-8") for path in private_files)
+        self.assertNotIn("Building SwarmAI", combined)
+        self.assertNotIn("Building My Own Inference Server", combined)
+        self.assertIn('"ciphertext"', combined)
 
         sitemap = GEN.sitemap(GEN.load_products(), GEN.load_posts(), GEN.load_apps(GEN.load_products()))
         self.assertNotIn("/blogs/private/", sitemap)
