@@ -14,7 +14,7 @@ The through-line is simple: move durable state out of any one model or vendor, t
 | 6 | Building My Own ChatGPT | What does a personal model router + UI + tools + local inference look like? |
 | 7 | AI Agents Don't Need to Be Brilliant | Can tests, retries, contracts, and escalation make cheaper models useful? |
 
-All seven are intentionally public drafts first. Promote a post to `status: published` only after its claims, code snippets, screenshots, and real-world examples have been verified.
+All seven are public, indexable essays under `/blogs/`. Internally they remain `internal_status: working-draft` so we can keep improving screenshots, measurements, and examples without presenting a public draft badge. Public claims must still distinguish measured reality from planned work; internal draft status is not permission to invent evidence.
 
 ## Article contract
 
@@ -28,7 +28,7 @@ Every technical article should include:
 - an explicit line between current reality and future work;
 - a lightweight open-source call-to-action when a reusable component exists.
 
-The website is the canonical copy. Substack can syndicate the polished version and point back to the site/project pages.
+The website at `/blogs/` is the canonical copy. Substack can syndicate each essay and point back to the site/project pages. The legacy `/journal/` routes exist only as redirects.
 
 ## Parked for later
 
