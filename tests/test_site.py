@@ -61,13 +61,16 @@ class GeneratorTests(unittest.TestCase):
     def test_private_blog_vault_is_unlisted_noindex_and_encrypted(self) -> None:
         rendered = GEN.private_blogs_page()
         self.assertIn('name="robots" content="noindex,follow"', rendered)
-        self.assertIn('fetch("payload.json"', rendered)
+        self.assertIn('decryptFile(filename, input.value)', rendered)
         self.assertNotIn("Building SwarmAI", rendered)
 
-        encrypted = (ROOT / "data" / "private_blogs.enc.json").read_text(encoding="utf-8")
-        self.assertNotIn("Building SwarmAI", encrypted)
-        self.assertNotIn("Building My Own Inference Server", encrypted)
-        self.assertIn('"ciphertext"', encrypted)
+        encrypted_files = sorted((ROOT / "data" / "private_blogs").glob("*.json"))
+        self.assertEqual([path.name for path in encrypted_files], ["04.json", "05.json", "06.json", "07.json"])
+        for path in encrypted_files:
+            encrypted = path.read_text(encoding="utf-8")
+            self.assertNotIn("Building SwarmAI", encrypted)
+            self.assertNotIn("Building My Own Inference Server", encrypted)
+            self.assertIn('"ciphertext"', encrypted)
 
         sitemap = GEN.sitemap(GEN.load_products(), GEN.load_posts(), GEN.load_apps(GEN.load_products()))
         self.assertNotIn("/blogs/private/", sitemap)
