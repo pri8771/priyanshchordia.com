@@ -29,6 +29,7 @@ DATA = ROOT / "data" / "registry.public.json"
 APPS = ROOT / "data" / "apps.json"
 LANDING_PAGES = ROOT / "data" / "landing_pages.json"
 POSTS = ROOT / "content" / "posts"
+PRIVATE_BLOGS = ROOT / "data" / "private_blogs.enc.json"
 OUT = ROOT / "site"
 ASSETS = ROOT / "assets"
 THEMES_DIR = ROOT / "scripts" / "themes"
@@ -933,6 +934,162 @@ def not_found_page() -> str:
 
 
 
+def private_blogs_page() -> str:
+    """Password-gated client-side vault for intentionally unlisted essays.
+
+    The repository contains only an AES-GCM encrypted payload. The password is
+    never committed. This is still a static-site access gate rather than
+    server-side authentication, so it should not be used for real secrets.
+    """
+    body = """<section><article class="post"><span class="label">Private / encrypted</span>
+<h1>Private writing.</h1>
+<div id="private-gate">
+<p>This section is intentionally unlisted. Enter the password to decrypt the private article bundle in your browser.</p>
+<form id="private-blog-form" style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:24px 0">
+<label for="private-blog-password" class="visually-hidden">Password</label>
+<input id="private-blog-password" name="password" type="password" autocomplete="off"
+style="min-width:260px;padding:12px 14px;border:1px solid currentColor;background:transparent;color:inherit"
+placeholder="Password" required>
+<button type="submit" style="padding:12px 16px;border:1px solid currentColor;background:transparent;color:inherit;cursor:pointer">Unlock</button>
+</form>
+<p id="private-blog-error" role="alert" hidden></p>
+</div>
+<div id="private-vault" hidden>
+<div id="private-blog-index"></div>
+<div id="private-blog-reader" hidden>
+<a class="back" href="#">&larr; Private index</a>
+<span id="private-blog-meta" class="label"></span>
+<h2 id="private-blog-title"></h2>
+<div id="private-blog-body"></div>
+</div>
+</div>
+</article></section>"""
+    extra = """<script>
+(function () {
+  "use strict";
+  var payload = null;
+  var encoder = new TextEncoder();
+  var decoder = new TextDecoder();
+
+  function bytes(value) {
+    var raw = atob(value);
+    var out = new Uint8Array(raw.length);
+    for (var i = 0; i < raw.length; i += 1) out[i] = raw.charCodeAt(i);
+    return out;
+  }
+
+  async function decrypt(password) {
+    var encrypted = await fetch("payload.json", {cache: "no-store"}).then(function (response) {
+      if (!response.ok) throw new Error("Encrypted payload is unavailable.");
+      return response.json();
+    });
+    var material = await crypto.subtle.importKey(
+      "raw", encoder.encode(password), "PBKDF2", false, ["deriveKey"]
+    );
+    var key = await crypto.subtle.deriveKey(
+      {
+        name: "PBKDF2",
+        salt: bytes(encrypted.salt),
+        iterations: encrypted.iterations,
+        hash: "SHA-256"
+      },
+      material,
+      {name: "AES-GCM", length: 256},
+      false,
+      ["decrypt"]
+    );
+    var clear = await crypto.subtle.decrypt(
+      {name: "AES-GCM", iv: bytes(encrypted.iv)},
+      key,
+      bytes(encrypted.ciphertext)
+    );
+    return JSON.parse(decoder.decode(clear));
+  }
+
+  function renderIndex() {
+    var index = document.getElementById("private-blog-index");
+    var reader = document.getElementById("private-blog-reader");
+    index.hidden = false;
+    reader.hidden = true;
+    index.innerHTML = '<div class="section-head"><span class="label">Private archive</span><h2>Unpublished follow-ups.</h2></div>';
+    var list = document.createElement("div");
+    list.className = "journal-index";
+    payload.articles.forEach(function (article, position) {
+      var link = document.createElement("a");
+      link.className = "entry";
+      link.href = "#" + article.slug;
+      var number = document.createElement("span");
+      number.textContent = String(position + 4).padStart(3, "0");
+      var title = document.createElement("strong");
+      title.textContent = article.title;
+      var meta = document.createElement("span");
+      meta.textContent = "private";
+      link.appendChild(number);
+      link.appendChild(title);
+      link.appendChild(meta);
+      list.appendChild(link);
+    });
+    index.appendChild(list);
+    document.title = "Private writing — priyanshchordia.com";
+  }
+
+  function renderArticle(slug) {
+    var article = payload.articles.find(function (item) { return item.slug === slug; });
+    if (!article) {
+      renderIndex();
+      return;
+    }
+    document.getElementById("private-blog-index").hidden = true;
+    document.getElementById("private-blog-reader").hidden = false;
+    document.getElementById("private-blog-meta").textContent =
+      [article.date, article.series, "PRIVATE"].filter(Boolean).join(" / ");
+    document.getElementById("private-blog-title").textContent = article.title;
+    document.getElementById("private-blog-body").innerHTML = article.html;
+    document.title = article.title + " — private";
+    window.scrollTo({top: 0, behavior: "instant"});
+  }
+
+  function renderRoute() {
+    if (!payload) return;
+    var slug = decodeURIComponent(window.location.hash.replace(/^#/, ""));
+    if (slug) renderArticle(slug);
+    else renderIndex();
+  }
+
+  var form = document.getElementById("private-blog-form");
+  var input = document.getElementById("private-blog-password");
+  var error = document.getElementById("private-blog-error");
+
+  form.addEventListener("submit", async function (event) {
+    event.preventDefault();
+    error.hidden = true;
+    try {
+      if (!window.crypto || !window.crypto.subtle) {
+        throw new Error("This browser does not support the Web Crypto API.");
+      }
+      payload = await decrypt(input.value);
+      input.value = "";
+      document.getElementById("private-gate").hidden = true;
+      document.getElementById("private-vault").hidden = false;
+      renderRoute();
+    } catch (reason) {
+      error.textContent = "Incorrect password or unavailable encrypted payload.";
+      error.hidden = false;
+    }
+  });
+
+  window.addEventListener("hashchange", renderRoute);
+}());
+</script>"""
+    return chrome(
+        f"Private writing — {SITE_NAME}", body, prefix="../../", active="blogs",
+        path="/blogs/private/",
+        description="Password-protected private writing.",
+        robots="noindex,follow",
+        extra=extra,
+    )
+
+
 def legacy_blog_redirect(target: str, prefix: str) -> str:
     """Keep old /journal URLs useful while /blogs is canonical."""
     target_json = safe_script_json(target)
@@ -990,10 +1147,12 @@ def main() -> int:
         write(OUT / "CNAME", CUSTOM_DOMAIN + "\n")
     write(OUT / "index.html", home(products, posts))
     write(OUT / "blogs" / "index.html", journal_index(posts))
+    write(OUT / "blogs" / "private" / "index.html", private_blogs_page())
+    write(OUT / "blogs" / "private" / "payload.json", PRIVATE_BLOGS.read_text(encoding="utf-8"))
     write(OUT / "journal" / "index.html", legacy_blog_redirect("/blogs/", "../"))
     write(OUT / "apps" / "index.html", apps_index(apps))
     write(OUT / "404.html", not_found_page())
-    write(OUT / "robots.txt", f"User-agent: *\nAllow: /\nSitemap: {BASE_URL}/sitemap.xml\n")
+    write(OUT / "robots.txt", f"User-agent: *\nDisallow: /blogs/private/\nAllow: /\nSitemap: {BASE_URL}/sitemap.xml\n")
     write(OUT / "sitemap.xml", sitemap(products, posts, apps))
 
     for product in products:
