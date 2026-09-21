@@ -4,34 +4,43 @@ slug: "artifact-first-development"
 date: "2026-09-20"
 summary: "The dependency does not have to be another team's implementation. Sometimes it can be an explicit contract for the artifact they must produce."
 series: "Own Your AI Stack"
-status: "draft"
+status: "published"
+internal_status: "working-draft"
 ---
 
 I keep coming back to a simple question:
 
-What if a software project were treated less like a sequence of tasks and more like a collection of artifacts that have to fit together?
+**What if a software project were treated less like a sequence of tasks and more like a graph of artifacts that have to fit together?**
 
-Traditional planning often becomes:
+A lot of project plans quietly assume this:
 
 ```text
 A → B → C → D
 ```
 
-B waits for A. C waits for B. Add more developers or AI agents and they spend more time waiting.
+B waits for A. C waits for B. Adding more developers does not help if everyone is blocked on the same chain.
 
-But sometimes B does not actually need A to be finished.
+That becomes especially weird once the workers are AI agents.
 
-B needs to know exactly what A will produce.
+If I can start ten implementation workers in a few minutes, worker supply is no longer the obvious bottleneck.
 
-That is a different dependency.
+Dependencies are.
 
-## Move the dependency from implementation to contract
+So the question I have been experimenting with is:
 
-Suppose Artifact A is a customer parser and Artifact B is a validator.
+**Can some implementation dependencies be moved earlier into artifact contracts, so the actual implementations can happen in parallel?**
 
-The validator does not need the parser's code.
+## The Lego version
 
-It needs the parser's output contract:
+Suppose Artifact A parses a customer from a purchase order.
+
+Artifact B validates that customer.
+
+The validator does not necessarily need the parser to exist.
+
+It needs to know what the parser is obligated to produce.
+
+For example:
 
 ```json
 {
@@ -42,7 +51,7 @@ It needs the parser's output contract:
 }
 ```
 
-Now the validator can be built against a fixture before the parser exists.
+Once that contract is stable, the validator can be built against fixtures.
 
 ```python
 def validate_customer(customer):
@@ -52,19 +61,65 @@ def validate_customer(customer):
     return customer
 ```
 
-The parser team now has a clear obligation: produce that artifact.
+At the same time, another worker can build the parser against the same contract.
 
-The validator team has a clear assumption: consume that artifact.
+Neither implementation is fake.
 
-Those pieces can move in parallel.
+The consumer uses a fixture until the real producer exists. The producer has a concrete output obligation. Integration becomes a test of whether the two pieces actually honor the same connection surface.
 
-## The artifact should carry its own acceptance contract
+That is the Lego analogy.
 
-I like the idea of defining each meaningful output with something close to this:
+The important thing is not how each piece was manufactured.
+
+It is whether the studs line up.
+
+## This is not a claim that contracts are new
+
+The pieces of this idea already exist in software engineering.
+
+API-first and contract-first development define interfaces before implementations. Tools such as [Pact](https://docs.pact.io/) let consumers and providers test integration contracts independently. Build systems such as [Bazel](https://bazel.build/versions/9.0.0/about/intro) explicitly model artifacts, actions, and dependency graphs so work can be reused and scheduled correctly.
+
+I am not trying to rename all of that.
+
+The part I am interested in is the **project-management unit**.
+
+Instead of saying:
+
+> Version 1.4 is 80% done because 16 of 20 tasks are closed.
+
+I want to be able to say:
+
+> Version 1.4 exists when this exact set of accepted artifacts exists.
+
+That turns a version into an artifact set instead of a task percentage.
+
+## What counts as an artifact?
+
+An artifact can be code, but it does not have to be.
+
+For an AI-heavy software project, I might track:
+
+- an API contract;
+- a JSON schema;
+- a database migration;
+- a threat model;
+- a benchmark definition;
+- a fixture set;
+- a test harness;
+- a deployment manifest;
+- a runbook;
+- a UI component;
+- a verified model-qualification result;
+- a real end-to-end evidence package.
+
+The important property is that it has a **defined state transition**.
+
+A useful artifact record might look like:
 
 ```yaml
 artifact:
   id: normalized-customer-v1
+  state: drafting
   owner: parser-worker
 
 inputs:
@@ -86,96 +141,229 @@ consumers:
   - order-validator
 ```
 
-Now "done" means more than "someone wrote the code."
+The state is not "someone is working on it."
 
-The artifact has a shape, examples, tests, and consumers.
+It might be:
 
-## This is not zero-dependency development
+```text
+missing
+  ↓
+contracted
+  ↓
+implemented
+  ↓
+verified
+  ↓
+accepted
+```
 
-There is a dangerous oversimplification here.
+That is much easier for both people and agents to reason about.
 
-You cannot make every software dependency disappear.
+## Why I think this matters more with AI workers
 
-If two components share a database transaction, timing behavior, state machine, or performance constraint, an interface definition does not make the integration free.
+Human software teams cannot scale worker count infinitely. Hiring, onboarding, communication, and coordination are expensive.
 
-Artifact-first development is not magic parallelism.
+AI changes that constraint.
 
-It is an attempt to identify dependencies that can be moved earlier into explicit contracts.
+I can start several coding sessions much faster than I can add several engineers to a team.
 
-That is still valuable, especially when workers are cheap.
+That exposes a different problem:
 
-## The idea clicked for me while reading about diffusion code models
+```text
+20 available workers
+        ↓
+12 blocked by dependencies
+        ↓
+5 editing the same files
+        ↓
+2 duplicating work
+        ↓
+1 useful merge
+```
 
-One of the things that nudged this mental model was Apple's work on diffusion-style code generation.
+More agents do not automatically create more throughput.
 
-Apple's [DiffuCoder research](https://machinelearning.apple.com/research/diffucoder) describes masked diffusion models whose denoising process operates over an entire sequence and can use global planning and iterative refinement rather than being restricted to conventional left-to-right generation.
+If I want real parallelism, I have to deliberately create **independent work surfaces**.
 
-That paper is not a project-management methodology, and I do not want to pretend it proves this idea.
+Artifact contracts are one way to do that.
 
-The interesting spark for me was simpler:
+## The producer can be missing and the consumer can still be real
 
-What changes when order is no longer assumed to be strictly sequential?
+Here is the simplest useful pattern.
 
-Software projects have the same question at a different layer.
+First, define the contract:
 
-## A producer can be missing and the consumer can still be real
+```json
+{
+  "$id": "normalized-order-v2",
+  "type": "object",
+  "required": ["order_id", "currency", "items"],
+  "properties": {
+    "order_id": {"type": "string"},
+    "currency": {"type": "string", "minLength": 3, "maxLength": 3},
+    "items": {"type": "array"}
+  }
+}
+```
 
-A consumer can start with a fixture:
+Then commit a fixture:
+
+```json
+{
+  "order_id": "PO-1042",
+  "currency": "GBP",
+  "items": [
+    {"sku": "ABC-1", "qty": 4}
+  ]
+}
+```
+
+Now the downstream worker can build something real:
 
 ```python
 from pathlib import Path
 import json
 
-customer = json.loads(
-    Path("fixtures/normalized-customer-v1.json").read_text()
+order = json.loads(
+    Path("fixtures/normalized-order-v2.json").read_text()
 )
 
-result = match_ship_to(customer)
+result = validate_and_route(order)
 
-assert result.ship_to_id == "100042"
+assert result.currency == "GBP"
+assert result.route == "uk-order-flow"
 ```
 
-Later, replace the fixture with the real producer.
+Later the real parser replaces the fixture.
 
-If the producer satisfies the same contract, the consumer should not care.
+If the real parser satisfies the contract, the downstream code should not need to care.
 
-That is the Lego analogy: the connection surface matters more than how the piece was manufactured.
+If it does care, that is useful information: the contract was incomplete.
 
-## This becomes more interesting with AI workers
+## Acceptance artifacts matter as much as implementation artifacts
 
-Human teams cannot infinitely parallelize because coordination is expensive.
+This is the part I think traditional task boards under-emphasize.
 
-AI changes the worker-supply side of the equation. I can start many sessions much more cheaply than I can hire many engineers.
+A code file existing is not the same thing as the artifact being accepted.
 
-That makes a different bottleneck visible:
+For a meaningful artifact, I want the evidence to travel with it.
 
-**dependencies become expensive.**
+```yaml
+acceptance:
+  source_revision: "git-sha"
+  required_checks:
+    - unit-tests
+    - contract-tests
+    - security-review
+  evidence:
+    - artifacts/test-report.json
+    - artifacts/review.md
+  accepted_by:
+    - lead-review
+```
 
-If I have twenty available workers but twelve of them are waiting for another task to finish, the worker count is meaningless.
+That makes "done" reconstructable.
 
-So my project-management question becomes:
+An agent cannot simply say "tests passed" and move on. The exact artifact version and the evidence that applies to that version have to line up.
 
-How much of the dependency graph can I replace with stable contracts, fixtures, schemas, tests, and acceptance artifacts?
+## Where the idea came from
 
-## The project itself becomes a graph of artifacts
+One of the things that pushed me toward this mental model was Apple's [DiffuCoder research](https://machinelearning.apple.com/research/diffucoder).
 
-Eventually I want a machine-readable view like:
+DiffuCoder is a diffusion-style code model. Apple's paper describes denoising over an entire sequence, with global planning and iterative refinement rather than requiring conventional strictly left-to-right generation.
+
+That paper is **not** a project-management paper, and I do not want to pretend it proves artifact-first development.
+
+The spark for me was more abstract:
+
+**What changes when order is no longer assumed to be strictly sequential?**
+
+If code generation itself can explore a less rigid generation order, what parts of software delivery are sequential only because our process assumes they have to be?
+
+That led me back to interfaces, fixtures, contracts, build graphs, and eventually this artifact-first framing.
+
+## The important caveat: some dependencies are real
+
+You cannot schema your way out of every dependency.
+
+Two components may share:
+
+- a transaction boundary;
+- a latency budget;
+- a state machine;
+- a locking strategy;
+- a migration order;
+- a hardware constraint;
+- a security boundary.
+
+Those integrations still need real integration work.
+
+The mistake would be to confuse "we wrote an interface" with "the system is decoupled."
+
+Artifact-first development is not zero-dependency development.
+
+It is a way to ask:
+
+**Which dependencies can be transformed from "wait for implementation" into "agree on a verifiable contract"?**
+
+Even a partial answer creates more parallelism.
+
+## The project becomes a graph, not a flat backlog
+
+The end state I want is a machine-readable artifact graph:
 
 ```text
-OCR artifact ───────┐
-                    ├─→ normalized order ─→ validation report
-customer catalog ───┘           │
-                                └─→ ship-to decision
+OCR contract ───────┐
+                    ├──→ normalized order ──→ validation report
+catalog contract ───┘           │
+                                ├──→ ship-to decision
+                                │
+                                └──→ audit evidence
 ```
 
-A worker should be able to ask:
+Then a scheduler can ask:
 
-- which artifacts exist;
-- which are missing;
+- which artifacts are missing;
 - which contracts are stable;
-- which consumers can start now;
-- which integrations need real evidence.
+- which artifacts are independently buildable now;
+- which workers would collide on the same files;
+- which consumers can start from fixtures;
+- which artifact states block a milestone.
 
-That is much more useful than a flat backlog when dozens of workers are available.
+That is a much more useful question than "what ticket is next?"
 
-I am experimenting with this inside my own projects now. If the pattern survives real integration work, I want to publish the schemas, task format, and artifact graph conventions as a reusable template.
+## I am now using this idea in SwarmAI itself
+
+This is no longer only a thought experiment for me.
+
+In SwarmAI, I have started treating artifacts as the canonical project state and deriving implementation packets from artifact gaps. Architecture documents, contracts, evidence protocols, implementation slices, and verification results can advance independently when their contracts do not conflict.
+
+That does not eliminate integration.
+
+It gives the integration work a more explicit shape.
+
+For now, I am deliberately stopping this first public series here. The next stage of the experiment gets into orchestration, larger worker pools, and infrastructure, but I want more measured evidence before I write about those pieces as finished systems.
+
+## What I may open-source
+
+If the pattern continues to work, I want to publish a tiny artifact-management layer:
+
+```text
+artifacts/
+├── registry.schema.json
+├── registry.json
+├── examples/
+│   ├── api-contract.yaml
+│   ├── benchmark.yaml
+│   └── acceptance-evidence.yaml
+└── tools/
+    ├── ready.py
+    ├── validate.py
+    └── graph.py
+```
+
+Not another giant project-management platform.
+
+Just enough structure to let people test the idea:
+
+**define the pieces first, define how they connect, then let workers build as many pieces in parallel as the contracts safely allow.**

@@ -49,6 +49,14 @@ class GeneratorTests(unittest.TestCase):
         })
         self.assertIn("DRAFT", rendered)
         self.assertIn('name="robots" content="noindex,follow"', rendered)
+        self.assertIn('href="https://priyanshchordia.com/blogs/draft-example/"', rendered)
+
+
+    def test_legacy_journal_redirect_canonicalizes_to_blogs(self) -> None:
+        rendered = GEN.legacy_blog_redirect("/blogs/repo-is-the-agent/", "../../")
+        self.assertIn('href="https://priyanshchordia.com/blogs/repo-is-the-agent/"', rendered)
+        self.assertIn('name="robots" content="noindex,follow"', rendered)
+        self.assertIn('window.location.replace("/blogs/repo-is-the-agent/")', rendered)
 
     def test_inline_script_json_cannot_close_script_element(self) -> None:
         rendered = GEN.safe_script_json({"summary": "</script><script>alert(1)</script>"})

@@ -4,7 +4,8 @@ slug: "ai-remote-workers"
 date: "2026-09-20"
 summary: "Remote AI work is more interesting than remote control: give every machine a repo, a queue, a heartbeat, and a handoff contract."
 series: "Own Your AI Stack"
-status: "draft"
+status: "published"
+internal_status: "working-draft"
 ---
 
 I do not want remote control software for my AI tools.
@@ -13,75 +14,117 @@ I want remote workers.
 
 There is a meaningful difference.
 
-Remote control means I open another computer and click around on it myself. A remote worker means I give a machine a project contract, it pulls the current repository, does authorized work, leaves evidence, and checks back in.
+Remote control means I open another computer and click around on it myself. A remote worker means I give a machine a bounded assignment, it pulls the current project state, does authorized work, leaves evidence, and checks back in.
 
-My current environment is moving toward three types of worker hosts:
+That changes how I look at the computers around me.
+
+A Mac is not just the computer I am sitting in front of. A Windows desktop is not just a second workstation. My Dell PowerEdge R730 is not just an old server.
+
+They are potential worker hosts.
+
+## My current mental model
+
+The setup I am building toward looks like this:
 
 ```text
-                     Git repository
-                          │
-              ┌───────────┼───────────┐
-              │           │           │
-             Mac        Windows      Server
-              │           │           │
-          ChatGPT       coding       local /
-          Claude        workers      container
-          Cursor                     workers
-          Gemini
+                         Git repository
+                              │
+                  coordination + evidence
+                              │
+          ┌───────────────────┼───────────────────┐
+          │                   │                   │
+         Mac               Windows              R730
+          │                   │                   │
+     AI sessions          coding workers      always-on
+     implementation       review / tests      services
+     coordination                              local inference
+                                                queues
 ```
 
-The machine is not the intelligence. It is a place where one or more workers can run.
+The machine is not the intelligence.
 
-## The repository is the coordination bus
+It is a place where one or more workers can run.
 
-Every worker gets the same basic rule:
+The intelligence can come from ChatGPT, Claude, Cursor, Gemini, a local model, or another provider. What makes the host useful is the protocol around the worker.
+
+## Give every worker the same boring startup ritual
+
+A worker should not wake up and improvise its understanding of the project.
+
+I want a startup contract closer to:
 
 ```yaml
 worker:
   id: windows-01
   role: implementation
-  repository: current-project
-  heartbeat_minutes: 15
 
 startup:
-  - git_pull
-  - read_agents
+  - fetch_current_repo
+  - read_agent_rules
   - read_project_state
   - read_work_queue
-  - read_unread_messages
+  - read_unread_handoffs
+
+before_work:
+  - confirm_authority
+  - confirm_branch
+  - claim_one_task
 
 completion:
-  - run_tests
+  - run_required_checks
   - record_evidence
-  - update_state
+  - update_state_if_authorized
   - leave_handoff
   - push_changes
 ```
 
-This is deliberately boring.
+This is deliberately not very "AI."
 
-That is a feature.
+That is the point.
 
-The more coordination can be represented as Git, files, tests, and deterministic rules, the less intelligence I have to waste on orchestration.
+Anything I can encode as Git, a schema, a lock, a test, or a deterministic script is something I do not need to spend model intelligence on.
 
-## A heartbeat is not "are you alive?"
+## The worker loop can be simple
 
-The first heartbeat system I am testing is intentionally simple.
+At the highest level:
 
-I want to know:
+```python
+while True:
+    repo.fetch()
 
-- did the worker check in;
-- what commit is it on;
-- what task does it think it owns;
-- is it blocked;
-- did it produce new work;
-- when should I expect the next check-in?
+    state = repo.read_state()
+    queue = repo.read_queue()
 
-A heartbeat can be as small as:
+    task = claim_next_authorized_task(queue, state)
+
+    if task:
+        result = worker.execute(task)
+        evidence = verify(result)
+        repo.write_handoff(task, result, evidence)
+        repo.push()
+
+    heartbeat.publish(current_status())
+    sleep(current_interval())
+```
+
+Obviously, `worker.execute` is the hard part.
+
+But the coordination loop does not have to be mysterious.
+
+## Heartbeats turned out to be more interesting than I expected
+
+My first heartbeat test had a very simple rule:
+
+- check every 15 minutes;
+- require three healthy scheduled check-ins in a row;
+- after the system proves it can do that, relax the cadence to hourly.
+
+The heartbeat itself can be tiny:
 
 ```json
 {
-  "worker": "mac-claude-01",
+  "worker": "mac-worker-01",
+  "trigger": "scheduler",
   "timestamp": "2026-09-20T22:30:00-04:00",
   "commit": "abc123",
   "task": "LIVE-TEST-001",
@@ -90,88 +133,158 @@ A heartbeat can be as small as:
 }
 ```
 
-For early testing I prefer frequent heartbeats. Once I see repeated healthy check-ins, the cadence can become less aggressive.
+What I wanted to prove was not just "the process is alive."
 
-The point is not to generate noise forever. The point is to prove that a worker can disappear from my screen without disappearing from the project.
+I wanted to know:
 
-## A worker loop can be almost embarrassingly small
+- did the scheduler really wake it;
+- what commit is it working from;
+- what task does it think it owns;
+- is it blocked;
+- did it produce anything;
+- can I reconstruct what happened later?
 
-The conceptual loop is:
+The first implementation exposed a useful bug: a manual status update could interfere with the timing of a scheduled heartbeat and make the system look healthier than it really was.
 
-```python
-while True:
-    repo.pull()
+That is exactly why I wanted the bootstrap proof.
 
-    state = repo.read_state()
-    queue = repo.read_queue()
+The fix was conceptual as much as technical:
 
-    task = claim_next_authorized_task(queue, state)
+**manual activity does not count as scheduler liveness.**
 
-    if task:
-        result = execute(task)
-        verify(result)
-        repo.write_handoff(result)
-        repo.push()
+Only a heartbeat that identifies itself as scheduler-triggered advances the streak.
 
-    heartbeat.send(current_status())
-    sleep(heartbeat_interval)
+That sounds small, but it is a good example of why autonomous systems need evidence categories. "I saw activity" is not the same claim as "the unattended scheduler works."
+
+## A heartbeat is not a progress report
+
+I also do not want every check-in to become a giant LLM-written status essay.
+
+The heartbeat should answer operational questions. The handoff should answer work questions.
+
+Those are different artifacts.
+
+```text
+heartbeat
+  → "I am alive, on this commit, owning this task."
+
+handoff
+  → "Here is what changed, what passed, what failed, and what is next."
 ```
 
-The hard parts are hidden in `execute` and `verify`, obviously.
+Keeping them separate makes the system easier to audit.
 
-But coordination does not have to be hidden.
+It also means a scheduler can check liveness without parsing prose.
 
 ## Multiple providers are useful because they fail differently
 
 I do not want every worker to be the same model.
 
-A coding model can implement. Another provider can review. A cheaper worker can run through mechanical tasks. A stronger model can be reserved for architecture or ambiguous failures.
+One model can implement. Another can review. A cheaper model can handle mechanical work. A stronger reasoning model can be reserved for ambiguous failures or architecture.
 
-Even better, a reviewer from a different provider is less likely to share exactly the same blind spots as the authoring session.
-
-That gives me a pattern like:
+A useful pattern is:
 
 ```text
-Plan → implement → test → independent review → accept/retry
+plan
+  ↓
+implement
+  ↓
+deterministic checks
+  ↓
+independent review
+  ↓
+accept / retry / escalate
 ```
 
-The workers can live on different computers. They can even be different products.
+When possible, I prefer the reviewer to come from a different provider than the author.
 
-The shared requirement is that they understand the same contracts.
+That is not because cross-provider review magically guarantees correctness. It simply reduces the chance that every step shares the exact same model-specific blind spots.
 
-## The server changes the economics later
+## The repository is still the coordination bus
 
-My Dell PowerEdge R730 is interesting here because it is always-on infrastructure.
+I am intentionally resisting the urge to make a giant central brain hold everything.
 
-Today, I am deliberately separating this "remote workers" idea from my SwarmAI product and from local inference. I want the basic worker protocol to function before I pile on orchestration.
+If the orchestration service dies, I want another worker to reconstruct the important project state from durable evidence.
 
-Later, an always-on server can host:
+That means:
 
-- queue services;
+- tasks have IDs;
+- artifacts have versions;
+- handoffs are committed;
+- acceptance criteria are inspectable;
+- a worker cannot "remember" that something passed if the repository says otherwise.
+
+This also gives me an escape hatch.
+
+If Claude hits a limit, Cursor can pull the branch.
+
+If the Mac goes offline, the Windows worker can still see the queue.
+
+If I replace an orchestration tool six months from now, the project does not have to be rewritten around the old control plane.
+
+## Where the R730 fits
+
+The R730 is interesting because it can become the always-on part of the system.
+
+I do not need it to be the smartest machine.
+
+I need it to be available.
+
+That makes it a natural place for boring infrastructure:
+
+- queues;
+- schedulers;
 - worker containers;
+- artifact storage;
+- monitoring;
 - local model endpoints;
 - test runners;
-- artifact stores;
-- monitoring;
-- schedulers.
+- routing services.
 
-But the architecture should still work if the server is temporarily gone.
+I still want the project to remain usable when the server is unavailable. That is why Git and portable project state come first.
 
-The repo is the durable layer.
+The server adds capacity. It should not become the only place truth exists.
 
-## What I am testing next
+## What is not solved yet
 
-The practical success criteria are not "look, I have a dashboard."
+The hardest part is not SSH, remote desktop, or starting another AI session.
 
-They are:
+It is making unattended work trustworthy.
 
-- a worker checks in without me touching its machine;
-- it claims only authorized work;
-- it produces a real change;
-- another worker can understand the handoff;
-- the system survives switching providers;
-- I can reconstruct what happened from repository evidence.
+A worker that can run for an hour without me watching it needs tighter boundaries than a chatbot I am supervising interactively.
 
-Once those are boring and repeatable, then it makes sense to add smarter orchestration.
+The system has to distinguish:
 
-That is where SwarmAI starts to become useful.
+- a real scheduled heartbeat from a manual one;
+- a claimed task from an accidentally duplicated task;
+- a passing test from a complete acceptance gate;
+- a model response from a material code change;
+- a useful retry from an infinite loop.
+
+I am finding that the less glamorous pieces — locks, state, evidence, retries, cancellation, leases — matter more as autonomy increases.
+
+That observation leads directly to the next idea: [artifact-first development](/blogs/artifact-first-development/).
+
+If workers are cheap and plentiful, the real bottleneck becomes the dependency graph.
+
+## What I may open-source
+
+There is a small reusable package hiding here too:
+
+```text
+worker-protocol/
+├── heartbeat.schema.json
+├── handoff.schema.json
+├── task-claim.schema.json
+├── scheduler/
+│   ├── install-macos.sh
+│   └── install-windows.ps1
+└── examples/
+    └── repo-backed-worker-loop.py
+```
+
+If the protocol survives enough real use, I would rather publish that as a boring, inspectable building block than hide it inside one giant "autonomous agent" demo.
+
+The goal is not to make my computers look busy.
+
+The goal is to make them produce **reconstructable, verified work without me babysitting every screen**.
