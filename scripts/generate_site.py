@@ -267,11 +267,16 @@ def load_posts() -> list[dict[str, object]]:
             raise ValueError(f"{path.name}: duplicate post slug {slug!r}")
         seen.add(slug)
         body = match.group(2)
+        status = (meta.get("status") or "published").lower()
+        if status not in {"published", "draft"}:
+            raise ValueError(f"{path.name}: status must be published or draft")
         posts.append({
             "slug": slug,
             "title": meta.get("title") or path.stem.replace("-", " ").title(),
             "date": meta.get("date", ""),
             "summary": meta.get("summary", ""),
+            "series": meta.get("series", ""),
+            "status": status,
             "body": body,
             "minutes": max(1, round(len(body.split()) / 200)),
         })
@@ -295,13 +300,16 @@ def inline(text: str) -> str:
 def markdown(body: str) -> str:
     """Render the deliberately small Markdown subset used by public copy.
 
-    Headings are line-delimited rather than blank-block-delimited. This matters
-    for legal documents: a heading followed immediately by a paragraph must
-    never turn the paragraph into heading text.
+    Headings are line-delimited rather than blank-block-delimited. Fenced code
+    blocks preserve whitespace and are escaped as literal code rather than
+    passing through inline Markdown formatting.
     """
     blocks: list[str] = []
     paragraph: list[str] = []
     items: list[str] = []
+    code_lines: list[str] = []
+    code_language = ""
+    in_code = False
 
     def flush_paragraph() -> None:
         if paragraph:
@@ -313,16 +321,46 @@ def markdown(body: str) -> str:
             blocks.append("<ul>" + "".join(f"<li>{inline(item)}</li>" for item in items) + "</ul>")
             items.clear()
 
+    def flush_code() -> None:
+        nonlocal code_language
+        if not code_lines and not in_code:
+            return
+        language = re.sub(r"[^A-Za-z0-9_+.-]", "", code_language)
+        language_attr = f' class="language-{esc(language)}"' if language else ""
+        source = html.escape("\n".join(code_lines))
+        blocks.append(
+            '<pre style="margin:24px 0;padding:18px 20px;overflow-x:auto;'
+            'border:1px solid currentColor;line-height:1.55;text-align:left">'
+            f'<code{language_attr} style="white-space:pre;overflow-wrap:normal">{source}</code></pre>'
+        )
+        code_lines.clear()
+        code_language = ""
+
     for raw_line in body.strip().splitlines():
         line = raw_line.strip()
-        if not line:
+        if in_code:
+            if line.startswith("```"):
+                in_code = False
+                flush_code()
+            else:
+                code_lines.append(raw_line)
+            continue
+        if line.startswith("```"):
             flush_paragraph()
             flush_list()
-        elif line.startswith(("## ", "# ")):
+            code_language = line[3:].strip()
+            in_code = True
+        elif not line:
             flush_paragraph()
             flush_list()
-            heading = line[3:] if line.startswith("## ") else line[2:]
-            blocks.append(f"<h2>{inline(heading.strip())}</h2>")
+        elif line.startswith(("### ", "## ", "# ")):
+            flush_paragraph()
+            flush_list()
+            if line.startswith("### "):
+                blocks.append(f"<h3>{inline(line[4:].strip())}</h3>")
+            else:
+                heading = line[3:] if line.startswith("## ") else line[2:]
+                blocks.append(f"<h2>{inline(heading.strip())}</h2>")
         elif line.startswith(("- ", "* ")):
             flush_paragraph()
             items.append(line[2:].strip())
@@ -331,6 +369,9 @@ def markdown(body: str) -> str:
             paragraph.append(line)
     flush_paragraph()
     flush_list()
+    if in_code:
+        in_code = False
+        flush_code()
     return "".join(blocks)
 
 
@@ -491,10 +532,11 @@ def product_tile(product: dict[str, object], index: int, prefix: str = "") -> st
 
 
 def entry_row(post: dict[str, object], index: int, prefix: str = "") -> str:
+    status = " / draft" if post.get("status") == "draft" else ""
     return (
         f'<a class="entry" href="{prefix}journal/{esc(post["slug"])}/">'
         f'<span>{index:03d}</span><strong>{esc(post["title"])}</strong>'
-        f'<span>{esc(post["minutes"])} min</span></a>'
+        f'<span>{esc(post["minutes"])} min{status}</span></a>'
     )
 
 
@@ -752,7 +794,14 @@ def journal_index(posts: list[dict[str, object]]) -> str:
 
 
 def post_page(post: dict[str, object]) -> str:
-    meta = " / ".join(x for x in [str(post.get("date", "")), f"{post['minutes']} min read"] if x)
+    status = str(post.get("status", "published"))
+    meta_parts = [
+        str(post.get("date", "")),
+        str(post.get("series", "")),
+        "DRAFT" if status == "draft" else "",
+        f"{post['minutes']} min read",
+    ]
+    meta = " / ".join(x for x in meta_parts if x)
     body = f"""<section><article class="post"><span class="label">{esc(meta)}</span>
 <h1>{esc(post["title"])}</h1>{markdown(str(post["body"]))}</article>
 <a class="back" href="../">&larr; All entries</a></section>"""
@@ -760,6 +809,7 @@ def post_page(post: dict[str, object]) -> str:
         f"{post['title']} — {SITE_NAME}", body, prefix="../../", active="journal",
         description=str(post.get("summary") or post["title"]),
         path=f"/journal/{post['slug']}/",
+        robots="noindex,follow" if status == "draft" else "index,follow",
     )
 
 
@@ -890,7 +940,10 @@ def sitemap(products: list[dict[str, object]], posts: list[dict[str, object]],
             apps: list[dict[str, object]]) -> str:
     paths = ["/", "/journal/", "/apps/"]
     paths.extend(f"/products/{product['slug']}/" for product in products)
-    paths.extend(f"/journal/{post['slug']}/" for post in posts)
+    paths.extend(
+        f"/journal/{post['slug']}/" for post in posts
+        if post.get("status") != "draft"
+    )
     for app in apps:
         if app.get("legal_approved") is True:
             paths.extend((f"/apps/{app['slug']}/privacy/", f"/apps/{app['slug']}/support/"))
