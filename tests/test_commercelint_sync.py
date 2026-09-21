@@ -34,6 +34,24 @@ class CommerceLintSyncTests(unittest.TestCase):
                 (target / "index.html").read_text(encoding="utf-8"),
             )
 
+    def test_portfolio_promotion_uses_blogs_markers(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            page = (
+                '<!doctype html><html><head><title>Portfolio</title></head>'
+                '<body><nav><a href="blogs/">Blogs</a></nav><main>'
+                '<section id="blogs"><span class="label">02 / Blogs</span>'
+                '<h1>Notes</h1></section></main></body></html>'
+            )
+            (root / "index.html").write_text(page, encoding="utf-8")
+
+            sync.inject_portfolio_promotion(root)
+
+            rendered = (root / "index.html").read_text(encoding="utf-8")
+            self.assertIn('id="commercelint-live"', rendered)
+            self.assertIn('<span class="label">03 / Blogs</span>', rendered)
+            self.assertIn('>CommerceLint</a><a href="blogs/">Blogs</a>', rendered)
+
     def test_no_noop_analytics_generator_remains(self):
         source = SCRIPT.read_text(encoding="utf-8")
         self.assertNotIn("def analytics_javascript", source)

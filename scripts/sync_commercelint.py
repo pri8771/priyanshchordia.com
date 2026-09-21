@@ -177,9 +177,9 @@ def inject_portfolio_promotion(site_root: Path) -> None:
     content = homepage.read_text(encoding="utf-8")
     if 'id="commercelint-live"' in content:
         return
-    journal_marker = '<section id="journal">'
-    if content.count(journal_marker) != 1:
-        raise ValueError("Portfolio journal insertion point is missing or ambiguous")
+    blogs_marker = '<section id="blogs">'
+    if content.count(blogs_marker) != 1:
+        raise ValueError("Portfolio blogs insertion point is missing or ambiguous")
     promotion = """<section id="commercelint-live" data-commercelint-promotion="2026-08-24">
 <div class="section-head"><span class="label">02 / Live experiment</span><h2>Machine-readable commerce.</h2></div>
 <div class="products"><a class="product" href="commercelint/?utm_source=portfolio&amp;utm_medium=internal&amp;utm_campaign=commercelint_launch">
@@ -188,12 +188,12 @@ def inject_portfolio_promotion(site_root: Path) -> None:
 <span class="meta">web commerce / free linter</span></a></div>
 </section>
 """
-    content = content.replace(journal_marker, promotion + journal_marker, 1)
-    content = content.replace('<span class="label">02 / Journal</span>', '<span class="label">03 / Journal</span>', 1)
-    nav_marker = '<a href="journal/">Journal</a>'
+    content = content.replace(blogs_marker, promotion + blogs_marker, 1)
+    content = content.replace('<span class="label">02 / Blogs</span>', '<span class="label">03 / Blogs</span>', 1)
+    nav_marker = '<a href="blogs/">Blogs</a>'
     nav_link = '<a href="commercelint/?utm_source=portfolio_nav&amp;utm_medium=internal&amp;utm_campaign=commercelint_launch">CommerceLint</a>'
     if content.count(nav_marker) != 1:
-        raise ValueError("Portfolio journal navigation insertion point is missing or ambiguous")
+        raise ValueError("Portfolio blogs navigation insertion point is missing or ambiguous")
     content = content.replace(nav_marker, nav_link + nav_marker, 1)
     homepage.write_text(content, encoding="utf-8")
 
