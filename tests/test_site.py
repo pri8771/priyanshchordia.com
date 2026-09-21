@@ -58,6 +58,25 @@ class GeneratorTests(unittest.TestCase):
         self.assertIn('name="robots" content="noindex,follow"', rendered)
         self.assertIn('window.location.replace("/blogs/repo-is-the-agent/")', rendered)
 
+    def test_private_blog_vault_is_unlisted_noindex_and_encrypted(self) -> None:
+        rendered = GEN.private_blogs_page()
+        self.assertIn('name="robots" content="noindex,follow"', rendered)
+        self.assertIn('decryptFile(filenames, input.value)', rendered)
+        self.assertNotIn("Building SwarmAI", rendered)
+
+        private_files = sorted((ROOT / "data" / "private_blogs").iterdir())
+        self.assertEqual(
+            [path.name for path in private_files],
+            ["04.json", "05.json", "06.1.part", "06.2.part", "06.3.part", "07.1.part", "07.2.part", "07.3.part"],
+        )
+        combined = "\n".join(path.read_text(encoding="utf-8") for path in private_files)
+        self.assertNotIn("Building SwarmAI", combined)
+        self.assertNotIn("Building My Own Inference Server", combined)
+        self.assertIn('"ciphertext"', combined)
+
+        sitemap = GEN.sitemap(GEN.load_products(), GEN.load_posts(), GEN.load_apps(GEN.load_products()))
+        self.assertNotIn("/blogs/private/", sitemap)
+
     def test_inline_script_json_cannot_close_script_element(self) -> None:
         rendered = GEN.safe_script_json({"summary": "</script><script>alert(1)</script>"})
         self.assertNotIn("</script", rendered.lower())
