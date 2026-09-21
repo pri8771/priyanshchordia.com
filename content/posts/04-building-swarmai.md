@@ -2,28 +2,37 @@
 title: "Building SwarmAI: What Happens When 50 AI Workers Share One Project?"
 slug: "building-swarmai"
 date: "2026-09-20"
-summary: "SwarmAI is my attempt to coordinate large numbers of temporary AI workers around shared state, contracts, tests, and evidence."
+summary: "SwarmAI is my attempt to coordinate large numbers of temporary AI workers around shared state, artifact contracts, tests, evidence, and multiple inference providers."
 series: "Own Your AI Stack"
-status: "draft"
+status: "published"
+internal_status: "working-draft"
 ---
 
-Most agent frameworks start by defining a small team.
+Most agent frameworks start with a team.
 
-Give one agent a researcher role. Another is the developer. Another is the reviewer. Connect them in a workflow.
+A researcher. A developer. A reviewer. Maybe a manager.
 
-I am interested in a different question:
+I started with a different question:
 
-What if the number of workers is not five, but fifty?
+**What if I had fifty useful workers available for a problem?**
 
-That is the experiment behind SwarmAI.
+Not fifty personalities.
 
-It is under active development, not a claim that I already have a production-ready hundred-agent system.
+Fifty pieces of temporary capacity.
+
+Some may be strong reasoning models. Some may be small local models. Some may be coding agents. Some may exist for one task and disappear.
+
+How do I make that useful instead of chaotic?
+
+That question became SwarmAI.
+
+This is a build-in-public description of what I am building, not a claim that I currently have a production-ready fifty-agent swarm running unattended.
 
 ## The unit should be work, not personality
 
-I do not want to begin by inventing fifty permanent personas.
+I do not want to begin by inventing fifty permanent job titles.
 
-I want a task to describe the capability it needs:
+I want the task to describe what it needs.
 
 ```yaml
 task:
@@ -42,7 +51,7 @@ inputs:
   - file: docs/PARSER_CONTRACT.md
 
 outputs:
-  - code
+  - implementation
   - tests
   - evidence
 
@@ -51,27 +60,34 @@ review:
   max_retries: 2
 ```
 
-The runtime can decide what worker is available.
+The runtime can decide what worker is qualified and available.
 
-Claude today. Cursor tomorrow. A local model later. Multiple temporary workers if the task benefits from exploration.
+Claude today. Cursor tomorrow. A local Qwen model for a small bounded task. A different provider for review. Multiple workers for competing approaches when that is actually useful.
 
-## A swarm needs constraints more than it needs enthusiasm
+The task is durable.
+
+The worker is replaceable.
+
+## A swarm needs constraints more than it needs more agents
 
 Spawning agents is easy.
 
-Preventing fifty agents from creating fifty incompatible realities is the actual problem.
+Preventing fifty agents from creating fifty incompatible versions of reality is the real problem.
 
-The coordination layer needs things like:
+The control layer needs boring things:
 
-- explicit task ownership;
-- immutable or versioned contracts;
+- explicit ownership;
+- task leases;
+- artifact contracts;
 - shared repository state;
 - conflict detection;
-- test gates;
-- review gates;
+- cancellation;
 - retry budgets;
 - cost limits;
-- authority boundaries.
+- provider admission rules;
+- deterministic checks;
+- independent review;
+- evidence that binds to an exact source revision.
 
 Conceptually:
 
@@ -81,96 +97,277 @@ def run_task(task):
 
     candidate = worker.execute(task)
 
-    if not tests.pass_for(candidate):
-        return retry_or_escalate(task, candidate)
+    checks = verifier.run(candidate)
+    if not checks.passed:
+        return retry_or_escalate(task, checks)
 
     reviewer = scheduler.assign_reviewer(
         task,
         exclude_provider=worker.provider,
     )
 
-    verdict = reviewer.review(candidate)
+    verdict = reviewer.review(candidate, checks)
 
     if verdict.accepted:
-        return merge(candidate)
+        return accept_artifact(candidate, checks, verdict)
 
     return retry_or_escalate(task, verdict)
 ```
 
-The intelligence is only one component.
+The LLM is only one component in that loop.
 
-## Why not just use a giant permanent crew?
+That is a recurring theme in this series: I want certainty to live outside the model whenever possible.
 
-Permanent teams are useful when roles themselves carry durable context.
+## Why not just make one giant permanent crew?
 
-I want SwarmAI to also handle disposable capacity.
+Persistent roles are useful when the role itself has durable context.
 
-A project may need ten implementation workers for an hour, two research workers for five minutes, and one expensive reasoning model only when the cheap workers disagree.
+But many software tasks do not need a permanent identity.
 
-That suggests a scheduler instead of a fixed org chart.
+A project may need:
 
 ```text
-goal
- ↓
-decomposition
- ↓
+2 architecture workers
+        ↓
+12 implementation workers
+        ↓
+4 independent reviewers
+        ↓
+1 expensive escalation
+```
+
+Then five minutes later it may need only one worker.
+
+That suggests a scheduler and a worker pool rather than a fixed org chart.
+
+My mental model is:
+
+```text
+human goal
+    ↓
+planning / decomposition
+    ↓
 artifact graph
- ↓
-task queue
- ↓
-worker pool
- ↓
-tests + reviewers
- ↓
+    ↓
+ready task queue
+    ↓
+qualified worker pool
+    ↓
+tests + evidence + review
+    ↓
 accepted artifacts
 ```
 
+The swarm is elastic around the work.
+
 ## The repository remains the common ground
 
-SwarmAI is not supposed to replace the repo-centric workflow from the first article.
+SwarmAI does not replace the repo-centric approach from the first article.
 
 It depends on it.
 
-If a SwarmAI controller dies, I want another controller to reconstruct project state from durable evidence.
+If the controller dies, I want a replacement controller to reconstruct the important state from durable artifacts.
 
-The swarm should be able to stop and restart without losing the project.
+If a worker disappears, I want its lease to expire without losing the project.
 
-That means the control plane can be smart, but the state cannot live only inside the control plane.
+If a provider becomes unavailable, I want another provider to pick up bounded work without requiring me to re-explain the project.
 
-## Eventually, SwarmAI should help build SwarmAI
+That means the system cannot keep its only copy of truth inside an orchestration process.
 
-This is one of the milestones I care about most.
+## The most useful test so far was a failure
 
-At some bootstrap point, the runtime should be capable of accepting bounded work on its own repository:
+This is where the project stopped being an architecture diagram for me.
+
+I ran a real end-to-end mission against a real repository using actual local inference.
+
+The worker inspected the real repo. The model call was real. The reviewer was real.
+
+The mission still failed.
+
+The model produced implementation text, but the system failed to turn that output into a material worktree change. The independent review rejected the result.
+
+That failure is more useful than a green demo that quietly substitutes fixtures.
+
+It exposed a missing artifact transition:
+
+```text
+model proposes implementation
+            ↓
+    materialize change
+            ↓
+      inspect diff
+            ↓
+     run regression
+            ↓
+    independent review
+```
+
+I had proved the top and bottom of the flow, but not the middle.
+
+So the failure stayed a failure and became the next repair packet.
+
+That is the behavior I want from SwarmAI: **no known-answer substitution, no fake success flag, no pretending a model response is the same thing as completed work.**
+
+## Local inference is already part of the experiment
+
+I have also run a smaller real routing proof with local Ollama models.
+
+The proof used actual `gemma3:4b` and `qwen3.5:4b` model calls through the governed broker. I deliberately disabled one route to verify that the system selected a permitted alternative, then exhausted the allowed quota to verify that another request was denied instead of silently falling through to paid capacity.
+
+The important result was not that a 4B model became magical.
+
+It was that the broker could distinguish:
+
+```text
+configured
+authenticated
+healthy
+allowed
+within quota
+qualified for this task
+```
+
+Those are different states.
+
+A model appearing in a provider catalog does not mean I should route production work to it.
+
+## "Free" is a policy, not a provider name
+
+This matters because one of my requirements is zero surprise spend.
+
+If a provider has a free tier, SwarmAI should not infer from a marketing page that a given account, model, and request is free right now.
+
+The route has to be explicitly admitted.
+
+Conceptually:
+
+```python
+def admit_route(account, model, task):
+    assert account.authenticated
+    assert model.health == "healthy"
+    assert model.price_is_known
+    assert model.current_cost == 0
+    assert account.quota_remaining > 0
+    assert model.qualified_for(task.kind)
+
+    return True
+```
+
+If any of that is unknown, the safest route is "not admitted."
+
+That makes the system less impressive in a demo and much more useful in real life.
+
+## Artifact-first project management changed SwarmAI itself
+
+As the project grew, I stopped treating the task list as canonical state.
+
+The artifact registry became more important.
+
+A version is not accepted because enough tickets are closed.
+
+It is accepted when the required artifact set is in the right state with evidence bound to the right source.
+
+That lets architecture, implementation, evaluation design, security work, and operational evidence progress in parallel without pretending they are interchangeable.
+
+It also gives the swarm something machine-readable to reason about.
+
+A worker can ask:
+
+- what artifact am I advancing;
+- what state transition is allowed;
+- what evidence is required;
+- what other artifacts block acceptance;
+- what can I work on without colliding with another worker?
+
+That is a much better substrate for a large worker pool than a vague backlog.
+
+## Eventually SwarmAI should help build SwarmAI
+
+One milestone I care about is self-hosted development.
+
+Not uncontrolled self-modification.
+
+A bounded loop:
 
 ```text
 SwarmAI issue
-   ↓
-SwarmAI decomposes work
-   ↓
-workers implement isolated artifacts
-   ↓
-tests + external review
-   ↓
-human-controlled acceptance gate
+    ↓
+artifact gap identified
+    ↓
+SwarmAI creates bounded worker packets
+    ↓
+workers implement on isolated branches
+    ↓
+tests + independent review
+    ↓
+human-controlled integration gate
 ```
 
-That is not permission for uncontrolled self-modification.
+If SwarmAI cannot safely consume its own task, artifact, evidence, and review abstractions, that is a sign the abstractions are not good enough.
 
-It is a test of whether the system is useful enough to consume its own abstractions.
+## Product versus my personal deployment
 
-## Product or personal experiment?
+I am deliberately keeping these separate.
 
-I want both layers to remain separate.
+My personal deployment can know that I have a Mac, a Windows machine, an R730, particular subscriptions, and particular preferences.
 
-My own deployment can be opinionated and messy. It can know about my computers and providers.
+The reusable product should not require any of that.
 
-SwarmAI the product should be reusable.
+The product boundary I want is:
 
-Built-in capabilities should be clearly separated from optional integrations and from my personal infrastructure.
+```text
+SwarmAI core
+├── artifact registry
+├── scheduler
+├── governed model broker
+├── worker protocol
+├── verification / review loop
+└── durable evidence
 
-If I open-source the bootstrap version, that boundary matters more than the number of agents in the demo.
+optional integrations
+├── GitHub
+├── local inference
+├── cloud providers
+├── MCP / tool providers
+└── deployment targets
+```
 
-The interesting benchmark is not "I spawned 100 agents."
+My environment should be one configuration of SwarmAI, not SwarmAI itself.
 
-It is whether adding workers actually decreases time-to-verified-artifact without multiplying errors faster than output.
+## The metric I care about is not agent count
+
+I can make a screenshot with 100 agents.
+
+That does not tell me anything.
+
+The metric I actually care about is closer to:
+
+**verified artifact progress per unit of time, inference, and human attention.**
+
+If doubling the worker count doubles merge conflicts and reviewer load, the swarm got worse.
+
+If a local small model can solve a bounded task with deterministic verification, that may be more valuable than routing every request to a frontier model.
+
+If an expensive model can resolve an ambiguity that would otherwise cause ten retries, that is also a win.
+
+The scheduler needs to care about the whole system.
+
+## Is SwarmAI open source?
+
+Not yet.
+
+The current repository is still under active development and I do not want to publish a bootstrap that encourages people to trust capabilities I have not verified.
+
+But I do want the reusable core to become a real product rather than remain a private pile of scripts.
+
+If enough people want to follow or test it, the first public release should include:
+
+- the artifact registry format;
+- worker/task contracts;
+- the provider abstraction;
+- zero-spend routing controls;
+- local inference support;
+- evidence/review gates;
+- a self-hosted starter deployment.
+
+That leads to the next layer of the stack: [why I am building my own inference server instead of treating provider limits as a permanent fact of life](/blogs/building-my-own-inference-server/).
