@@ -342,7 +342,7 @@ That does not eliminate integration.
 
 It gives the integration work a more explicit shape.
 
-The next post explains why I care so much about that: [SwarmAI is an experiment in coordinating a much larger pool of temporary AI workers](/blogs/building-swarmai/).
+For now, I am deliberately stopping this first public series here. The next stage of the experiment gets into orchestration, larger worker pools, and infrastructure, but I want more measured evidence before I write about those pieces as finished systems.
 
 ## What I may open-source
 
