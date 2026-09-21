@@ -978,11 +978,14 @@ placeholder="Password" required>
     return out;
   }
 
-  async function decryptFile(filename, password) {
-    var encrypted = await fetch(filename, {cache: "no-store"}).then(function (response) {
-      if (!response.ok) throw new Error("Encrypted payload is unavailable.");
-      return response.json();
-    });
+  async function decryptFile(filenames, password) {
+    var parts = await Promise.all(filenames.map(function (filename) {
+      return fetch(filename, {cache: "no-store"}).then(function (response) {
+        if (!response.ok) throw new Error("Encrypted payload is unavailable.");
+        return response.text();
+      });
+    }));
+    var encrypted = JSON.parse(parts.join(""));
     var material = await crypto.subtle.importKey(
       "raw", encoder.encode(password), "PBKDF2", false, ["deriveKey"]
     );
@@ -1067,9 +1070,14 @@ placeholder="Password" required>
       if (!window.crypto || !window.crypto.subtle) {
         throw new Error("This browser does not support the Web Crypto API.");
       }
-      var files = ["04.json", "05.json", "06.json", "07.json"];
-      var articles = await Promise.all(files.map(function (filename) {
-        return decryptFile(filename, input.value);
+      var files = [
+        ["04.json"],
+        ["05.json"],
+        ["06.1.part", "06.2.part", "06.3.part"],
+        ["07.1.part", "07.2.part", "07.3.part"]
+      ];
+      var articles = await Promise.all(files.map(function (filenames) {
+        return decryptFile(filenames, input.value);
       }));
       payload = {articles: articles};
       input.value = "";
@@ -1152,8 +1160,9 @@ def main() -> int:
     write(OUT / "index.html", home(products, posts))
     write(OUT / "blogs" / "index.html", journal_index(posts))
     write(OUT / "blogs" / "private" / "index.html", private_blogs_page())
-    for source in sorted(PRIVATE_BLOGS.glob("*.json")):
-        write(OUT / "blogs" / "private" / source.name, source.read_text(encoding="utf-8"))
+    for source in sorted(PRIVATE_BLOGS.iterdir()):
+        if source.is_file():
+            write(OUT / "blogs" / "private" / source.name, source.read_text(encoding="utf-8"))
     write(OUT / "journal" / "index.html", legacy_blog_redirect("/blogs/", "../"))
     write(OUT / "apps" / "index.html", apps_index(apps))
     write(OUT / "404.html", not_found_page())
