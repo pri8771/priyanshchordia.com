@@ -1,6 +1,6 @@
 # Writing roadmap
 
-## Season 1 — Own Your AI Stack
+## Public batch 1 — Own Your AI Stack
 
 The through-line is simple: move durable state out of any one model or vendor, then progressively own more of the stack.
 
@@ -9,12 +9,12 @@ The through-line is simple: move durable state out of any one model or vendor, t
 | 1 | The Repo Is the Agent | What happens when the project, not the chat session, owns context? |
 | 2 | I Turned My AI Tools Into Remote Workers | How can Mac, Windows, cloud tools, and servers behave like interchangeable workers? |
 | 3 | Artifact-First Development | Can implementation dependencies be replaced with explicit artifact contracts? |
-| 4 | Building SwarmAI | How do you coordinate many temporary workers without turning the system into chaos? |
-| 5 | Building My Own Inference Server | What changes when some inference becomes local and effectively zero-marginal-cost? |
-| 6 | Building My Own ChatGPT | What does a personal model router + UI + tools + local inference look like? |
-| 7 | AI Agents Don't Need to Be Brilliant | Can tests, retries, contracts, and escalation make cheaper models useful? |
+| 4 | Building SwarmAI | **Parked** — keep private until there is more product evidence. |
+| 5 | Building My Own Inference Server | **Parked** — do not publish yet. |
+| 6 | Building My Own ChatGPT | **Parked** — do not publish yet. |
+| 7 | AI Agents Don't Need to Be Brilliant | **Parked** — keep private for a later batch. |
 
-All seven are public, indexable essays under `/blogs/`. Internally they remain `internal_status: working-draft` so we can keep improving screenshots, measurements, and examples without presenting a public draft badge. Public claims must still distinguish measured reality from planned work; internal draft status is not permission to invent evidence.
+Only articles 1–3 are in the current public batch and should render under `/blogs/`. Articles 4–7 are stored under `content/parked/` and are intentionally not public. The three public essays remain `internal_status: working-draft` so we can keep improving examples without showing a public draft badge.
 
 ## Article contract
 
