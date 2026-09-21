@@ -2,19 +2,15 @@
 
 ## Public batch 1 — Own Your AI Stack
 
-The through-line is simple: move durable state out of any one model or vendor, then progressively own more of the stack.
+The through-line is simple: move durable project state out of any one model or vendor, make workers interchangeable, then redesign work so more of it can happen safely in parallel.
 
-| Order | Draft | Core question |
+| Order | Article | Core question |
 | --- | --- | --- |
 | 1 | The Repo Is the Agent | What happens when the project, not the chat session, owns context? |
 | 2 | I Turned My AI Tools Into Remote Workers | How can Mac, Windows, cloud tools, and servers behave like interchangeable workers? |
 | 3 | Artifact-First Development | Can implementation dependencies be replaced with explicit artifact contracts? |
-| 4 | Building SwarmAI | **Parked** — keep private until there is more product evidence. |
-| 5 | Building My Own Inference Server | **Parked** — do not publish yet. |
-| 6 | Building My Own ChatGPT | **Parked** — do not publish yet. |
-| 7 | AI Agents Don't Need to Be Brilliant | **Parked** — keep private for a later batch. |
 
-Only articles 1–3 are in the current public batch and should render under `/blogs/`. Articles 4–7 are stored under `content/parked/` and are intentionally not public. The three public essays remain `internal_status: working-draft` so we can keep improving examples without showing a public draft badge.
+Only these three articles belong to the current public batch and should render under `/blogs/`.
 
 ## Article contract
 
@@ -28,10 +24,6 @@ Every technical article should include:
 - an explicit line between current reality and future work;
 - a lightweight open-source call-to-action when a reusable component exists.
 
-The website at `/blogs/` is the canonical copy. Substack can syndicate each essay and point back to the site/project pages. The legacy `/journal/` routes exist only as redirects.
+The website at `/blogs/` is the canonical copy. Substack can syndicate polished versions and point back to the site/project pages. The legacy `/journal/` routes exist only as compatibility redirects.
 
-## Parked for later
-
-### AI + IT Mesh at Thar
-
-A case study on combining practical AI workers with an IT-mesh style environment and existing infrastructure. Before publication, explicitly review what company details, diagrams, vendors, and operational examples are safe to share. This is not part of the first seven-post publishing batch.
+Future article ideas are intentionally kept outside this public repository until they are approved for publication.
