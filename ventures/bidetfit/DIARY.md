@@ -453,4 +453,13 @@ by this source-authoring task.
 - Public site state observed: **live**.
 - Evidence detail: required mission, governance, tracker, work-item, CSV, and public-source files passed; public status endpoint verified; health evidence only; commercial metrics were not observed
 - Additional same-day runs are retained in `RUNS.csv` and `logs/runs.jsonl`.
+---
+
+## Automated evidence — 2026-09-22
+
+<!-- operator:2026-09-22 -->
+- First scheduled operator evidence for this UTC day: **success**.
+- Public site state observed: **live**.
+- Evidence detail: required mission, governance, tracker, work-item, CSV, and public-source files passed; public status endpoint verified; health evidence only; commercial metrics were not observed
+- Additional same-day runs are retained in `RUNS.csv` and `logs/runs.jsonl`.
 
