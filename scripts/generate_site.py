@@ -402,7 +402,7 @@ def markdown(body: str) -> str:
             flush_blocks()
             blocks.append(
                 '<figure style="margin:28px 0">'
-                f'<img src="{esc(picture.group(2))}" alt="{esc(picture.group(1))}" loading="lazy" '
+                f'<img src="{esc(picture.group(2))}" alt="{esc(picture.group(1))}" '
                 'style="display:block;max-width:100%;height:auto"></figure>'
             )
         elif re.fullmatch(r"!\[[^\]]*\]\(.*\)", line):
