@@ -308,6 +308,8 @@ def markdown(body: str) -> str:
     blocks: list[str] = []
     paragraph: list[str] = []
     items: list[str] = []
+    quote: list[str] = []
+    numbered: list[str] = []
     code_lines: list[str] = []
     code_language = ""
     in_code = False
@@ -321,6 +323,20 @@ def markdown(body: str) -> str:
         if items:
             blocks.append("<ul>" + "".join(f"<li>{inline(item)}</li>" for item in items) + "</ul>")
             items.clear()
+
+    def flush_quote() -> None:
+        if quote:
+            blocks.append(
+                '<blockquote style="margin:24px 0;padding:2px 0 2px 18px;border-left:3px solid currentColor"><p>'
+                + inline(" ".join(quote))
+                + "</p></blockquote>"
+            )
+            quote.clear()
+
+    def flush_numbered() -> None:
+        if numbered:
+            blocks.append("<ol>" + "".join(f"<li>{inline(item)}</li>" for item in numbered) + "</ol>")
+            numbered.clear()
 
     def flush_code() -> None:
         nonlocal code_language
@@ -346,17 +362,25 @@ def markdown(body: str) -> str:
             else:
                 code_lines.append(raw_line)
             continue
+        picture = re.match(r"^!\[([^\]]*)\]\((/[A-Za-z0-9/_.-]+\.(?:gif|png|jpg))\)$", line)
+        numbered_item = re.match(r"^(\d+)\. ", line)
         if line.startswith("```"):
             flush_paragraph()
             flush_list()
+            flush_quote()
+            flush_numbered()
             code_language = line[3:].strip()
             in_code = True
         elif not line:
             flush_paragraph()
             flush_list()
+            flush_quote()
+            flush_numbered()
         elif line.startswith(("### ", "## ", "# ")):
             flush_paragraph()
             flush_list()
+            flush_quote()
+            flush_numbered()
             if line.startswith("### "):
                 blocks.append(f"<h3>{inline(line[4:].strip())}</h3>")
             else:
@@ -364,12 +388,38 @@ def markdown(body: str) -> str:
                 blocks.append(f"<h2>{inline(heading.strip())}</h2>")
         elif line.startswith(("- ", "* ")):
             flush_paragraph()
+            flush_quote()
+            flush_numbered()
             items.append(line[2:].strip())
+        elif line.startswith(">"):
+            flush_paragraph()
+            flush_list()
+            flush_numbered()
+            quote.append(line.lstrip(">").strip())
+        elif numbered_item:
+            flush_paragraph()
+            flush_list()
+            flush_quote()
+            numbered.append(line[numbered_item.end():])
+        elif picture:
+            flush_paragraph()
+            flush_list()
+            flush_quote()
+            flush_numbered()
+            blocks.append(
+                '<figure style="margin:28px 0">'
+                f'<img src="{esc(picture.group(2))}" alt="{esc(picture.group(1))}" loading="lazy" '
+                'style="display:block;max-width:100%;height:auto"></figure>'
+            )
         else:
             flush_list()
+            flush_quote()
+            flush_numbered()
             paragraph.append(line)
     flush_paragraph()
     flush_list()
+    flush_quote()
+    flush_numbered()
     if in_code:
         in_code = False
         flush_code()
