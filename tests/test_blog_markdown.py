@@ -34,3 +34,4 @@ class GeneratorTests(unittest.TestCase):
     def test_remote_picture_stays_text(self) -> None:
         rendered = GEN.markdown("![x](http://example.com/a.gif)")
         self.assertNotIn("<img", rendered)
+        self.assertEqual(rendered, "<p>![x](http://example.com/a.gif)</p>")

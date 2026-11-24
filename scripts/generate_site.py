@@ -353,6 +353,12 @@ def markdown(body: str) -> str:
         code_lines.clear()
         code_language = ""
 
+    def flush_blocks() -> None:
+        flush_paragraph()
+        flush_list()
+        flush_quote()
+        flush_numbered()
+
     for raw_line in body.strip().splitlines():
         line = raw_line.strip()
         if in_code:
@@ -365,22 +371,13 @@ def markdown(body: str) -> str:
         picture = re.match(r"^!\[([^\]]*)\]\((/[A-Za-z0-9/_.-]+\.(?:gif|png|jpg))\)$", line)
         numbered_item = re.match(r"^(\d+)\. ", line)
         if line.startswith("```"):
-            flush_paragraph()
-            flush_list()
-            flush_quote()
-            flush_numbered()
+            flush_blocks()
             code_language = line[3:].strip()
             in_code = True
         elif not line:
-            flush_paragraph()
-            flush_list()
-            flush_quote()
-            flush_numbered()
+            flush_blocks()
         elif line.startswith(("### ", "## ", "# ")):
-            flush_paragraph()
-            flush_list()
-            flush_quote()
-            flush_numbered()
+            flush_blocks()
             if line.startswith("### "):
                 blocks.append(f"<h3>{inline(line[4:].strip())}</h3>")
             else:
@@ -401,25 +398,22 @@ def markdown(body: str) -> str:
             flush_list()
             flush_quote()
             numbered.append(line[numbered_item.end():])
-        elif picture:
-            flush_paragraph()
-            flush_list()
-            flush_quote()
-            flush_numbered()
+        elif picture and not picture.group(2).startswith("//"):
+            flush_blocks()
             blocks.append(
                 '<figure style="margin:28px 0">'
                 f'<img src="{esc(picture.group(2))}" alt="{esc(picture.group(1))}" loading="lazy" '
                 'style="display:block;max-width:100%;height:auto"></figure>'
             )
+        elif re.fullmatch(r"!\[[^\]]*\]\(.*\)", line):
+            flush_blocks()
+            blocks.append(f"<p>{esc(line)}</p>")
         else:
             flush_list()
             flush_quote()
             flush_numbered()
             paragraph.append(line)
-    flush_paragraph()
-    flush_list()
-    flush_quote()
-    flush_numbered()
+    flush_blocks()
     if in_code:
         in_code = False
         flush_code()
