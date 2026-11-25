@@ -1,3 +1,4 @@
 User-agent: *
+Disallow: /blogs/private/
 Allow: /
 Sitemap: https://priyanshchordia.com/sitemap.xml
