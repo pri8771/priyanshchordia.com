@@ -844,7 +844,13 @@ def post_page(post: dict[str, object]) -> str:
         f"{post['minutes']} min read",
     ]
     meta = " / ".join(x for x in meta_parts if x)
-    body = f"""<section><article class="post"><span class="label">{esc(meta)}</span>
+    banner = (
+        '<p class="draft-banner" role="note" style="border:2px solid currentColor;'
+        'padding:10px 14px;margin:0 0 20px;font-weight:700;letter-spacing:.04em">'
+        'DRAFT &mdash; unlisted working copy, not yet published.</p>'
+        if status == "draft" else ""
+    )
+    body = f"""<section><article class="post">{banner}<span class="label">{esc(meta)}</span>
 <h1>{esc(post["title"])}</h1>{markdown(str(post["body"]))}</article>
 <a class="back" href="../">&larr; All posts</a></section>"""
     return chrome(
@@ -1201,8 +1207,10 @@ def main() -> int:
         # Regenerated every build; site/ is wiped each run, so Pages would
         # otherwise lose the custom domain on the next deploy.
         write(OUT / "CNAME", CUSTOM_DOMAIN + "\n")
-    write(OUT / "index.html", home(products, posts))
-    write(OUT / "blogs" / "index.html", journal_index(posts))
+    # Drafts get their own noindex page but stay out of every listing.
+    listed_posts = [post for post in posts if post.get("status") != "draft"]
+    write(OUT / "index.html", home(products, listed_posts))
+    write(OUT / "blogs" / "index.html", journal_index(listed_posts))
     write(OUT / "blogs" / "private" / "index.html", private_blogs_page())
     for source in sorted(PRIVATE_BLOGS.iterdir()):
         if source.is_file():

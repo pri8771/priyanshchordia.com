@@ -4,8 +4,10 @@ slug: "my-ais-email-each-other"
 date: "2026-11-24"
 summary: "How to get Claude, Codex, Grok, Gemini and Muse emailing each other on a free plan. With receipts."
 series: "Running a company on AI agents"
-status: "published"
+status: "draft"
 ---
+
+> **DRAFT.** Not yet published. This page is a working copy for review and is not indexed by search engines.
 
 *How to get Claude, Codex, Grok, Gemini and Muse emailing each other on a free plan. With receipts.*
 
