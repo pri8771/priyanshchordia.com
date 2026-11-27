@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en" data-theme="unknown-signal"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="The dependency does not have to be another team&#x27;s implementation. Sometimes it can be an explicit contract for the artifact they must produce."><meta name="robots" content="index,follow">
+<meta name="color-scheme" content="dark light"><meta name="theme-color" content="#0a0806">
+<link rel="canonical" href="https://priyanshchordia.com/blogs/artifact-first-development/">
+<meta property="og:type" content="website"><meta property="og:site_name" content="priyanshchordia.com">
+<meta property="og:title" content="Artifact-First Development: What If Software Could Be Built Like Lego? — priyanshchordia.com"><meta property="og:description" content="The dependency does not have to be another team&#x27;s implementation. Sometimes it can be an explicit contract for the artifact they must produce.">
+<meta property="og:url" content="https://priyanshchordia.com/blogs/artifact-first-development/"><meta property="og:image" content="https://priyanshchordia.com/og-five-apps.png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:image:alt" content="Five apps, fifteen directions: abstract marks for Mala, Anjali, Svara, Roam, and Hindsight."><meta name="twitter:image" content="https://priyanshchordia.com/og-five-apps.png"><meta name="twitter:image:alt" content="Five apps, fifteen directions: abstract marks for Mala, Anjali, Svara, Roam, and Hindsight.">
+<meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="Artifact-First Development: What If Software Could Be Built Like Lego? — priyanshchordia.com">
+<meta name="twitter:description" content="The dependency does not have to be another team&#x27;s implementation. Sometimes it can be an explicit contract for the artifact they must produce.">
+<title>Artifact-First Development: What If Software Could Be Built Like Lego? — priyanshchordia.com</title><script>(function(){var a=["signal","editorial","instrument","gallery","monolith","overworld","unknown-signal","cabinet","parallel","workshop","department"];try{var t=localStorage.getItem('pc-theme');if(a.indexOf(t)>=0)document.documentElement.setAttribute('data-theme',t);else if(t)localStorage.removeItem('pc-theme')}catch(e){}})()</script><link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2032%2032'%3E%3Crect%20width='32'%20height='32'%20rx='7'%20fill='%23141414'/%3E%3Ccircle%20cx='16'%20cy='16'%20r='6'%20fill='%23d7ff4a'/%3E%3C/svg%3E" type="image/svg+xml">
+<link rel="stylesheet" href="../../styles.css?v=9883ddb311"></head>
+<body><a class="skip" href="#main">Skip to content</a><div class="wrap">
+<header class="top"><div class="left">
+<select id="themer" class="themer" aria-label="Site design"><option value="signal">Signal Catalog</option><option value="editorial">Editorial Ledger</option><option value="instrument">Instrument Panel</option><option value="gallery">Living Gallery</option><option value="monolith">Monolith</option><option value="overworld">Overworld</option><option value="unknown-signal" selected>Unknown Signal</option><option value="cabinet">Cabinet</option><option value="parallel">Parallel Universes</option><option value="workshop">Hidden Workshop</option><option value="department">Department</option></select>
+<a class="brand" href="../../index.html">P/C <span class="status" aria-hidden="true">&#9679;</span></a></div>
+<nav aria-label="Primary"><a href="../../index.html#work">Work</a><a href="../../apps/">App URLs</a><a class="active" aria-current="page" href="../../blogs/">Blogs</a></nav></header>
+<main id="main"><section><article class="post"><span class="label">2026-09-20 / Own Your AI Stack / 7 min read</span>
+<h1>Artifact-First Development: What If Software Could Be Built Like Lego?</h1><p>I keep coming back to a simple question:</p><p><strong>What if a software project were treated less like a sequence of tasks and more like a graph of artifacts that have to fit together?</strong></p><p>A lot of project plans quietly assume this:</p><pre style="margin:24px 0;padding:18px 20px;overflow-x:auto;border:1px solid currentColor;line-height:1.55;text-align:left"><code class="language-text" style="white-space:pre;overflow-wrap:normal">A → B → C → D</code></pre><p>B waits for A. C waits for B. Adding more developers does not help if everyone is blocked on the same chain.</p><p>That becomes especially weird once the workers are AI agents.</p><p>If I can start ten implementation workers in a few minutes, worker supply is no longer the obvious bottleneck.</p><p>Dependencies are.</p><p>So the question I have been experimenting with is:</p><p><strong>Can some implementation dependencies be moved earlier into artifact contracts, so the actual implementations can happen in parallel?</strong></p><h2>The Lego version</h2><p>Suppose Artifact A parses a customer from a purchase order.</p><p>Artifact B validates that customer.</p><p>The validator does not necessarily need the parser to exist.</p><p>It needs to know what the parser is obligated to produce.</p><p>For example:</p><pre style="margin:24px 0;padding:18px 20px;overflow-x:auto;border:1px solid currentColor;line-height:1.55;text-align:left"><code class="language-json" style="white-space:pre;overflow-wrap:normal">{
+  &quot;customer_id&quot;: &quot;string&quot;,
+  &quot;name&quot;: &quot;string&quot;,
+  &quot;country&quot;: &quot;ISO-3166-1 alpha-2&quot;,
+  &quot;confidence&quot;: 0.0
+}</code></pre><p>Once that contract is stable, the validator can be built against fixtures.</p><pre style="margin:24px 0;padding:18px 20px;overflow-x:auto;border:1px solid currentColor;line-height:1.55;text-align:left"><code class="language-python" style="white-space:pre;overflow-wrap:normal">def validate_customer(customer):
+    assert customer[&quot;customer_id&quot;]
+    assert len(customer[&quot;country&quot;]) == 2
+    assert 0 &lt;= customer[&quot;confidence&quot;] &lt;= 1
+    return customer</code></pre><p>At the same time, another worker can build the parser against the same contract.</p><p>Neither implementation is fake.</p><p>The consumer uses a fixture until the real producer exists. The producer has a concrete output obligation. Integration becomes a test of whether the two pieces actually honor the same connection surface.</p><p>That is the Lego analogy.</p><p>The important thing is not how each piece was manufactured.</p><p>It is whether the studs line up.</p><h2>This is not a claim that contracts are new</h2><p>The pieces of this idea already exist in software engineering.</p><p>API-first and contract-first development define interfaces before implementations. Tools such as <a href="https://docs.pact.io/">Pact</a> let consumers and providers test integration contracts independently. Build systems such as <a href="https://bazel.build/versions/9.0.0/about/intro">Bazel</a> explicitly model artifacts, actions, and dependency graphs so work can be reused and scheduled correctly.</p><p>I am not trying to rename all of that.</p><p>The part I am interested in is the <strong>project-management unit</strong>.</p><p>Instead of saying:</p><blockquote style="margin:24px 0;padding:2px 0 2px 18px;border-left:3px solid currentColor"><p>Version 1.4 is 80% done because 16 of 20 tasks are closed.</p></blockquote><p>I want to be able to say:</p><blockquote style="margin:24px 0;padding:2px 0 2px 18px;border-left:3px solid currentColor"><p>Version 1.4 exists when this exact set of accepted artifacts exists.</p></blockquote><p>That turns a version into an artifact set instead of a task percentage.</p><h2>What counts as an artifact?</h2><p>An artifact can be code, but it does not have to be.</p><p>For an AI-heavy software project, I might track:</p><ul><li>an API contract;</li><li>a JSON schema;</li><li>a database migration;</li><li>a threat model;</li><li>a benchmark definition;</li><li>a fixture set;</li><li>a test harness;</li><li>a deployment manifest;</li><li>a runbook;</li><li>a UI component;</li><li>a verified model-qualification result;</li><li>a real end-to-end evidence package.</li></ul><p>The important property is that it has a <strong>defined state transition</strong>.</p><p>A useful artifact record might look like:</p><pre style="margin:24px 0;padding:18px 20px;overflow-x:auto;border:1px solid currentColor;line-height:1.55;text-align:left"><code class="language-yaml" style="white-space:pre;overflow-wrap:normal">artifact:
+  id: normalized-customer-v1
+  state: drafting
+  owner: parser-worker
+
+inputs:
+  - purchase-order-ocr-v1
+
+outputs:
+  schema: schemas/normalized-customer-v1.json
+
+acceptance:
+  tests:
+    - tests/test_customer_schema.py
+    - tests/test_country_codes.py
+  examples:
+    - fixtures/customer-uk.json
+    - fixtures/customer-de.json
+
+consumers:
+  - ship-to-matcher
+  - order-validator</code></pre><p>The state is not &quot;someone is working on it.&quot;</p><p>It might be:</p><pre style="margin:24px 0;padding:18px 20px;overflow-x:auto;border:1px solid currentColor;line-height:1.55;text-align:left"><code class="language-text" style="white-space:pre;overflow-wrap:normal">missing
+  ↓
+contracted
+  ↓
+implemented
+  ↓
+verified
+  ↓
+accepted</code></pre><p>That is much easier for both people and agents to reason about.</p><h2>Why I think this matters more with AI workers</h2><p>Human software teams cannot scale worker count infinitely. Hiring, onboarding, communication, and coordination are expensive.</p><p>AI changes that constraint.</p><p>I can start several coding sessions much faster than I can add several engineers to a team.</p><p>That exposes a different problem:</p><pre style="margin:24px 0;padding:18px 20px;overflow-x:auto;border:1px solid currentColor;line-height:1.55;text-align:left"><code class="language-text" style="white-space:pre;overflow-wrap:normal">20 available workers
+        ↓
+12 blocked by dependencies
+        ↓
+5 editing the same files
+        ↓
+2 duplicating work
+        ↓
+1 useful merge</code></pre><p>More agents do not automatically create more throughput.</p><p>If I want real parallelism, I have to deliberately create <strong>independent work surfaces</strong>.</p><p>Artifact contracts are one way to do that.</p><h2>The producer can be missing and the consumer can still be real</h2><p>Here is the simplest useful pattern.</p><p>First, define the contract:</p><pre style="margin:24px 0;padding:18px 20px;overflow-x:auto;border:1px solid currentColor;line-height:1.55;text-align:left"><code class="language-json" style="white-space:pre;overflow-wrap:normal">{
+  &quot;$id&quot;: &quot;normalized-order-v2&quot;,
+  &quot;type&quot;: &quot;object&quot;,
+  &quot;required&quot;: [&quot;order_id&quot;, &quot;currency&quot;, &quot;items&quot;],
+  &quot;properties&quot;: {
+    &quot;order_id&quot;: {&quot;type&quot;: &quot;string&quot;},
+    &quot;currency&quot;: {&quot;type&quot;: &quot;string&quot;, &quot;minLength&quot;: 3, &quot;maxLength&quot;: 3},
+    &quot;items&quot;: {&quot;type&quot;: &quot;array&quot;}
+  }
+}</code></pre><p>Then commit a fixture:</p><pre style="margin:24px 0;padding:18px 20px;overflow-x:auto;border:1px solid currentColor;line-height:1.55;text-align:left"><code class="language-json" style="white-space:pre;overflow-wrap:normal">{
+  &quot;order_id&quot;: &quot;PO-1042&quot;,
+  &quot;currency&quot;: &quot;GBP&quot;,
+  &quot;items&quot;: [
+    {&quot;sku&quot;: &quot;ABC-1&quot;, &quot;qty&quot;: 4}
+  ]
+}</code></pre><p>Now the downstream worker can build something real:</p><pre style="margin:24px 0;padding:18px 20px;overflow-x:auto;border:1px solid currentColor;line-height:1.55;text-align:left"><code class="language-python" style="white-space:pre;overflow-wrap:normal">from pathlib import Path
+import json
+
+order = json.loads(
+    Path(&quot;fixtures/normalized-order-v2.json&quot;).read_text()
+)
+
+result = validate_and_route(order)
+
+assert result.currency == &quot;GBP&quot;
+assert result.route == &quot;uk-order-flow&quot;</code></pre><p>Later the real parser replaces the fixture.</p><p>If the real parser satisfies the contract, the downstream code should not need to care.</p><p>If it does care, that is useful information: the contract was incomplete.</p><h2>Acceptance artifacts matter as much as implementation artifacts</h2><p>This is the part I think traditional task boards under-emphasize.</p><p>A code file existing is not the same thing as the artifact being accepted.</p><p>For a meaningful artifact, I want the evidence to travel with it.</p><pre style="margin:24px 0;padding:18px 20px;overflow-x:auto;border:1px solid currentColor;line-height:1.55;text-align:left"><code class="language-yaml" style="white-space:pre;overflow-wrap:normal">acceptance:
+  source_revision: &quot;git-sha&quot;
+  required_checks:
+    - unit-tests
+    - contract-tests
+    - security-review
+  evidence:
+    - artifacts/test-report.json
+    - artifacts/review.md
+  accepted_by:
+    - lead-review</code></pre><p>That makes &quot;done&quot; reconstructable.</p><p>An agent cannot simply say &quot;tests passed&quot; and move on. The exact artifact version and the evidence that applies to that version have to line up.</p><h2>Where the idea came from</h2><p>One of the things that pushed me toward this mental model was Apple&#x27;s <a href="https://machinelearning.apple.com/research/diffucoder">DiffuCoder research</a>.</p><p>DiffuCoder is a diffusion-style code model. Apple&#x27;s paper describes denoising over an entire sequence, with global planning and iterative refinement rather than requiring conventional strictly left-to-right generation.</p><p>That paper is <strong>not</strong> a project-management paper, and I do not want to pretend it proves artifact-first development.</p><p>The spark for me was more abstract:</p><p><strong>What changes when order is no longer assumed to be strictly sequential?</strong></p><p>If code generation itself can explore a less rigid generation order, what parts of software delivery are sequential only because our process assumes they have to be?</p><p>That led me back to interfaces, fixtures, contracts, build graphs, and eventually this artifact-first framing.</p><h2>The important caveat: some dependencies are real</h2><p>You cannot schema your way out of every dependency.</p><p>Two components may share:</p><ul><li>a transaction boundary;</li><li>a latency budget;</li><li>a state machine;</li><li>a locking strategy;</li><li>a migration order;</li><li>a hardware constraint;</li><li>a security boundary.</li></ul><p>Those integrations still need real integration work.</p><p>The mistake would be to confuse &quot;we wrote an interface&quot; with &quot;the system is decoupled.&quot;</p><p>Artifact-first development is not zero-dependency development.</p><p>It is a way to ask:</p><p><strong>Which dependencies can be transformed from &quot;wait for implementation&quot; into &quot;agree on a verifiable contract&quot;?</strong></p><p>Even a partial answer creates more parallelism.</p><h2>The project becomes a graph, not a flat backlog</h2><p>The end state I want is a machine-readable artifact graph:</p><pre style="margin:24px 0;padding:18px 20px;overflow-x:auto;border:1px solid currentColor;line-height:1.55;text-align:left"><code class="language-text" style="white-space:pre;overflow-wrap:normal">OCR contract ───────┐
+                    ├──→ normalized order ──→ validation report
+catalog contract ───┘           │
+                                ├──→ ship-to decision
+                                │
+                                └──→ audit evidence</code></pre><p>Then a scheduler can ask:</p><ul><li>which artifacts are missing;</li><li>which contracts are stable;</li><li>which artifacts are independently buildable now;</li><li>which workers would collide on the same files;</li><li>which consumers can start from fixtures;</li><li>which artifact states block a milestone.</li></ul><p>That is a much more useful question than &quot;what ticket is next?&quot;</p><h2>I am now using this idea in SwarmAI itself</h2><p>This is no longer only a thought experiment for me.</p><p>In SwarmAI, I have started treating artifacts as the canonical project state and deriving implementation packets from artifact gaps. Architecture documents, contracts, evidence protocols, implementation slices, and verification results can advance independently when their contracts do not conflict.</p><p>That does not eliminate integration.</p><p>It gives the integration work a more explicit shape.</p><p>For now, I am deliberately stopping this first public series here. The next stage of the experiment gets into orchestration, larger worker pools, and infrastructure, but I want more measured evidence before I write about those pieces as finished systems.</p><h2>What I may open-source</h2><p>If the pattern continues to work, I want to publish a tiny artifact-management layer:</p><pre style="margin:24px 0;padding:18px 20px;overflow-x:auto;border:1px solid currentColor;line-height:1.55;text-align:left"><code class="language-text" style="white-space:pre;overflow-wrap:normal">artifacts/
+├── registry.schema.json
+├── registry.json
+├── examples/
+│   ├── api-contract.yaml
+│   ├── benchmark.yaml
+│   └── acceptance-evidence.yaml
+└── tools/
+    ├── ready.py
+    ├── validate.py
+    └── graph.py</code></pre><p>Not another giant project-management platform.</p><p>Just enough structure to let people test the idea:</p><p><strong>define the pieces first, define how they connect, then let workers build as many pieces in parallel as the contracts safely allow.</strong></p></article>
+<a class="back" href="../">&larr; All posts</a></section></main>
+<footer><span>priyanshchordia.com</span><span>Independent software, built with privacy in mind.</span></footer>
+</div><script>(function(){var a=["signal","editorial","instrument","gallery","monolith","overworld","unknown-signal","cabinet","parallel","workshop","department"],ss=[].slice.call(document.querySelectorAll('.themer'));if(!ss.length)return;try{var t=localStorage.getItem('pc-theme');if(a.indexOf(t)>=0)ss.forEach(function(s){s.value=t})}catch(e){}ss.forEach(function(s){s.addEventListener('change',function(){var v=s.value;if(a.indexOf(v)<0)return;document.documentElement.setAttribute('data-theme',v);ss.forEach(function(o){o.value=v});try{localStorage.setItem('pc-theme',v)}catch(e){}requestAnimationFrame(function(){var xp=document.documentElement.classList.contains('has-xp');var target=document.querySelector(xp?'#themer2':'#themer');if(target&&target!==document.activeElement)target.focus()})})})})()</script></body></html>
