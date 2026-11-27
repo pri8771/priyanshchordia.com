@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en" data-theme="unknown-signal"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Remote AI work is more interesting than remote control: give every machine a repo, a queue, a heartbeat, and a handoff contract."><meta name="robots" content="index,follow">
+<meta name="color-scheme" content="dark light"><meta name="theme-color" content="#0a0806">
+<link rel="canonical" href="https://priyanshchordia.com/blogs/ai-remote-workers/">
+<meta property="og:type" content="website"><meta property="og:site_name" content="priyanshchordia.com">
+<meta property="og:title" content="I Turned ChatGPT, Claude, Cursor and My Computers Into Remote Workers — priyanshchordia.com"><meta property="og:description" content="Remote AI work is more interesting than remote control: give every machine a repo, a queue, a heartbeat, and a handoff contract.">
+<meta property="og:url" content="https://priyanshchordia.com/blogs/ai-remote-workers/"><meta property="og:image" content="https://priyanshchordia.com/og-five-apps.png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:image:alt" content="Five apps, fifteen directions: abstract marks for Mala, Anjali, Svara, Roam, and Hindsight."><meta name="twitter:image" content="https://priyanshchordia.com/og-five-apps.png"><meta name="twitter:image:alt" content="Five apps, fifteen directions: abstract marks for Mala, Anjali, Svara, Roam, and Hindsight.">
+<meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="I Turned ChatGPT, Claude, Cursor and My Computers Into Remote Workers — priyanshchordia.com">
+<meta name="twitter:description" content="Remote AI work is more interesting than remote control: give every machine a repo, a queue, a heartbeat, and a handoff contract.">
+<title>I Turned ChatGPT, Claude, Cursor and My Computers Into Remote Workers — priyanshchordia.com</title><script>(function(){var a=["signal","editorial","instrument","gallery","monolith","overworld","unknown-signal","cabinet","parallel","workshop","department"];try{var t=localStorage.getItem('pc-theme');if(a.indexOf(t)>=0)document.documentElement.setAttribute('data-theme',t);else if(t)localStorage.removeItem('pc-theme')}catch(e){}})()</script><link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2032%2032'%3E%3Crect%20width='32'%20height='32'%20rx='7'%20fill='%23141414'/%3E%3Ccircle%20cx='16'%20cy='16'%20r='6'%20fill='%23d7ff4a'/%3E%3C/svg%3E" type="image/svg+xml">
+<link rel="stylesheet" href="../../styles.css?v=9883ddb311"></head>
+<body><a class="skip" href="#main">Skip to content</a><div class="wrap">
+<header class="top"><div class="left">
+<select id="themer" class="themer" aria-label="Site design"><option value="signal">Signal Catalog</option><option value="editorial">Editorial Ledger</option><option value="instrument">Instrument Panel</option><option value="gallery">Living Gallery</option><option value="monolith">Monolith</option><option value="overworld">Overworld</option><option value="unknown-signal" selected>Unknown Signal</option><option value="cabinet">Cabinet</option><option value="parallel">Parallel Universes</option><option value="workshop">Hidden Workshop</option><option value="department">Department</option></select>
+<a class="brand" href="../../index.html">P/C <span class="status" aria-hidden="true">&#9679;</span></a></div>
+<nav aria-label="Primary"><a href="../../index.html#work">Work</a><a href="../../apps/">App URLs</a><a class="active" aria-current="page" href="../../blogs/">Blogs</a></nav></header>
+<main id="main"><section><article class="post"><span class="label">2026-09-20 / Own Your AI Stack / 6 min read</span>
+<h1>I Turned ChatGPT, Claude, Cursor and My Computers Into Remote Workers</h1><p>I do not want remote control software for my AI tools.</p><p>I want remote workers.</p><p>There is a meaningful difference.</p><p>Remote control means I open another computer and click around on it myself. A remote worker means I give a machine a bounded assignment, it pulls the current project state, does authorized work, leaves evidence, and checks back in.</p><p>That changes how I look at the computers around me.</p><p>A Mac is not just the computer I am sitting in front of. A Windows desktop is not just a second workstation. My Dell PowerEdge R730 is not just an old server.</p><p>They are potential worker hosts.</p><h2>My current mental model</h2><p>The setup I am building toward looks like this:</p><pre style="margin:24px 0;padding:18px 20px;overflow-x:auto;border:1px solid currentColor;line-height:1.55;text-align:left"><code class="language-text" style="white-space:pre;overflow-wrap:normal">                         Git repository
+                              │
+                  coordination + evidence
+                              │
+          ┌───────────────────┼───────────────────┐
+          │                   │                   │
+         Mac               Windows              R730
+          │                   │                   │
+     AI sessions          coding workers      always-on
+     implementation       review / tests      services
+     coordination                              local inference
+                                                queues</code></pre><p>The machine is not the intelligence.</p><p>It is a place where one or more workers can run.</p><p>The intelligence can come from ChatGPT, Claude, Cursor, Gemini, a local model, or another provider. What makes the host useful is the protocol around the worker.</p><h2>Give every worker the same boring startup ritual</h2><p>A worker should not wake up and improvise its understanding of the project.</p><p>I want a startup contract closer to:</p><pre style="margin:24px 0;padding:18px 20px;overflow-x:auto;border:1px solid currentColor;line-height:1.55;text-align:left"><code class="language-yaml" style="white-space:pre;overflow-wrap:normal">worker:
+  id: windows-01
+  role: implementation
+
+startup:
+  - fetch_current_repo
+  - read_agent_rules
+  - read_project_state
+  - read_work_queue
+  - read_unread_handoffs
+
+before_work:
+  - confirm_authority
+  - confirm_branch
+  - claim_one_task
+
+completion:
+  - run_required_checks
+  - record_evidence
+  - update_state_if_authorized
+  - leave_handoff
+  - push_changes</code></pre><p>This is deliberately not very &quot;AI.&quot;</p><p>That is the point.</p><p>Anything I can encode as Git, a schema, a lock, a test, or a deterministic script is something I do not need to spend model intelligence on.</p><h2>The worker loop can be simple</h2><p>At the highest level:</p><pre style="margin:24px 0;padding:18px 20px;overflow-x:auto;border:1px solid currentColor;line-height:1.55;text-align:left"><code class="language-python" style="white-space:pre;overflow-wrap:normal">while True:
+    repo.fetch()
+
+    state = repo.read_state()
+    queue = repo.read_queue()
+
+    task = claim_next_authorized_task(queue, state)
+
+    if task:
+        result = worker.execute(task)
+        evidence = verify(result)
+        repo.write_handoff(task, result, evidence)
+        repo.push()
+
+    heartbeat.publish(current_status())
+    sleep(current_interval())</code></pre><p>Obviously, <code>worker.execute</code> is the hard part.</p><p>But the coordination loop does not have to be mysterious.</p><h2>Heartbeats turned out to be more interesting than I expected</h2><p>My first heartbeat test had a very simple rule:</p><ul><li>check every 15 minutes;</li><li>require three healthy scheduled check-ins in a row;</li><li>after the system proves it can do that, relax the cadence to hourly.</li></ul><p>The heartbeat itself can be tiny:</p><pre style="margin:24px 0;padding:18px 20px;overflow-x:auto;border:1px solid currentColor;line-height:1.55;text-align:left"><code class="language-json" style="white-space:pre;overflow-wrap:normal">{
+  &quot;worker&quot;: &quot;mac-worker-01&quot;,
+  &quot;trigger&quot;: &quot;scheduler&quot;,
+  &quot;timestamp&quot;: &quot;2026-09-20T22:30:00-04:00&quot;,
+  &quot;commit&quot;: &quot;abc123&quot;,
+  &quot;task&quot;: &quot;LIVE-TEST-001&quot;,
+  &quot;state&quot;: &quot;working&quot;,
+  &quot;blocked&quot;: false
+}</code></pre><p>What I wanted to prove was not just &quot;the process is alive.&quot;</p><p>I wanted to know:</p><ul><li>did the scheduler really wake it;</li><li>what commit is it working from;</li><li>what task does it think it owns;</li><li>is it blocked;</li><li>did it produce anything;</li><li>can I reconstruct what happened later?</li></ul><p>The first implementation exposed a useful bug: a manual status update could interfere with the timing of a scheduled heartbeat and make the system look healthier than it really was.</p><p>That is exactly why I wanted the bootstrap proof.</p><p>The fix was conceptual as much as technical:</p><p><strong>manual activity does not count as scheduler liveness.</strong></p><p>Only a heartbeat that identifies itself as scheduler-triggered advances the streak.</p><p>That sounds small, but it is a good example of why autonomous systems need evidence categories. &quot;I saw activity&quot; is not the same claim as &quot;the unattended scheduler works.&quot;</p><h2>A heartbeat is not a progress report</h2><p>I also do not want every check-in to become a giant LLM-written status essay.</p><p>The heartbeat should answer operational questions. The handoff should answer work questions.</p><p>Those are different artifacts.</p><pre style="margin:24px 0;padding:18px 20px;overflow-x:auto;border:1px solid currentColor;line-height:1.55;text-align:left"><code class="language-text" style="white-space:pre;overflow-wrap:normal">heartbeat
+  → &quot;I am alive, on this commit, owning this task.&quot;
+
+handoff
+  → &quot;Here is what changed, what passed, what failed, and what is next.&quot;</code></pre><p>Keeping them separate makes the system easier to audit.</p><p>It also means a scheduler can check liveness without parsing prose.</p><h2>Multiple providers are useful because they fail differently</h2><p>I do not want every worker to be the same model.</p><p>One model can implement. Another can review. A cheaper model can handle mechanical work. A stronger reasoning model can be reserved for ambiguous failures or architecture.</p><p>A useful pattern is:</p><pre style="margin:24px 0;padding:18px 20px;overflow-x:auto;border:1px solid currentColor;line-height:1.55;text-align:left"><code class="language-text" style="white-space:pre;overflow-wrap:normal">plan
+  ↓
+implement
+  ↓
+deterministic checks
+  ↓
+independent review
+  ↓
+accept / retry / escalate</code></pre><p>When possible, I prefer the reviewer to come from a different provider than the author.</p><p>That is not because cross-provider review magically guarantees correctness. It simply reduces the chance that every step shares the exact same model-specific blind spots.</p><h2>The repository is still the coordination bus</h2><p>I am intentionally resisting the urge to make a giant central brain hold everything.</p><p>If the orchestration service dies, I want another worker to reconstruct the important project state from durable evidence.</p><p>That means:</p><ul><li>tasks have IDs;</li><li>artifacts have versions;</li><li>handoffs are committed;</li><li>acceptance criteria are inspectable;</li><li>a worker cannot &quot;remember&quot; that something passed if the repository says otherwise.</li></ul><p>This also gives me an escape hatch.</p><p>If Claude hits a limit, Cursor can pull the branch.</p><p>If the Mac goes offline, the Windows worker can still see the queue.</p><p>If I replace an orchestration tool six months from now, the project does not have to be rewritten around the old control plane.</p><h2>Where the R730 fits</h2><p>The R730 is interesting because it can become the always-on part of the system.</p><p>I do not need it to be the smartest machine.</p><p>I need it to be available.</p><p>That makes it a natural place for boring infrastructure:</p><ul><li>queues;</li><li>schedulers;</li><li>worker containers;</li><li>artifact storage;</li><li>monitoring;</li><li>local model endpoints;</li><li>test runners;</li><li>routing services.</li></ul><p>I still want the project to remain usable when the server is unavailable. That is why Git and portable project state come first.</p><p>The server adds capacity. It should not become the only place truth exists.</p><h2>What is not solved yet</h2><p>The hardest part is not SSH, remote desktop, or starting another AI session.</p><p>It is making unattended work trustworthy.</p><p>A worker that can run for an hour without me watching it needs tighter boundaries than a chatbot I am supervising interactively.</p><p>The system has to distinguish:</p><ul><li>a real scheduled heartbeat from a manual one;</li><li>a claimed task from an accidentally duplicated task;</li><li>a passing test from a complete acceptance gate;</li><li>a model response from a material code change;</li><li>a useful retry from an infinite loop.</li></ul><p>I am finding that the less glamorous pieces — locks, state, evidence, retries, cancellation, leases — matter more as autonomy increases.</p><p>That observation leads directly to the next idea: <a href="/blogs/artifact-first-development/">artifact-first development</a>.</p><p>If workers are cheap and plentiful, the real bottleneck becomes the dependency graph.</p><h2>What I may open-source</h2><p>There is a small reusable package hiding here too:</p><pre style="margin:24px 0;padding:18px 20px;overflow-x:auto;border:1px solid currentColor;line-height:1.55;text-align:left"><code class="language-text" style="white-space:pre;overflow-wrap:normal">worker-protocol/
+├── heartbeat.schema.json
+├── handoff.schema.json
+├── task-claim.schema.json
+├── scheduler/
+│   ├── install-macos.sh
+│   └── install-windows.ps1
+└── examples/
+    └── repo-backed-worker-loop.py</code></pre><p>If the protocol survives enough real use, I would rather publish that as a boring, inspectable building block than hide it inside one giant &quot;autonomous agent&quot; demo.</p><p>The goal is not to make my computers look busy.</p><p>The goal is to make them produce <strong>reconstructable, verified work without me babysitting every screen</strong>.</p></article>
+<a class="back" href="../">&larr; All posts</a></section></main>
+<footer><span>priyanshchordia.com</span><span>Independent software, built with privacy in mind.</span></footer>
+</div><script>(function(){var a=["signal","editorial","instrument","gallery","monolith","overworld","unknown-signal","cabinet","parallel","workshop","department"],ss=[].slice.call(document.querySelectorAll('.themer'));if(!ss.length)return;try{var t=localStorage.getItem('pc-theme');if(a.indexOf(t)>=0)ss.forEach(function(s){s.value=t})}catch(e){}ss.forEach(function(s){s.addEventListener('change',function(){var v=s.value;if(a.indexOf(v)<0)return;document.documentElement.setAttribute('data-theme',v);ss.forEach(function(o){o.value=v});try{localStorage.setItem('pc-theme',v)}catch(e){}requestAnimationFrame(function(){var xp=document.documentElement.classList.contains('has-xp');var target=document.querySelector(xp?'#themer2':'#themer');if(target&&target!==document.activeElement)target.focus()})})})})()</script></body></html>

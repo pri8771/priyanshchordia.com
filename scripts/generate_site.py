@@ -308,6 +308,8 @@ def markdown(body: str) -> str:
     blocks: list[str] = []
     paragraph: list[str] = []
     items: list[str] = []
+    quote: list[str] = []
+    numbered: list[str] = []
     code_lines: list[str] = []
     code_language = ""
     in_code = False
@@ -321,6 +323,20 @@ def markdown(body: str) -> str:
         if items:
             blocks.append("<ul>" + "".join(f"<li>{inline(item)}</li>" for item in items) + "</ul>")
             items.clear()
+
+    def flush_quote() -> None:
+        if quote:
+            blocks.append(
+                '<blockquote style="margin:24px 0;padding:2px 0 2px 18px;border-left:3px solid currentColor"><p>'
+                + inline(" ".join(quote))
+                + "</p></blockquote>"
+            )
+            quote.clear()
+
+    def flush_numbered() -> None:
+        if numbered:
+            blocks.append("<ol>" + "".join(f"<li>{inline(item)}</li>" for item in numbered) + "</ol>")
+            numbered.clear()
 
     def flush_code() -> None:
         nonlocal code_language
@@ -337,6 +353,12 @@ def markdown(body: str) -> str:
         code_lines.clear()
         code_language = ""
 
+    def flush_blocks() -> None:
+        flush_paragraph()
+        flush_list()
+        flush_quote()
+        flush_numbered()
+
     for raw_line in body.strip().splitlines():
         line = raw_line.strip()
         if in_code:
@@ -346,17 +368,16 @@ def markdown(body: str) -> str:
             else:
                 code_lines.append(raw_line)
             continue
+        picture = re.match(r"^!\[([^\]]*)\]\((/[A-Za-z0-9/_.-]+\.(?:gif|png|jpg))\)$", line)
+        numbered_item = re.match(r"^(\d+)\. ", line)
         if line.startswith("```"):
-            flush_paragraph()
-            flush_list()
+            flush_blocks()
             code_language = line[3:].strip()
             in_code = True
         elif not line:
-            flush_paragraph()
-            flush_list()
+            flush_blocks()
         elif line.startswith(("### ", "## ", "# ")):
-            flush_paragraph()
-            flush_list()
+            flush_blocks()
             if line.startswith("### "):
                 blocks.append(f"<h3>{inline(line[4:].strip())}</h3>")
             else:
@@ -364,12 +385,35 @@ def markdown(body: str) -> str:
                 blocks.append(f"<h2>{inline(heading.strip())}</h2>")
         elif line.startswith(("- ", "* ")):
             flush_paragraph()
+            flush_quote()
+            flush_numbered()
             items.append(line[2:].strip())
+        elif line.startswith(">"):
+            flush_paragraph()
+            flush_list()
+            flush_numbered()
+            quote.append(line.lstrip(">").strip())
+        elif numbered_item:
+            flush_paragraph()
+            flush_list()
+            flush_quote()
+            numbered.append(line[numbered_item.end():])
+        elif picture and not picture.group(2).startswith("//"):
+            flush_blocks()
+            blocks.append(
+                '<figure style="margin:28px 0">'
+                f'<img src="{esc(picture.group(2))}" alt="{esc(picture.group(1))}" '
+                'style="display:block;max-width:100%;height:auto"></figure>'
+            )
+        elif re.fullmatch(r"!\[[^\]]*\]\(.*\)", line):
+            flush_blocks()
+            blocks.append(f"<p>{esc(line)}</p>")
         else:
             flush_list()
+            flush_quote()
+            flush_numbered()
             paragraph.append(line)
-    flush_paragraph()
-    flush_list()
+    flush_blocks()
     if in_code:
         in_code = False
         flush_code()
@@ -778,11 +822,20 @@ def product_page(product: dict[str, object], landing: dict[str, object],
 
 
 def journal_index(posts: list[dict[str, object]]) -> str:
-    if posts:
-        rows = "".join(entry_row(p, i + 1, "../") for i, p in enumerate(posts))
+    published = [p for p in posts if p.get("status") != "draft"]
+    drafts = [p for p in posts if p.get("status") == "draft"]
+    if published:
+        rows = "".join(entry_row(p, i + 1, "../") for i, p in enumerate(published))
         listing = f'<div class="journal-index">{rows}</div>'
     else:
         listing = '<p class="empty">No posts published yet. Check back for notes from the workbench.</p>'
+    if drafts:
+        rows = "".join(entry_row(p, i + 1, "../") for i, p in enumerate(drafts))
+        listing += (
+            '<div class="section-head" style="margin-top:48px"><span class="label">Drafts</span>'
+            '<h2>Drafts. Working copies; they may change.</h2></div>'
+            f'<div class="journal-index drafts">{rows}</div>'
+        )
     body = f"""<section><div class="section-head"><span class="label">Blogs</span><h1>Notes from the workbench.</h1></div>
 {listing}</section>"""
     return chrome(
@@ -800,7 +853,13 @@ def post_page(post: dict[str, object]) -> str:
         f"{post['minutes']} min read",
     ]
     meta = " / ".join(x for x in meta_parts if x)
-    body = f"""<section><article class="post"><span class="label">{esc(meta)}</span>
+    banner = (
+        '<p class="draft-banner" role="note" style="border:2px solid currentColor;'
+        'padding:10px 14px;margin:0 0 20px;font-weight:700;letter-spacing:.04em">'
+        'DRAFT &mdash; a working copy; it may change.</p>'
+        if status == "draft" else ""
+    )
+    body = f"""<section><article class="post">{banner}<span class="label">{esc(meta)}</span>
 <h1>{esc(post["title"])}</h1>{markdown(str(post["body"]))}</article>
 <a class="back" href="../">&larr; All posts</a></section>"""
     return chrome(
@@ -1157,7 +1216,10 @@ def main() -> int:
         # Regenerated every build; site/ is wiped each run, so Pages would
         # otherwise lose the custom domain on the next deploy.
         write(OUT / "CNAME", CUSTOM_DOMAIN + "\n")
-    write(OUT / "index.html", home(products, posts))
+    # Drafts are listed on /blogs/ under a Drafts heading (noindex, kept off
+    # the home page and the sitemap).
+    listed_posts = [post for post in posts if post.get("status") != "draft"]
+    write(OUT / "index.html", home(products, listed_posts))
     write(OUT / "blogs" / "index.html", journal_index(posts))
     write(OUT / "blogs" / "private" / "index.html", private_blogs_page())
     for source in sorted(PRIVATE_BLOGS.iterdir()):

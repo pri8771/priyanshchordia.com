@@ -52,6 +52,23 @@ class GeneratorTests(unittest.TestCase):
         self.assertIn('href="https://priyanshchordia.com/blogs/draft-example/"', rendered)
 
 
+    def test_draft_posts_are_listed_as_drafts_and_left_out_of_sitemap(self) -> None:
+        draft = {"slug": "draft-example", "title": "Draft example", "date": "2026-11-25",
+                 "status": "draft", "summary": "", "series": "", "body": "x", "minutes": 1}
+        live = dict(draft, slug="live-example", title="Live example", status="published")
+        index = GEN.journal_index([draft, live])
+        self.assertIn("live-example", index)
+        self.assertIn("draft-example", index)
+        self.assertIn(">Drafts<", index)
+        self.assertLess(index.index("live-example"), index.index(">Drafts<"))
+        self.assertLess(index.index(">Drafts<"), index.index("draft-example"))
+        self.assertIn("1 min / draft", index)
+        sitemap = GEN.sitemap([], [draft, live], [])
+        self.assertNotIn("draft-example", sitemap)
+        self.assertIn("live-example", sitemap)
+        self.assertIn('class="draft-banner"', GEN.post_page(draft))
+        self.assertNotIn('class="draft-banner"', GEN.post_page(live))
+
     def test_legacy_journal_redirect_canonicalizes_to_blogs(self) -> None:
         rendered = GEN.legacy_blog_redirect("/blogs/repo-is-the-agent/", "../../")
         self.assertIn('href="https://priyanshchordia.com/blogs/repo-is-the-agent/"', rendered)

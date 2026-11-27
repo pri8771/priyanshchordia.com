@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en" data-theme="unknown-signal"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="If the rules, decisions, tasks, and state live in Git, changing AI models becomes a worker swap instead of a project migration."><meta name="robots" content="index,follow">
+<meta name="color-scheme" content="dark light"><meta name="theme-color" content="#0a0806">
+<link rel="canonical" href="https://priyanshchordia.com/blogs/repo-is-the-agent/">
+<meta property="og:type" content="website"><meta property="og:site_name" content="priyanshchordia.com">
+<meta property="og:title" content="The Repo Is the Agent: Why I Stopped Letting One LLM Own My Project — priyanshchordia.com"><meta property="og:description" content="If the rules, decisions, tasks, and state live in Git, changing AI models becomes a worker swap instead of a project migration.">
+<meta property="og:url" content="https://priyanshchordia.com/blogs/repo-is-the-agent/"><meta property="og:image" content="https://priyanshchordia.com/og-five-apps.png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:image:alt" content="Five apps, fifteen directions: abstract marks for Mala, Anjali, Svara, Roam, and Hindsight."><meta name="twitter:image" content="https://priyanshchordia.com/og-five-apps.png"><meta name="twitter:image:alt" content="Five apps, fifteen directions: abstract marks for Mala, Anjali, Svara, Roam, and Hindsight.">
+<meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="The Repo Is the Agent: Why I Stopped Letting One LLM Own My Project — priyanshchordia.com">
+<meta name="twitter:description" content="If the rules, decisions, tasks, and state live in Git, changing AI models becomes a worker swap instead of a project migration.">
+<title>The Repo Is the Agent: Why I Stopped Letting One LLM Own My Project — priyanshchordia.com</title><script>(function(){var a=["signal","editorial","instrument","gallery","monolith","overworld","unknown-signal","cabinet","parallel","workshop","department"];try{var t=localStorage.getItem('pc-theme');if(a.indexOf(t)>=0)document.documentElement.setAttribute('data-theme',t);else if(t)localStorage.removeItem('pc-theme')}catch(e){}})()</script><link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2032%2032'%3E%3Crect%20width='32'%20height='32'%20rx='7'%20fill='%23141414'/%3E%3Ccircle%20cx='16'%20cy='16'%20r='6'%20fill='%23d7ff4a'/%3E%3C/svg%3E" type="image/svg+xml">
+<link rel="stylesheet" href="../../styles.css?v=9883ddb311"></head>
+<body><a class="skip" href="#main">Skip to content</a><div class="wrap">
+<header class="top"><div class="left">
+<select id="themer" class="themer" aria-label="Site design"><option value="signal">Signal Catalog</option><option value="editorial">Editorial Ledger</option><option value="instrument">Instrument Panel</option><option value="gallery">Living Gallery</option><option value="monolith">Monolith</option><option value="overworld">Overworld</option><option value="unknown-signal" selected>Unknown Signal</option><option value="cabinet">Cabinet</option><option value="parallel">Parallel Universes</option><option value="workshop">Hidden Workshop</option><option value="department">Department</option></select>
+<a class="brand" href="../../index.html">P/C <span class="status" aria-hidden="true">&#9679;</span></a></div>
+<nav aria-label="Primary"><a href="../../index.html#work">Work</a><a href="../../apps/">App URLs</a><a class="active" aria-current="page" href="../../blogs/">Blogs</a></nav></header>
+<main id="main"><section><article class="post"><span class="label">2026-09-20 / Own Your AI Stack / 6 min read</span>
+<h1>The Repo Is the Agent: Why I Stopped Letting One LLM Own My Project</h1><p>I use ChatGPT, Claude, Cursor, and Gemini. Some of that capacity is paid, some is bundled, and some is promotional. Jio, for example, currently advertises an <a href="https://www.jio.com/google-gemini-offer/">18-month Google AI Pro offer for eligible 5G users</a>, which makes Gemini another useful pool of capacity for me.</p><p>And I still run out of inference.</p><p>That sounds ridiculous until the AI tools stop being occasional chatbots and start acting like development workers. One session is planning. Another is implementing. Another is reviewing. A long-running conversation accumulates too much context. A coding tool hits a usage limit. A provider throttles. A &quot;free&quot; source is available, but only in a different product.</p><p>The obvious response is to buy more AI.</p><p>My response has increasingly been: <strong>stop letting any one AI own the project.</strong></p><p>If the project survives the model, then changing models is not a migration. It is a worker swap.</p><h2>The failure mode: the chat becomes the database</h2><p>A lot of AI coding workflows quietly make the conversation the source of truth.</p><p>The requirements are in the chat. The reason for a design decision is in the chat. The next task is somewhere 180 messages back. The model has a private mental picture of the architecture that nobody else can inspect.</p><p>That works until the session ends or I switch providers.</p><p>Then the handoff looks like this:</p><ul><li>summarize the project;</li><li>paste a pile of files;</li><li>explain the current branch;</li><li>repeat the rules;</li><li>explain which bugs are real and which were already fixed;</li><li>hope the new model does not reinterpret the whole thing.</li></ul><p>That is exactly the wrong place for durable project state.</p><p>The better shape, for me, is a repository that carries not just code but the minimum operating context required to continue the work.</p><pre style="margin:24px 0;padding:18px 20px;overflow-x:auto;border:1px solid currentColor;line-height:1.55;text-align:left"><code class="language-text" style="white-space:pre;overflow-wrap:normal">repository/
+├── AGENTS.md
+├── README.md
+├── docs/
+│   ├── ARCHITECTURE.md
+│   ├── PROJECT_MEMORY.md
+│   ├── DECISIONS.md
+│   └── coordination/
+│       ├── STATE.json
+│       ├── WORK_QUEUE.md
+│       └── AGENT_MESSAGES.md
+├── src/
+└── tests/</code></pre><p>The exact filenames are not important. The separation is.</p><ul><li><code>AGENTS.md</code> says how a worker is allowed to operate.</li><li>architecture docs explain durable structure.</li><li>memory explains decisions that are easy to lose.</li><li><code>STATE.json</code> says what is true now.</li><li>the queue says what is next.</li><li>messages preserve handoffs that have not yet been folded into canonical state.</li><li>tests encode as much &quot;done&quot; as can be made deterministic.</li></ul><p>Now ChatGPT is not the project. Claude is not the project. Cursor is not the project.</p><p>They are workers that can read the project.</p><h2>A new session should need a small bootstrap prompt</h2><p>A useful test is this:</p><p><strong>How much do I have to explain when I open a brand-new session?</strong></p><p>If the answer is &quot;twenty minutes of project history,&quot; the repo is missing context.</p><p>A healthy bootstrap can be closer to:</p><pre style="margin:24px 0;padding:18px 20px;overflow-x:auto;border:1px solid currentColor;line-height:1.55;text-align:left"><code class="language-text" style="white-space:pre;overflow-wrap:normal">Pull the latest repository.
+
+Read, in order:
+1. AGENTS.md
+2. docs/ARCHITECTURE.md
+3. docs/PROJECT_MEMORY.md
+4. docs/coordination/STATE.json
+5. docs/coordination/WORK_QUEUE.md
+6. unread coordination messages
+
+Do not infer current project state from this chat.
+Use repository evidence as the source of truth.
+
+Take only work you are authorized to perform.
+Run the required checks.
+Record evidence.
+Leave a handoff before you stop.</code></pre><p>That is intentionally boring.</p><p>The prompt is not trying to re-create the entire project in natural language. It tells the worker <strong>where truth lives</strong>.</p><p>The same bootstrap pattern can work in ChatGPT, Claude, Cursor, Gemini, a local model, or something I have not started using yet.</p><p>The model changes. The project contract does not.</p><h2>Make current state machine-readable</h2><p>Markdown is great for people and LLMs. Some project state should still be explicit enough that nobody has to interpret prose.</p><p>A small state file can do a lot:</p><pre style="margin:24px 0;padding:18px 20px;overflow-x:auto;border:1px solid currentColor;line-height:1.55;text-align:left"><code class="language-json" style="white-space:pre;overflow-wrap:normal">{
+  &quot;version&quot;: &quot;0.4&quot;,
+  &quot;status&quot;: &quot;implementation_complete_acceptance_pending&quot;,
+  &quot;current_goal&quot;: &quot;complete one real end-to-end example&quot;,
+  &quot;blocked_by&quot;: [],
+  &quot;next_tasks&quot;: [
+    &quot;run live example&quot;,
+    &quot;capture evidence&quot;,
+    &quot;review failure modes&quot;
+  ]
+}</code></pre><p>That is better than a sentence like:</p><blockquote style="margin:24px 0;padding:2px 0 2px 18px;border-left:3px solid currentColor"><p>I think we are basically done with 0.4, except maybe the live test.</p></blockquote><p>The state file forces me to choose what I actually mean.</p><p>It also makes automation easier. A worker can parse the state. A heartbeat can report it. A scheduler can decide whether there is unblocked work. A reviewer can compare a claimed milestone with the artifacts that are supposed to prove it.</p><h2>Handoffs become repository events, not memories</h2><p>Suppose Claude is halfway through a parser and hits a limit.</p><p>The old handoff is another summary.</p><p>The repo-centric handoff is:</p><pre style="margin:24px 0;padding:18px 20px;overflow-x:auto;border:1px solid currentColor;line-height:1.55;text-align:left"><code class="language-bash" style="white-space:pre;overflow-wrap:normal">git add .
+git commit -m &quot;Checkpoint parser work and record remaining failures&quot;
+git push</code></pre><p>Then the worker leaves a short structured note:</p><pre style="margin:24px 0;padding:18px 20px;overflow-x:auto;border:1px solid currentColor;line-height:1.55;text-align:left"><code class="language-yaml" style="white-space:pre;overflow-wrap:normal">task: parser-042
+state: review-needed
+changed:
+  - src/parser.py
+  - tests/test_parser.py
+evidence:
+  - &quot;41 parser tests passed&quot;
+remaining:
+  - &quot;one multi-line fixture still fails&quot;
+do_not_assume:
+  - &quot;customer matcher behavior was not reviewed&quot;</code></pre><p>The next worker pulls the same branch, reads the same contract, sees the same failing fixture, and continues.</p><p>The important unit is no longer the chat session.</p><p>It is the <strong>repository state</strong>.</p><h2>This makes inference more fungible</h2><p>I do not mean that all models are equivalent. They are not.</p><p>Some work deserves the strongest reasoning model I have. Some work is mechanical. Some review is more useful when it comes from a different provider than the one that wrote the code.</p><p>Once context is portable, I can route work by capability and available capacity instead of by provider loyalty.</p><p>Conceptually:</p><pre style="margin:24px 0;padding:18px 20px;overflow-x:auto;border:1px solid currentColor;line-height:1.55;text-align:left"><code class="language-python" style="white-space:pre;overflow-wrap:normal">def choose_worker(task, capacity):
+    if task.risk == &quot;high&quot;:
+        return capacity.best_reasoning_model()
+
+    if task.kind == &quot;implementation&quot;:
+        return capacity.available_coding_worker()
+
+    if task.kind == &quot;review&quot;:
+        return capacity.different_provider_than(task.author)
+
+    return capacity.cheapest_qualified_worker()</code></pre><p>The key word there is <code>qualified</code>.</p><p>A free model is not useful just because it is free. It has to be good enough for the bounded task and the output still needs verification.</p><h2>The repo does not solve context by itself</h2><p>There is an easy way to ruin this idea: dump everything into Git and tell every model to read all of it.</p><p>That is just a context window problem with folders.</p><p>The repository needs hierarchy.</p><p>I think of the information in roughly four layers:</p><pre style="margin:24px 0;padding:18px 20px;overflow-x:auto;border:1px solid currentColor;line-height:1.55;text-align:left"><code class="language-text" style="white-space:pre;overflow-wrap:normal">durable rules
+    ↓
+architecture + decisions
+    ↓
+current machine-readable state
+    ↓
+task-specific evidence and handoffs</code></pre><p>Old handoff messages should become less important as canonical state gets updated. Historical notes should not outrank current contracts. A worker should not need to read six months of logs to understand what it can do today.</p><p>The goal is not &quot;store infinite context.&quot;</p><p>The goal is <strong>make the minimum required context recoverable</strong>.</p><h2>The bigger idea: the repo becomes the operating environment</h2><p>This started as a way to switch between AI tools without losing my place.</p><p>It is becoming something bigger.</p><p>Once the repository contains enough durable context, I can have multiple workers on multiple machines using multiple providers without requiring them to share a single conversation.</p><p>My Mac can host one worker. A Windows machine can host another. A server can run local inference or background workers. They can all pull the same project contracts and leave evidence in the same place.</p><p>That is the next article in this series: <a href="/blogs/ai-remote-workers/">how I am turning AI sessions and computers into remote workers</a>.</p><h2>What I may open-source</h2><p>If this pattern is useful to other people, the first thing I would open-source is not a giant agent framework.</p><p>It would be a tiny repo starter:</p><pre style="margin:24px 0;padding:18px 20px;overflow-x:auto;border:1px solid currentColor;line-height:1.55;text-align:left"><code class="language-text" style="white-space:pre;overflow-wrap:normal">AGENTS.md
+docs/
+  PROJECT_MEMORY.md
+  ARCHITECTURE.md
+  coordination/
+    STATE.schema.json
+    STATE.json
+    WORK_QUEUE.md
+    HANDOFF.template.md
+scripts/
+  validate_state.py</code></pre><p>That is enough to make the experiment reproducible without forcing anyone to adopt my entire stack.</p><p>If there is interest, I will turn the conventions I am using into a clean starter repository and link it here.</p><p>The model should be replaceable.</p><p>The project should not be.</p></article>
+<a class="back" href="../">&larr; All posts</a></section></main>
+<footer><span>priyanshchordia.com</span><span>Independent software, built with privacy in mind.</span></footer>
+</div><script>(function(){var a=["signal","editorial","instrument","gallery","monolith","overworld","unknown-signal","cabinet","parallel","workshop","department"],ss=[].slice.call(document.querySelectorAll('.themer'));if(!ss.length)return;try{var t=localStorage.getItem('pc-theme');if(a.indexOf(t)>=0)ss.forEach(function(s){s.value=t})}catch(e){}ss.forEach(function(s){s.addEventListener('change',function(){var v=s.value;if(a.indexOf(v)<0)return;document.documentElement.setAttribute('data-theme',v);ss.forEach(function(o){o.value=v});try{localStorage.setItem('pc-theme',v)}catch(e){}requestAnimationFrame(function(){var xp=document.documentElement.classList.contains('has-xp');var target=document.querySelector(xp?'#themer2':'#themer');if(target&&target!==document.activeElement)target.focus()})})})})()</script></body></html>

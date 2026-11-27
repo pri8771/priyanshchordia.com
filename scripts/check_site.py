@@ -156,6 +156,20 @@ def is_private_blog_vault(path: Path, parser: PageParser) -> bool:
     )
 
 
+def is_unlisted_draft_post(path: Path, parser: PageParser) -> bool:
+    """Draft posts are reachable by URL only: noindex and left out of listings."""
+    try:
+        rel = path.relative_to(SITE.resolve())
+    except ValueError:
+        return False
+    return (
+        len(rel.parts) == 3
+        and rel.parts[0] == "blogs"
+        and rel.parts[2] == "index.html"
+        and "noindex" in parser.meta_name_values.get("robots", "").lower()
+    )
+
+
 def parse_pages() -> tuple[dict[Path, PageParser], list[str]]:
     errors: list[str] = []
     parsed: dict[Path, PageParser] = {}
@@ -248,6 +262,7 @@ def validate_links(pages: dict[Path, PageParser]) -> list[str]:
     ignored.update(
         path for path, parser in pages.items()
         if is_legacy_journal_redirect(path, parser) or is_private_blog_vault(path, parser)
+        or is_unlisted_draft_post(path, parser)
     )
     for path in sorted(set(pages) - reachable - ignored):
         errors.append(f"{path.relative_to(SITE.resolve())}: HTML page is orphaned")

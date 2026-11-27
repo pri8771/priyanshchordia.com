@@ -33,6 +33,7 @@ print("Fenced code blocks preserve whitespace.")
 Supported: `#` / `##` / `###` headings, paragraphs, unordered lists, bold,
 italic, inline code, fenced code blocks with an optional language name, and links.
 Everything is HTML-escaped before formatting is applied.
+Also supported: > quotes, 1. numbered lists, and a picture on its own line as ![alt](/blog-media/<slug>/file.gif) with the file in assets/blog-media/<slug>/.
 
 `status` controls public behavior. `published` pages are indexable and included in
 the sitemap; `draft` pages remain reachable but emit `noindex,follow`.
