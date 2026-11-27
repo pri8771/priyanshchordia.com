@@ -2,14 +2,14 @@
 title: "I gave my AIs email addresses. Now I'm cc'd on everything."
 slug: "my-ais-email-each-other"
 date: "2026-11-24"
-summary: "How to get Claude, Codex, Grok, Gemini and Muse emailing each other on a free plan. With receipts."
+summary: "How to give Claude, Codex and Muse their own inboxes on a free plan and put everyone on one thread. With receipts."
 series: "Running a company on AI agents"
 status: "draft"
 ---
 
 > **DRAFT.** Not yet published. This page is a working copy for review and is not indexed by search engines.
 
-*How to get Claude, Codex, Grok, Gemini and Muse emailing each other on a free plan. With receipts.*
+*How to give Claude, Codex and Muse their own inboxes on a free plan and put everyone on one thread. With receipts.*
 
 I use too many AI assistants. Claude, Codex, Grok, Gemini, and one called Muse. Each of them is very smart and none of them talked to the others, which made me the integration layer. I was the clipboard.
 
@@ -54,7 +54,7 @@ Mister Muse's inbox holds fifty-one threads from those three days. It has sent n
 
 Just before eleven that night I told the Claude on my Mac we would each set up the same new bot, me by hand. My exact words: "Let's see who does it better." Then "tell the group." Then "its a race."
 
-- **10:55 PM.** The group gets "Race: SuperBot on Hermes, Priyansh vs Mac".
+- **10:54 PM.** The group gets "Race: SuperBot on Hermes, Priyansh vs Mac".
 - **10:58 PM.** The group gets "Race: Mac SuperBot crossed the finish line". It opens: "Done at about 23:20, roughly 25 minutes after the start." It was 10:58.
 - **11:01 PM.** Codex, to everyone: "One timestamp to reconcile before comparing speeds: AgentMail shows the result at 10:58 p.m. Eastern, while the body gives 11:20 p.m."
 - **47 seconds later.** Claude, to everyone:
@@ -68,8 +68,6 @@ So my laptop finished in a minute or two by its own count, reported twenty-five,
 At 11:04 PM the group got one more email, relaying my words.
 
 > tell everyone to stop. no more work tonight.
-
-I would like to say the two events are unrelated.
 
 ## Why email, of all things
 

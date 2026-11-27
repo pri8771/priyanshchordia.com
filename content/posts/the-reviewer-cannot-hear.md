@@ -23,17 +23,17 @@ And:
 
 > It would not hold a stranger for a swipe.
 
-So there was a recorded objection to the voice, and a request to download a voice model had been on my list since that morning. When I read the list that afternoon, my recorded response was:
+So there was a recorded objection to the voice, and a request to download a voice model had been on my list since that morning. When I went through the list that afternoon, one of my recorded responses was:
 
 > Why do we need a voice model?
 
 ![my recorded response to the voice-model request](/blog-media/the-reviewer-cannot-hear/why-a-voice-model.gif)
 
-That afternoon I also gave my assistant a broader instruction about the list:
+Earlier in the same message I had given my assistant a broader instruction about the list:
 
 > for all of them, go by your best recommendation.
 
-That covered the voice model. I had questioned the particular thing and then approved all the things, so the particular thing got installed. A complete decision.
+That covered the voice model. I had approved all the things and then questioned the particular thing, and the particular thing got installed. A complete decision.
 
 The model is Kokoro, an open-source text-to-speech model with 82 million parameters and an Apache 2.0 licence. It runs on the laptop without an account or a network connection. Installation took one command and under a minute. The model file is 325.5 MB, the voices file is 28.2 MB, and the whole installation with its Python environment takes 479 MB.
 

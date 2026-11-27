@@ -43,7 +43,7 @@ It had, in fact, checked.
 
 This is trust on first use, the same idea as SSH's known_hosts warning. The client remembers the identity it first saw at an address and refuses when a different one answers. From the phone's side, a different server answering at a trusted address is exactly what an attack looks like. The app was right. The repair is to give the new thing a new address, not make the warning disappear.
 
-I had called this a glitch. The security check I was annoyed by was the best-engineered part of my set-up, and I did not write it. The only component that behaved correctly all afternoon was the one refusing to work.
+I had called this a glitch. That security check was the best-engineered part of my set-up, and I did not write it. The only component that behaved correctly all afternoon was the one refusing to work.
 
 The next fix gave Mr. Luthor his own address, to be added in the app as a new server. The hand-over note written minutes later said:
 

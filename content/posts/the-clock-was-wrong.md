@@ -1,5 +1,5 @@
 ---
-title: "My post about keeping records got the times wrong"
+title: "My blog post got the times wrong"
 slug: "the-clock-was-wrong"
 date: "2026-11-14"
 summary: "The events were in order. My records also said how far apart they were."
@@ -11,7 +11,7 @@ status: "draft"
 
 *The events were in order. My records also said how far apart they were.*
 
-An independent checker compared my blog draft with the source, and the source had a correction note that applied to the times in the draft. This was my post about how well I keep records. The wrong times came from my own records.
+An independent checker compared my blog draft with the source, and the source had a correction note that applied to the times in the draft. This was my post about changing my AI org chart. The wrong times came from my own records.
 
 I keep a decisions log. When I give an instruction, the log keeps my exact words. Then there’s a `Reading`, where my AI assistant writes down what it understood, and a `Done under` entry, where it records what it did and gives a time. I can go back to an instruction and read what I said, what my assistant took that to mean and what it did about it.
 
@@ -25,7 +25,7 @@ The slightly technical part is where the time comes from. A timestamp written by
 
 ![The correction note marking the affected entries, followed by the draft changing from clock times to order words](/blog-media/the-clock-was-wrong/clock-correction.gif)
 
-The checker followed the times in my draft back to the `Done under` entries and found the note that covered them. The edit was small. Out went the clock times, and out went the gap I’d reported between the events. The events stayed in the post, in the same order they’d been in before the check.
+The checker followed the times in my draft back to the `Done under` entries and found the note that covered them. Out went the clock times, and out went the gap I’d reported between the events. The events stayed in the post, in the same order they’d been in before the check.
 
-Later that day I gave my assistant a rule about checks. If there’s a check to do, do it now. Section 140 records what that looked like in practice. A check that had been parked for later was taken off the schedule and done at once. The research block had already started on its own timer.
+Before that check ran, I had given my assistant a rule about checks. If there’s a check to do, do it now. Section 140 records what that looked like in practice. A check that had been parked for later was taken off the schedule and done at once. The research block had already started on its own timer.
 
