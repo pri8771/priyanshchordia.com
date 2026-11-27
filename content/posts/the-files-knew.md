@@ -2,14 +2,14 @@
 title: "The files knew when they were made. I had not asked."
 slug: "the-files-knew"
 date: "2026-11-22"
-summary: "392 audio files, four facts to find, and the fourth was in my account history."
+summary: "392 audio files, four facts to find, and my AI assistant found the fourth."
 series: "Running a company on AI agents"
 status: "draft"
 ---
 
 > **DRAFT.** Not yet published. This page is a working copy for review and is not indexed by search engines.
 
-*392 audio files, four facts to find, and the fourth was in my account history.*
+*392 audio files, four facts to find, and my AI assistant found the fourth.*
 
 I have 392 AI-made audio files in an app I built, and I need four things before I can work out which ones I can release commercially: when each was made, when it was downloaded, whose words it uses, and which plan it was made under.
 
@@ -33,7 +33,7 @@ The inventory already existed too. It had 1,166 rows and was made on June 19. Ac
 
 - 128 classed as AI-generated audio with original text.
 - 16 classed as traditional or unknown.
-- 248 absent from the inventory, the mantra and prayer recordings with traditional words, so those are out.
+- 248 absent from the inventory, so those are out.
 
 For 105 of the 128 candidates, creation and first addition to git were on the same day. All 128 were in git by May 28. Candidates, so far.
 
@@ -43,7 +43,7 @@ An album has been assembled: ten tracks, 22 minutes 17 seconds, all made May 25 
 
 ![the album's recorded release status: Released: nothing.](/blog-media/the-files-knew/release-status.gif)
 
-I found the fourth fact in my own account history. That gives me all four.
+My AI assistant found the fourth fact. That gives me all four.
 
 Released: nothing.
 

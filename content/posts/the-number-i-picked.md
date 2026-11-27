@@ -15,22 +15,22 @@ I build automation and AI agent systems, and my company runs on bots. The free o
 
 The runtime that starts the bots has a minimum of 64,000. Below that, it does not start the bot at all.
 
-I found out because two research jobs had failed earlier, and when my assistant relaunched them, each one exited after one second.
+It showed up when two research jobs had failed earlier, and my assistant relaunched them: each one exited after one second.
 
 ![the two relaunched jobs, one second each](/blog-media/the-number-i-picked/attempts.gif)
 
-> 40,000: the cap my assistant set.
-> 64,000: the least the runtime will accept.
+- 40,000: the cap my assistant set.
+- 64,000: the least the runtime will accept.
 
 ![the two numbers side by side](/blog-media/the-number-i-picked/context.gif)
 
 A one-second exit is an unusual symptom. A bot that fails halfway through a job is doing something wrong. A bot that fails in one second has not started doing anything. So the investigation went to the limits, not the model, and found the cap.
 
-The fix was one number: 64,000 on every local profile. The check was one line, run on six bots, and all six started. Then the research jobs were relaunched. That is the control I keep: any setting that can stop a bot starting gets a test that starts a bot.
+The fix was one number: 64,000 on every local profile. The check was one line, run on six bots, and all six started. Then the research jobs were relaunched.
 
 The other rule from the same week is about the slots. Four slots are shared, so I run at most three local jobs at once, each in a fresh conversation, with a ledger row recording whether it left a file.
 
-That ledger is how I know the research bot is still not fixed. For one research bot, the task log shows three rows for November 23. All three failed. None left a file.
+That ledger is how I can tell whether the research bot is working. For one research bot, the task log for November 23 shows four failed rows, none of which left a file. From 7:55 PM, the next fifteen rows each left a file.
 
-I will keep the number at 64,000, and the research bot is next.
+I will keep the number at 64,000.
 

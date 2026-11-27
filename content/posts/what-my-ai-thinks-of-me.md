@@ -13,7 +13,7 @@ status: "draft"
 
 I had my AI assistants read four years of my own chats and commit history and write a profile of me. In its findings file, every finding comes with its evidence, a confidence level and a line that starts "Could be wrong if". The third revision landed on November 21.
 
-I can build things, so there was quite a bit to read. About 70 app designs since April, by its count. Then it listed who uses them.
+I can build things, so there was quite a bit to read. About 70 app designs since April, by its count. Then it listed who uses two of my tools.
 
 ![Agent Bus and the gateway have only him as a user](/blog-media/what-my-ai-thinks-of-me/card-1.png)
 
@@ -37,7 +37,7 @@ The file gives a date, June 27, and says that since then the building system too
 
 Quite a focused evening.
 
-It also searched my ChatGPT messages from December 2022 to October 2026. Five of 9,252 matched its customer-contact keywords, and two of those said I meant to contact an actual person. It admits its search missed at least one customer-facing post I drafted in 2024, so five is an undercount. My best objection to the methodology is another draft.
+It also searched my ChatGPT messages from December 2022 to October 2026. Five of 9,252 matched its customer-contact keywords. A separate count found two that said I meant to contact an actual person. It admits its search missed at least one customer-facing post I drafted in 2024, so five is an undercount. My best objection to the methodology is another draft.
 
 Then it wrote the sentence.
 

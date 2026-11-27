@@ -11,7 +11,7 @@ status: "draft"
 
 I kept one lead per team and archived the extra profiles.
 
-That morning I was asking for bots in trios. Later that day I asked for fewer bots to keep track of. I kept the extra profiles in an archive so I could reverse the change. Independent checkers went through the config files that day to see which arrangement I actually had.
+That morning I was asking for bots in trios. Later that day I asked for fewer bots to keep track of. The extra profiles went into an archive, which kept the change reversible. Independent checkers went through the config files that day to see which arrangement I actually had.
 
 The trios came from my own instructions. I’d asked for a group to run experiments, and a group to do research, and a group for startup work. The fleet reflected the way I’d described the teams. Then I gave a more specific instruction about the part of the arrangement that involved me.
 

@@ -13,7 +13,7 @@ My audio folder has the songs. My rights inventory has a job for me.
 
 On Nov 23, I said, “I also think it would be really cool if we could create our own AI music albums and release it on Spotify.” That’s in my album plan. The part about creating the music was already fairly well along.
 
-My app’s audio folder holds 392 MP3s, about 274 MB. Of those, 223 are named for Suno, the AI music tool. They take up about 248 MB and the tracks typically run 1 to 3 minutes. I can tell you how much space the music takes up. I have 0 files with a per-track record of which plan made them.
+My app’s audio folder holds 392 MP3s, about 626 MB. Of those, 223 are named for Suno, the AI music tool. They take up about 259 MB. I can tell you how much space the music takes up. I have 0 files with a per-track record of which plan made them.
 
 ![The folder count narrows from 392 MP3s to 223 Suno files to 0 with a per-track plan record](/blog-media/223-songs/audio-folder.gif)
 
