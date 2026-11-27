@@ -32,17 +32,18 @@ jobs:
       - name: Check out portfolio
         uses: actions/checkout@v4
 
-      - name: Check out autonomous CommerceLint source
-        uses: actions/checkout@v4
-        with:
-          repository: pri8771/autonomous_apps
-          ref: main
-          path: .commercelint-source
+      - name: Use the vendored CommerceLint release
+        # autonomous_apps is private, so the default token cannot check it out.
+        # The last released public docs tree is kept in ventures/commercelint/docs.
+        shell: bash
+        run: |
+          mkdir -p .commercelint-source
+          cp -R ventures/commercelint/docs .commercelint-source/docs
 
       - name: Record CommerceLint source revision
         id: source
         shell: bash
-        run: echo "sha=$(git -C .commercelint-source rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+        run: echo "sha=$(python3 -c "import json;print(json.load(open('deployments/commercelint-production.json'))['source_commit'])")" >> "$GITHUB_OUTPUT"
 
       - name: Detect a new CommerceLint release
         id: changed
