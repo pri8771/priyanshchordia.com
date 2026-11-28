@@ -27,11 +27,24 @@ jobs:
           ref: main
 
       - name: Check out autonomous CommerceLint source
+        id: commercelint_checkout
+        # autonomous_apps is private, so the default token cannot read it.
+        # If the checkout fails, the next step uses the vendored release instead.
+        continue-on-error: true
         uses: actions/checkout@v4
         with:
           repository: pri8771/autonomous_apps
           ref: main
           path: .commercelint-source
+
+      - name: Use the vendored CommerceLint release when the checkout fails
+        if: ${{ steps.commercelint_checkout.outcome == 'failure' }}
+        shell: bash
+        run: |
+          echo "autonomous_apps checkout failed; using ventures/commercelint/docs (same as pages.yml)."
+          rm -rf .commercelint-source
+          mkdir -p .commercelint-source
+          cp -R ventures/commercelint/docs .commercelint-source/docs
 
       - uses: actions/setup-python@v5
         with:
