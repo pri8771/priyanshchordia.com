@@ -1,0 +1,18 @@
+name: Approved post
+# A5 (28 Nov 2026): a post goes live only with the owner-approved hash from the dashboard queue.
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, edited]
+permissions:
+  contents: read
+jobs:
+  approved-post:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Check approved hash for every post that goes live
+        env:
+          PR_BODY: ${{ github.event.pull_request.body }}
+        run: python3 .github/scripts/check_approved_posts.py "${{ github.event.pull_request.base.sha }}" "${{ github.event.pull_request.head.sha }}"
